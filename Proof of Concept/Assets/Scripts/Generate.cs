@@ -2,19 +2,63 @@
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+public enum TileType
+{
+    UNWALKABLE,
+    WALKABLE,
+    PLAYER,
+    ENEMY,
+    BOSS,
+    NONE
+};
+
+public class Map
+{
+    private int width;
+    private int height;
+    private TileType[,] grid;
+
+    public Map(int width, int height)
+    {
+        this.width = width;
+        this.height = height;
+        grid = new TileType[width, height];
+    }
+
+    public TileType getTileAt(int height, int width)
+    {
+        return grid[height, width];
+    }
+
+    public void setTileAt(int height, int width, TileType type)
+    {
+        grid[height, width] = type;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+}
+
 public class Room
 {
 	/* A data class for holding room information. */
 
 	public int width = -1;
 	public int height = -1; 
-	public float x = -1.0f;
-	public float y = -1.0f;
+	public int x = -1;
+	public int y = -1;
 	public Vector3 topRightCorner;
 	public Vector3 bottomRightCorner;
 	public Vector3 bottomLeftCorner;
     
-	public Room(int width, int height, float x, float y)
+	public Room(int width, int height, int x, int y)
 	{
 		this.width = width;
 		this.height = height;
@@ -27,16 +71,21 @@ public class Generate : MonoBehaviour
 {
     public GameObject unwalkablePrefab;
     public GameObject walkablePrefab;
+    public GameObject playerPrefab;
+    public GameObject enemyPrefab;
+    public GameObject bossPrefab;
 
     public int minRoomSize      = 10;
 	public int maxRoomSize      = 20;
     public int hallwayHeight    = 4;
     public int numRooms         = 3;
+    public int mapHeight        = 64;
+    public int mapWidth         = 64;
 
-    public float absoluteMinX   = -7.0f;
-    public float absoluteMinY   = -3.0f;
+    public int absoluteMinX   = 0;
+    public int absoluteMinY   = 0;
 	public float spriteSize     = 1;
-
+ 
     private Transform boardHolder;
     private Transform hallwayHolder;
     private int curHallway;
@@ -46,37 +95,42 @@ public class Generate : MonoBehaviour
 
 	void Start() 
 	{
-		float minX  = absoluteMinX;
-		float maxX  = -2.0f;
+		int minX  = absoluteMinX;
+		int maxX  = 5;
 
-		float minY  = absoluteMinY;
-		float maxY  = 0.0f;
+		int minY  = absoluteMinY;
+		int maxY  = 20;
 
         curRoom     = 1;
         curHallway  = 1;
 
-		for(int i = 0; i < numRooms; i++)
-		{
-			int width = Random.Range(minRoomSize, maxRoomSize);
-			int height = Random.Range(minRoomSize, maxRoomSize);
+        Map map = new Map(mapHeight, mapHeight);
 
-			float roomX = Random.Range(minX, maxX);
-			float roomY = Random.Range(minY, maxY);
+        // Generate each room
+        for (int i = 0; i < numRooms; i++)
+        {
+            print("Min X: " + minX + " Max X: " + maxX);
+            int randX = Random.Range(minX, maxX);
+            int randY = Random.Range(minY, maxY);
 
-			print("Spawning room at x:" + roomX + " y:" + roomY + " With width:" + width + " and height:" + height);
+            int randWidth = Random.Range(minRoomSize, maxRoomSize);
+            int randHeight = Random.Range(minRoomSize, maxRoomSize);
 
-			Room newRoom = generateRoom(width, height, roomX, roomY);
-			rooms.Add(newRoom);
-			minX = newRoom.topRightCorner.x;
-			maxX = minX + Random.Range(1.0f, 5.0f);
-		}
+            // Try to make sure that no rooms ever collide. There's probably a better way to do this. 
+            minX = randX + randWidth;
+            maxX += randWidth;
 
-		connectRooms(rooms);
-	}
+            generateRoom(map, randWidth, randHeight, randX, randY);
+            curRoom++;
+        }
 
-	void connectRooms(List<Room> rooms)
+        // Render the map, starting at (0.0, 0.0)
+        renderMap(map, 0.0f, 0.0f);
+    }
+
+	/* void connectRooms(List<Room> rooms)
 	{
-		/* Attempt to connect all the rooms. Currently only one room formation is supported. */
+		// Attempt to connect all the rooms. Currently only one room formation is supported. 
 
 		Room prevRoom = null;
         GameObject instance;
@@ -121,44 +175,89 @@ public class Generate : MonoBehaviour
 
 			prevRoom = room;
 		}
-	}
-		
-	Room generateRoom(int roomHeight, int roomWidth, float startX, float startY)
-	{
-        /* Generate a room given the specifications and return a new Room. 
-         * FIXME: We should most likely just be generating a big grid in a list, marking each element in it as a certain tile type, then iterate through them rendering them (similarly to how the rougelike was done). 
-         */
+	} */
 
-        boardHolder = new GameObject("Room" + curRoom).transform;
-        curRoom++;
+    void renderMap(Map map, float startX, float startY)
+    {
+        boardHolder = new GameObject("Board").transform;
         GameObject instance;
 
-		float currentX = startX;
-		float currentY = startY;
+        float currentX = startX;
+        float currentY = startY;
+
+        for (int i = 0; i < map.getWidth(); i++)
+        {
+            for (int j = 0; j < map.getHeight(); j++)
+            {
+                TileType curTile = map.getTileAt(i, j);
+                if(curTile == TileType.NONE || curTile== TileType.UNWALKABLE)
+                {
+                    instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                }
+                else if(curTile == TileType.WALKABLE)
+                {
+                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                }
+                else if(curTile == TileType.PLAYER)
+                {
+                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(playerPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                }
+                else if(curTile == TileType.ENEMY)
+                {
+                    instance = (GameObject)Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                }
+                else if(curTile == TileType.BOSS)
+                {
+                    instance = (GameObject)Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                }
+                else
+                {
+                    instance = null;
+                }
+
+                currentX += spriteSize;
+                instance.transform.SetParent(boardHolder);
+            }
+
+            currentX = startX;
+            currentY += spriteSize;
+        }
+    }
+		
+	Room generateRoom(Map map, int roomHeight, int roomWidth, int startX, int startY)
+	{
+        /* Generate a room given the specifications and return a new Room. 
+        */
+        
+		int currentX = startX;
+		int currentY = startY;
+        bool spawnedPlayer = false;
+
+        print("Generating a new room at: " + startX + "," + startY + " with WxH: " + roomWidth + "x" + roomHeight);
 
 		Room room = new Room(roomWidth, roomHeight, startX, startY);
 
-		for(int i = 0; i < roomHeight; i++)
+		for(int i = startX; i < startX + roomHeight; i++)
 		{
-			for(int j = 0; j < roomWidth; j++)
+			for(int j = startY; j < startY + roomWidth; j++)
 			{
                 /* Handle drawing pathable sprites on the interior and unpathable sprites on the exterior. */
-
-                /* FIXME: We should be drawing edges, rather than ignoring them. But. Procedural generation is hard. :(
-                 * 
-				if(i == 0 || i == roomHeight - 1 || j == 0 || j == roomWidth - 1)
+				if(i != startX && i != (startX + roomHeight) - 1 && j != startY && j != (startY + roomWidth) - 1)
 				{
-					instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-				}	
-				else 
-				{
-					instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);	
-				}*/
+                    if (!spawnedPlayer && curRoom == 1)
+                    {
+                        spawnedPlayer = true;
+                        map.setTileAt(i, j, TileType.PLAYER);
+                    }
+                    else
+                    {
+                        map.setTileAt(i, j, TileType.WALKABLE);
+                    }
+				}
 
-                instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);	
-
-				currentX += spriteSize;
-                instance.transform.SetParent(boardHolder);
+                currentX += 1;
+               
 
 				/* Handle grabbing the top-right most sprite/bottom-right most sprite -- used in hallway construction */
                 if (i == roomHeight - 1 && j == roomWidth - 1)
@@ -175,8 +274,8 @@ public class Generate : MonoBehaviour
 				}
 			}
 
-			currentX = startX;
-			currentY += spriteSize;
+            currentX = startX;
+            currentY += 1;
 		}
 
 		return room;

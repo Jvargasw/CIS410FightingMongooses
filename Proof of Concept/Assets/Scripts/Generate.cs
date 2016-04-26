@@ -24,14 +24,14 @@ public class Map
         grid = new TileType[width, height];
     }
 
-    public TileType getTileAt(int height, int width)
+    public TileType getTileAt(int x, int y)
     {
-        return grid[height, width];
+        return grid[x, y];
     }
 
-    public void setTileAt(int height, int width, TileType type)
+    public void setTileAt(int x, int y, TileType type)
     {
-        grid[height, width] = type;
+        grid[x, y] = type;
     }
 
     public int getWidth()
@@ -78,6 +78,7 @@ public class Generate : MonoBehaviour
         curHallway  = 1;
 
         Map map = new Map(mapHeight, mapHeight);
+        int hallwayDirection = -1;
 
         // Generate each room
         for (int i = 0; i < numRooms; i++)
@@ -85,16 +86,18 @@ public class Generate : MonoBehaviour
             int randWidth = Random.Range(minRoomSize, maxRoomSize);
             int randHeight = Random.Range(minRoomSize, maxRoomSize);
 
-            generateRoom(map, randWidth, randHeight, currentX, currentY);
+            generateRoom(map, randWidth, randHeight, currentX, currentY, hallwayDirection);
 
             // Randomize if the next room will be above or to the right of the current room.
             // TODO: Add in left or below? 
             if (Random.Range(0, 100) >= 50)
             {
+                hallwayDirection = 0;
                 currentX += randWidth;
             }
             else
             {
+                hallwayDirection = 1;
                 currentY += randHeight;
             }
             curRoom++;
@@ -152,7 +155,7 @@ public class Generate : MonoBehaviour
         }
     }
 		
-	void generateRoom(Map map, int roomWidth, int roomHeight, int startX, int startY)
+	void generateRoom(Map map, int roomWidth, int roomHeight, int startX, int startY, int hallwayDirection)
 	{
         /* Generate a room given the specifications and return a new Room. 
         */
@@ -162,6 +165,39 @@ public class Generate : MonoBehaviour
         int rightSide = startX + roomWidth; 
 
         bool spawnedPlayer = false;
+
+        // FIXME: Apparently our x and y are getting swapped somewhere. We should fix that. 
+
+        // Create a hallway on the top of the room previous room to the bottom of the current room.
+        if(hallwayDirection == 0)
+        {
+            print("Generate hallway on the bottom of the room.");
+            for(int i = startX - 5; i < startX + 5; i++)
+            {
+                for (int j = startY + 1; j < startY + hallwayHeight; j++)
+                {
+                    map.setTileAt(i, j, TileType.WALKABLE);
+                }
+            }          
+        }
+  
+        // Create a hallway on the right side of the previous room to the left side of the current room.
+        else if(hallwayDirection == 1)
+        {
+            print("Generating hallway to the left");
+            for(int i = startX + 1; i < startX + hallwayHeight; i++)
+            {
+                for (int j = startY - 5; j < startY + 5; j++)
+                {
+                    map.setTileAt(i, j, TileType.WALKABLE);
+                }
+            }
+        }
+        else
+        {
+            print("Original room -- no hallway generated.");
+        }
+
 
         print("Generating a new room at: " + startX + "," + startY + " with WxH: " + roomWidth + "x" + roomHeight);
 

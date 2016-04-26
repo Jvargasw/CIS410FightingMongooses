@@ -106,7 +106,7 @@ public class Generate : MonoBehaviour
     private int curRoom;
 
 
-	void Start() 
+	void Awake() 
 	{
 
         int currentX = 0;
@@ -117,6 +117,7 @@ public class Generate : MonoBehaviour
 
         map = new Map(mapHeight, mapHeight);
         int hallwayDirection = -1;
+        rooms = new List<Room>();
 
         // Generate each room
         for (int i = 0; i < numRooms; i++)
@@ -124,6 +125,7 @@ public class Generate : MonoBehaviour
             int randWidth = Random.Range(minRoomSize, maxRoomSize);
             int randHeight = Random.Range(minRoomSize, maxRoomSize);
 
+            
             rooms.Add(generateRoom(map, randWidth, randHeight, currentX, currentY, hallwayDirection));
 
             // Randomize if the next room will be above or to the right of the current room.
@@ -257,16 +259,19 @@ public class Generate : MonoBehaviour
                     }
                     else if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
                     {
+                        //print("setTileAt(" + i + ", " + j + ", TileType.ENEMY);");
                         map.setTileAt(i, j, TileType.ENEMY);
                         numEnemies -= 1;
                     }
                     else if (curRoom == numRooms && !spawnedBoss)
                     {
+                        //print("setTileAt(" + i + ", " + j + ", TileType.BOSS);");
                         map.setTileAt(i, j, TileType.BOSS);
                         spawnedBoss = true;
                     }
                     else
                     {
+                        //print("setTileAt(" + i + ", " + j + ", TileType.Walkable);");
                         map.setTileAt(i, j, TileType.WALKABLE);
                     }
 				}

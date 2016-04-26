@@ -111,6 +111,10 @@ public class Generate : MonoBehaviour
 
         int currentX = 0;
         int currentY = 0;
+        int randWidth;
+        int randHeight;
+        int width;
+        int height;
 
         curRoom     = 1;
         curHallway  = 1;
@@ -122,11 +126,22 @@ public class Generate : MonoBehaviour
         // Generate each room
         for (int i = 0; i < numRooms; i++)
         {
-            int randWidth = Random.Range(minRoomSize, maxRoomSize);
-            int randHeight = Random.Range(minRoomSize, maxRoomSize);
 
-            
-            rooms.Add(generateRoom(map, randWidth, randHeight, currentX, currentY, hallwayDirection));
+            randWidth = Random.Range(minRoomSize, maxRoomSize);
+            randHeight = Random.Range(minRoomSize, maxRoomSize);
+
+            width = Mathf.Min(63 - currentX, randWidth);
+            height = Mathf.Min(63 - currentY, randHeight);
+            if(width != randWidth)
+            {
+                print("Width overide: " + width);
+            }
+            if (height != randHeight)
+            {
+                print("Height overide: " + height);
+            }
+
+            rooms.Add(generateRoom(map, width, height, currentX, currentY, hallwayDirection));
 
             // Randomize if the next room will be above or to the right of the current room.
             // TODO: Add in left or below? 

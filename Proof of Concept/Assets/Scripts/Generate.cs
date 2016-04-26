@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 public enum TileType
@@ -45,6 +46,41 @@ public class Map
     }
 }
 
+public class Room
+{
+    private int numEnemies;
+    private int x;
+    private int y;
+
+    public Room(int x, int y, int numEnemies)
+    {
+        this.x = x;
+        this.y = y;
+        this.numEnemies = numEnemies;
+    }
+
+    public bool hasEnemies()
+    {
+        return numEnemies == 0;
+    }
+
+    public int getNumEnemies()
+    {
+        return numEnemies;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
+    
+}
+
 public class Generate : MonoBehaviour 
 {
     public GameObject unwalkablePrefab;
@@ -61,6 +97,8 @@ public class Generate : MonoBehaviour
     public int mapWidth         = 64;
 
 	public float spriteSize     = 1;
+    public static Map map;
+    public static List<Room> rooms;
  
     private Transform boardHolder;
     private Transform hallwayHolder;
@@ -77,7 +115,7 @@ public class Generate : MonoBehaviour
         curRoom     = 1;
         curHallway  = 1;
 
-        Map map = new Map(mapHeight, mapHeight);
+        map = new Map(mapHeight, mapHeight);
         int hallwayDirection = -1;
 
         // Generate each room
@@ -86,7 +124,7 @@ public class Generate : MonoBehaviour
             int randWidth = Random.Range(minRoomSize, maxRoomSize);
             int randHeight = Random.Range(minRoomSize, maxRoomSize);
 
-            generateRoom(map, randWidth, randHeight, currentX, currentY, hallwayDirection);
+            rooms.Add(generateRoom(map, randWidth, randHeight, currentX, currentY, hallwayDirection));
 
             // Randomize if the next room will be above or to the right of the current room.
             // TODO: Add in left or below? 
@@ -135,11 +173,13 @@ public class Generate : MonoBehaviour
                 }
                 else if(curTile == TileType.ENEMY)
                 {
-                    instance = (GameObject)Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
                 }
                 else if(curTile == TileType.BOSS)
                 {
-                    instance = (GameObject)Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
                 }
                 else
                 {
@@ -155,7 +195,7 @@ public class Generate : MonoBehaviour
         }
     }
 		
-	void generateRoom(Map map, int roomWidth, int roomHeight, int startX, int startY, int hallwayDirection)
+	Room generateRoom(Map map, int roomWidth, int roomHeight, int startX, int startY, int hallwayDirection)
 	{
         /* Generate a room given the specifications and return a new Room. 
         */
@@ -165,9 +205,11 @@ public class Generate : MonoBehaviour
         int rightSide = startX + roomWidth; 
 
         bool spawnedPlayer = false;
+        bool spawnedBoss = false;
+        int numEnemies = (int)Mathf.Floor(Mathf.Log(numRooms));
+
 
         // FIXME: Apparently our x and y are getting swapped somewhere. We should fix that. 
-
         // Create a hallway on the top of the room previous room to the bottom of the current room.
         if(hallwayDirection == 0)
         {
@@ -213,6 +255,16 @@ public class Generate : MonoBehaviour
                         spawnedPlayer = true;
                         map.setTileAt(i, j, TileType.PLAYER);
                     }
+                    else if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
+                    {
+                        map.setTileAt(i, j, TileType.ENEMY);
+                        numEnemies -= 1;
+                    }
+                    else if (curRoom == numRooms && !spawnedBoss)
+                    {
+                        map.setTileAt(i, j, TileType.BOSS);
+                        spawnedBoss = true;
+                    }
                     else
                     {
                         map.setTileAt(i, j, TileType.WALKABLE);
@@ -220,5 +272,6 @@ public class Generate : MonoBehaviour
 				}
 			}
 		}
-	}
+        return new Room(startX, startY, numEnemies);
+    }
 }

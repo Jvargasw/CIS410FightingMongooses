@@ -196,12 +196,12 @@ public class Generate : MonoBehaviour
                 else if(curTile == TileType.ENEMY)
                 {
                     instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(enemyPrefab, new Vector3(currentX, currentY, -1), transform.rotation);
                 }
                 else if(curTile == TileType.BOSS)
                 {
                     instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(bossPrefab, new Vector3(currentX, currentY, -1), transform.rotation);
                 }
                 else
                 {

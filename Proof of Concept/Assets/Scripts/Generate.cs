@@ -182,7 +182,9 @@ public class Generate : MonoBehaviour
                 if(curTile == TileType.NONE || curTile== TileType.UNWALKABLE)
                 {
                     instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, -1), transform.rotation);
+                    instance.transform.SetParent(boardHolder);
+
+                    instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, -1), transform.rotation);
                 }
                 else if(curTile == TileType.WALKABLE)
                 {

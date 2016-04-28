@@ -99,6 +99,7 @@ public class Generate : MonoBehaviour
     public int numRooms         = 3;
     public int mapHeight        = 64;
     public int mapWidth         = 64;
+    public int wallHeight       = 1;
 
 	public float spriteSize     = 1;
     public static Map map;
@@ -181,6 +182,7 @@ public class Generate : MonoBehaviour
                 if(curTile == TileType.NONE || curTile== TileType.UNWALKABLE)
                 {
                     instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, -1), transform.rotation);
                 }
                 else if(curTile == TileType.WALKABLE)
                 {
@@ -189,7 +191,7 @@ public class Generate : MonoBehaviour
                 else if(curTile == TileType.PLAYER)
                 {
                     instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(playerPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                    Instantiate(playerPrefab, new Vector3(currentX, currentY, -1), transform.rotation);
                 }
                 else if(curTile == TileType.ENEMY)
                 {

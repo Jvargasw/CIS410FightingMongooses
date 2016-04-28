@@ -21,8 +21,8 @@ public class TurnManager : MonoBehaviour {
 
 	private void enemyTurn() {
 		print ("Watch out folks, we're enemies and we're gonna getcha");
+        this.GetComponent<EnemyManager>().EnemyTurn();
 		playerTurn = true;
-		//fill out with actual enemy movement stuff
 		return;
 	}
 }

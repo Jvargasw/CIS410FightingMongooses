@@ -6,15 +6,9 @@ public class EnemyManager : MonoBehaviour {
     //public int maxEnemies = 10;
     public GameObject[] enemies;
     
-    void Start()
-    {
+    void Start() {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
 
     public void EnemyTurn()
     {

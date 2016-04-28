@@ -16,6 +16,10 @@ public class Map
 {
     private int width;
     private int height;
+
+    public int renderHeight { get; set; }
+    public int renderWidth { get; set; }
+
     private TileType[,] grid;
 
     public Map(int width, int height)
@@ -105,7 +109,6 @@ public class Generate : MonoBehaviour
     private int curHallway;
     private int curRoom;
 
-
 	void Awake() 
 	{
 
@@ -170,9 +173,9 @@ public class Generate : MonoBehaviour
         float currentX = startX;
         float currentY = startY;
 
-        for (int i = 0; i < map.getWidth(); i++)
+        for (int i = 0; i < map.renderWidth; i++)
         {
-            for (int j = 0; j < map.getHeight(); j++)
+            for (int j = 0; j < map.renderHeight; j++)
             {
                 TileType curTile = map.getTileAt(i, j);
                 if(curTile == TileType.NONE || curTile== TileType.UNWALKABLE)
@@ -274,23 +277,22 @@ public class Generate : MonoBehaviour
                     }
                     else if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
                     {
-                        //print("setTileAt(" + i + ", " + j + ", TileType.ENEMY);");
                         map.setTileAt(i, j, TileType.ENEMY);
                         numEnemies -= 1;
                     }
                     else if (curRoom == numRooms && !spawnedBoss)
                     {
-                        //print("setTileAt(" + i + ", " + j + ", TileType.BOSS);");
                         map.setTileAt(i, j, TileType.BOSS);
                         spawnedBoss = true;
                     }
                     else
                     {
-                        //print("setTileAt(" + i + ", " + j + ", TileType.Walkable);");
+                        map.renderHeight = Mathf.Max(map.renderHeight, j);
                         map.setTileAt(i, j, TileType.WALKABLE);
                     }
 				}
 			}
+            map.renderWidth = Mathf.Max(map.renderWidth, i);
 		}
         return new Room(startX, startY, numEnemies);
     }

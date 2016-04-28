@@ -287,12 +287,12 @@ public class Generate : MonoBehaviour
                     }
                     else
                     {
-                        map.renderHeight = Mathf.Max(map.renderHeight, j);
+                        map.renderHeight = Mathf.Max(map.renderHeight, j + 2);
                         map.setTileAt(i, j, TileType.WALKABLE);
                     }
 				}
 			}
-            map.renderWidth = Mathf.Max(map.renderWidth, i);
+            map.renderWidth = Mathf.Max(map.renderWidth, i + 2);
 		}
         return new Room(startX, startY, numEnemies);
     }

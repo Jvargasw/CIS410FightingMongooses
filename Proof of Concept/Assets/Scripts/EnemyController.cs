@@ -18,10 +18,10 @@ public class EnemyController : MonoBehaviour {
         }
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	public void Attack()
+    {
+
+    }
 
     public void TakeDmg(int dmgTaken) {
         health -= dmgTaken;

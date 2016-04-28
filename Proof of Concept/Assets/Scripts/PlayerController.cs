@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     public int playerDmg = 10;
 
     private bool isMoving = true; //represents moving vs attacking
-	private bool turn = true; //the player's turn (as opposed to the enemy's)
 
 	private Vector3 movePosition;
 	private Vector3 startPosition;

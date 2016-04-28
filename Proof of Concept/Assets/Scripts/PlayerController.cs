@@ -7,7 +7,9 @@ public class PlayerController : MonoBehaviour
     public float playerSpeed = 3.0f;
 
 	public int maxMoveDistance = 3; //the most spaces the player can move in a turn
+    public int playerDmg = 10;
 
+    private bool isMoving = true; //represents moving vs attacking
 	private bool turn = true; //the player's turn (as opposed to the enemy's)
 
 	private Vector3 movePosition;
@@ -51,14 +53,22 @@ public class PlayerController : MonoBehaviour
 
 			//end turn
 			} else if (Input.GetKeyDown (KeyCode.Return)) {
-				TurnManager.playerTurn = false;
-				spacesMoved = 0;
-				transform.position = movePosition;
+                if (isMoving)
+                {
+                    isMoving = false;
+                }
+                else
+                {
+                    PlayerEndTurn();
+                }
 				yield return null;
 			} else if (Input.GetKeyDown (KeyCode.Backspace)) {
-				spacesMoved = 0;
-				movePosition = startPosition;
-				transform.position = movePosition;
+                if (isMoving)
+                {
+                    spacesMoved = 0;
+                    movePosition = startPosition;
+                    transform.position = movePosition;
+                }
 				yield return null;
 			}
 			yield return null;
@@ -70,17 +80,37 @@ public class PlayerController : MonoBehaviour
 
 	public void AttemptMove(Vector2 moveDirection) {
 		int unwalkable = 1 << 9;
-		RaycastHit2D hit = Physics2D.Raycast (new Vector2 (transform.position.x, transform.position.y), moveDirection, 1f, unwalkable);
+        int entities = 1 << 11;
+        RaycastHit2D hit = Physics2D.Raycast (new Vector2 (transform.position.x, transform.position.y), moveDirection, 1f, unwalkable);
 		//there's a wall in the way
 		if (hit.rigidbody != null) {
 			return;
 		}
-		//have we already moved the max number of spaces?
-		if (spacesMoved + 1 <= maxMoveDistance) {
+        hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), moveDirection, 1f, entities);
+        if (hit.rigidbody != null) {
+            print(hit.rigidbody.gameObject.tag);
+            if (isMoving) {return;}
+            MeleeAttack(hit.rigidbody.gameObject);
+            PlayerEndTurn();
+            return;
+        }
+        //have we already moved the max number of spaces?
+        if ((spacesMoved + 1 <= maxMoveDistance) && isMoving) {
 			spacesMoved++;
 			movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
 			transform.position = movePosition;
 		}
 		return;
 	}
+
+    public void PlayerEndTurn() {
+        isMoving = true;
+        TurnManager.playerTurn = false;
+        spacesMoved = 0;
+        transform.position = movePosition;
+    }
+
+    private void MeleeAttack(GameObject enemy) {
+        enemy.GetComponent<EnemyController>().TakeDmg(playerDmg);
+    }
 }

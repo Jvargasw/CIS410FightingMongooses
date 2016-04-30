@@ -55,12 +55,16 @@ public class Room
     private int numEnemies;
     private int x;
     private int y;
+    private int height;
+    private int width;
 
-    public Room(int x, int y, int numEnemies)
+    public Room(int x, int y, int width, int height, int numEnemies)
     {
         this.x = x;
         this.y = y;
         this.numEnemies = numEnemies;
+        this.width = width;
+        this.height = height;
     }
 
     public bool hasEnemies()
@@ -71,6 +75,16 @@ public class Room
     public int getNumEnemies()
     {
         return numEnemies;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+
+    public int getWidth()
+    {
+        return width;
     }
 
     public int getX()
@@ -112,7 +126,6 @@ public class Generate : MonoBehaviour
 
 	void Awake() 
 	{
-
         int currentX = 0;
         int currentY = 0;
         int randWidth;
@@ -169,51 +182,53 @@ public class Generate : MonoBehaviour
     void renderMap(Map map, float startX, float startY)
     {
         boardHolder = new GameObject("Board").transform;
-        GameObject instance;
+        
 
         float currentX = startX;
         float currentY = startY;
+
+        print("Render Height: " + map.renderHeight);
+        print("Render Width: " + map.renderWidth);
+
+        /* We got some magic numbers up the ass here. Basically, when divided by 9, the floor *almost* fits, but then we have to multiply that by 5 because Unity planes are 5 units long, 
+         * so if we want the bottom left corner to be aligned correctly, it needs to be moved by 5 * length and 5 * height. This is a shitty implementation, but it works for now. 
+         */
+        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight / 9) * 5, (map.renderWidth / 9) * 5, 1), Quaternion.Euler(-90, 0, 0));
+        instance.transform.localScale = new Vector3(map.renderHeight / 9, 1, map.renderWidth / 9);
 
         for (int i = 0; i < map.renderWidth; i++)
         {
             for (int j = 0; j < map.renderHeight; j++)
             {
                 TileType curTile = map.getTileAt(i, j);
-                if(curTile == TileType.NONE || curTile== TileType.UNWALKABLE)
+                switch(curTile)
                 {
-                    instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    instance.transform.SetParent(boardHolder);
+                    case TileType.NONE:
+                        // Woooo. Abusing logical fall throughs!
 
-                    instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, -1), transform.rotation);
-                }
-                else if(curTile == TileType.WALKABLE)
-                {
-                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                }
-                else if(curTile == TileType.PLAYER)
-                {
-                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(playerPrefab, new Vector3(currentX, currentY, -1), transform.rotation);
-                }
-                else if(curTile == TileType.ENEMY)
-                {
-                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(enemyPrefab, new Vector3(currentX, currentY, -1), transform.rotation);
-                }
-                else if(curTile == TileType.BOSS)
-                {
-                    instance = (GameObject)Instantiate(walkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
-                    Instantiate(bossPrefab, new Vector3(currentX, currentY, -1), transform.rotation);
-                }
-                else
-                {
-                    instance = null;
-                }
+                    case TileType.UNWALKABLE:
+                        instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
 
+                        // Make the wall 2 units high. 
+                        // FIXME: This currently only increases it's height by 0.5 (I believe), because unity scales both ends.
+                        Vector3 unwalkableScale = instance.transform.localScale = new Vector3(1, 1, 2);
+                        break;
+
+                    case TileType.PLAYER:
+                        Instantiate(playerPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        break;
+
+                    case TileType.ENEMY:
+                        Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        break;
+
+                    case TileType.BOSS:
+                        Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        break;
+                }
                 currentX += spriteSize;
                 instance.transform.SetParent(boardHolder);
             }
-
             currentX = startX;
             currentY += spriteSize;
         }
@@ -237,7 +252,6 @@ public class Generate : MonoBehaviour
         // Create a hallway on the top of the room previous room to the bottom of the current room.
         if(hallwayDirection == 0)
         {
-            print("Generate hallway on the bottom of the room.");
             for(int i = startX - 5; i < startX + 5; i++)
             {
                 for (int j = startY + 1; j < startY + hallwayHeight; j++)
@@ -250,7 +264,6 @@ public class Generate : MonoBehaviour
         // Create a hallway on the right side of the previous room to the left side of the current room.
         else if(hallwayDirection == 1)
         {
-            print("Generating hallway to the left");
             for(int i = startX + 1; i < startX + hallwayHeight; i++)
             {
                 for (int j = startY - 5; j < startY + 5; j++)
@@ -259,13 +272,6 @@ public class Generate : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            print("Original room -- no hallway generated.");
-        }
-
-
-        print("Generating a new room at: " + startX + "," + startY + " with WxH: " + roomWidth + "x" + roomHeight);
 
 		for(int i = startX; i < startX + roomWidth; i++)
 		{
@@ -298,6 +304,6 @@ public class Generate : MonoBehaviour
 			}
             map.renderWidth = Mathf.Max(map.renderWidth, i + 2);
 		}
-        return new Room(startX, startY, numEnemies);
+        return new Room(startX, startY, roomWidth, roomHeight, numEnemies);
     }
 }

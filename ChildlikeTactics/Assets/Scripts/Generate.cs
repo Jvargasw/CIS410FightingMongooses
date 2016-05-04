@@ -47,6 +47,16 @@ public class Map
 
     public int getPlayerCollidedWith(int x, int y)
     {
+        /* Returns the index in the enemy list of the enemy the player would collide with if the 
+         * move to coordinates (x, y) is performed.
+         * Args:
+         *      int x - The x coordinate of the move to perform.
+         *      int y - The y coordinate of the move to perform.
+         * Returns:
+         *      The position in the enemy list of the enemy the player would collide with, -1 if the player
+         *      wouldn't collide with any enemy.
+         */
+
         for(int i = 0; i < enemyPositions.Count; i++)
         {
             if(enemyPositions[i].x == x && enemyPositions[i].y == y)
@@ -60,6 +70,15 @@ public class Map
 
     public bool moveEnemyTo(int enemyIndex, int x, int y)
     {
+        /* Moves the enemy at the given enemyIndex to the supplied x and y in the grid, 
+         * if possible.
+         * Args:
+         *      int x - The x coordinate to move to
+         *      int y - The y coordinate to move to
+         * Returns:
+         *      true if the move was successful, false if it wasn't.
+         */
+
         if(canMoveTo(x, y))
         {
             setEnemyPosition(enemyIndex, new Position(x, y));
@@ -71,7 +90,15 @@ public class Map
 
     public bool movePlayerTo(int x, int y)
     {
-        if(canMoveTo(x, y))
+        /* Moves the player at the to the supplied x and y in the grid if possible.
+         * Args:
+         *      int x - The x coordinate to move to
+         *      int y - The y coordinate to move to
+         * Returns:
+         *      true if the move was successful, false if it wasn't.
+         */
+
+        if (canMoveTo(x, y))
         {
             setPlayerPosition(x, y);
             return true;
@@ -82,6 +109,14 @@ public class Map
 
     public bool canMoveTo(int x, int y)
     {
+        /* Checks to see if the tile at grid position (x, y) is WALKABLE.
+         * Args:
+         *      int x - The x coordinate to check
+         *      int y - The y coordinate to check
+         * Returns:
+         *      true if the tile at grid position (x, y) is WALKABLE, false if it isn't.
+         */
+
         if(grid[x, y] == TileType.WALKABLE)
         {
             return true;
@@ -115,7 +150,7 @@ public class Map
         return playerPosition;
     }
 
-    public void addEnemyPosition(Position enemyPosition)
+    public void addEnemy(Position enemyPosition)
     {
         enemyPositions.Add(enemyPosition);
         grid[enemyPosition.x, enemyPosition.y] = TileType.ENEMY;

@@ -9,16 +9,32 @@ public enum TileType
     PLAYER,
     ENEMY,
     BOSS,
+    ITEM,
     NONE
 };
 
+public class Position
+{
+    public int x { get; set; }
+    public int y { get; set; }
+
+    public Position(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
 public class Map
 {
-    private int width;
-    private int height;
+    public int width { get; private set; }
+    public int height { get; private set; }
 
     public int renderHeight { get; set; }
     public int renderWidth { get; set; }
+
+    private List<Position> enemyPositions;
+    private Position playerPosition;
 
     private TileType[,] grid;
 
@@ -29,6 +45,88 @@ public class Map
         grid = new TileType[width, height];
     }
 
+    public bool moveEnemyTo(int enemyIndex, int x, int y)
+    {
+        if(canMoveTo(x, y))
+        {
+            setEnemyPosition(enemyIndex, new Position(x, y));
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool movePlayerTo(int x, int y)
+    {
+        if(canMoveTo(x, y))
+        {
+            setPlayerPosition(x, y);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool canMoveTo(int x, int y)
+    {
+        if(grid[x, y] == TileType.WALKABLE)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void setPlayerPosition(Position position)
+    {
+        setPlayerPosition(position.x, position.y);
+    }
+
+    public void setPlayerPosition(int x, int y)
+    {
+        // Update the grid
+        grid[playerPosition.x, playerPosition.y]    = TileType.WALKABLE;
+        grid[x, y]                                  = TileType.PLAYER;
+
+        if (playerPosition == null)
+        {
+            playerPosition = new Position(x, y);
+        }
+
+        playerPosition.x = x;
+        playerPosition.y = y;
+    }
+
+    public Position getPlayerPosition()
+    {
+        return playerPosition;
+    }
+
+    public void addEnemyPosition(Position enemyPosition)
+    {
+        enemyPositions.Add(enemyPosition);
+        grid[enemyPosition.x, enemyPosition.y] = TileType.ENEMY;
+    }
+
+    public List<Position> getAllEnemyPositions()
+    {
+        return enemyPositions;
+    }
+
+    public Position getEnemyPosition(int index)
+    {
+        return enemyPositions[index];
+    }
+
+    public void setEnemyPosition(int index, Position position)
+    {
+        // Update the grid
+        grid[enemyPositions[index].x, enemyPositions[index].y] = TileType.WALKABLE;
+        grid[position.x, position.y] = TileType.ENEMY;
+
+        enemyPositions[index] = position;
+    }
+
     public TileType getTileAt(int x, int y)
     {
         return grid[x, y];
@@ -37,16 +135,6 @@ public class Map
     public void setTileAt(int x, int y, TileType type)
     {
         grid[x, y] = type;
-    }
-
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public int getHeight()
-    {
-        return height;
     }
 }
 
@@ -224,6 +312,10 @@ public class Generate : MonoBehaviour
 
                     case TileType.BOSS:
                         Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        break;
+
+                    case TileType.ITEM:
+                        // Future proofing.
                         break;
                 }
                 currentX += spriteSize;

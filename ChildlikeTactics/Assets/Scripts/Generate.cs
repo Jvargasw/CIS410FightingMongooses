@@ -45,6 +45,19 @@ public class Map
         grid = new TileType[width, height];
     }
 
+    public int getPlayerCollidedWith(int x, int y)
+    {
+        for(int i = 0; i < enemyPositions.Count; i++)
+        {
+            if(enemyPositions[i].x == x && enemyPositions[i].y == y)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public bool moveEnemyTo(int enemyIndex, int x, int y)
     {
         if(canMoveTo(x, y))

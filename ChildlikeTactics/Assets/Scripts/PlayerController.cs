@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 	private int spacesMoved = 0;
     private Text turnText;
     private Text healthText;
+    private Map map;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
         StartMoving();
         healthText.text = "HP: " + health;
+        map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
 	IEnumerator PlayerTurn() {
@@ -77,27 +79,35 @@ public class PlayerController : MonoBehaviour
 
 
 	public void AttemptMove(Vector2 moveDirection) {
-		int unwalkable = 1 << 9;
-        int entities = 1 << 11;
-        RaycastHit2D hit = Physics2D.Raycast (new Vector2 (transform.position.x, transform.position.y), moveDirection, 1f, unwalkable);
-		//there's a wall in the way
-		if (hit.rigidbody != null) {
-			return;
-		}
-        hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), moveDirection, 1f, entities);
-        if (hit.rigidbody != null) {
-            print(hit.rigidbody.gameObject.tag);
-            if (isMoving) {return;}
-            MeleeAttack(hit.rigidbody.gameObject);
-            PlayerEndTurn();
+        //Moving
+        if(isMoving){
+            //have we already moved the max number of spaces?
+            if ((spacesMoved + 1 <= maxMoveDistance)) {
+                if (map.movePlayerTo((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x))) { //OK, the X and Y being swapped is kinda a problem.
+                    spacesMoved++;
+                    movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
+                    transform.position = movePosition;
+                }
+            }
             return;
         }
-        //have we already moved the max number of spaces?
-        if ((spacesMoved + 1 <= maxMoveDistance) && isMoving) {
-			spacesMoved++;
-			movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
-			transform.position = movePosition;
-		}
+
+        //Attacking
+        if (map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.ENEMY ||
+            map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.BOSS){
+
+            int index = map.getPlayerCollidedWith((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x));
+            foreach(GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
+                if(index == enemy.GetComponent<EnemyController>().index) {
+                    MeleeAttack(enemy);
+                    PlayerEndTurn();
+                    return;
+                }
+                else {
+                    print("Error with fighting enemies");
+                }
+            }
+        }
 		return;
 	}
 

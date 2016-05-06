@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyController : MonoBehaviour {
 
+    public int index;
     public int health;
     public int dmg;
     public int movement = 5;
     private int range = 1;
 
-    private GameObject target;
+    private GameObject tileManager;
+    private bool success;
+    private Map map;
 
     void Start () {
         if (health == 0) {
@@ -17,11 +21,13 @@ public class EnemyController : MonoBehaviour {
         if(dmg == 0) {
             dmg = 5;
         }
-	}
+        map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
+
+    }
 	
 	public void Attack() {
         if (SeekAndDestroy(range,movement)) {
-            MeleeAttack(target);
+            MeleeAttack(GameObject.FindGameObjectWithTag("Player"));//Change this once we add multiple Players
         }
     }
 
@@ -34,65 +40,83 @@ public class EnemyController : MonoBehaviour {
 
     public void Die() {
         //placeholder for giving player experience, gold, etc.
+        map.destroyEnemy(index);
         gameObject.gameObject.SetActive(false);
     }
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
-        target = null;
-        Search(new Vector2(transform.position.x, transform.position.y), enemyRange, enemyMovement);
-        return !(target == null);
+        success = false;
+        List<Position> path = Search(map.getEnemyPosition(index), enemyRange, enemyMovement, new List<Position>());
+        if (success) {
+            print("SUCCESS");
+            foreach ( Position loc in path) {
+                map.setEnemyPosition(index, loc);
+                print(loc.x + " " + loc.y);
+                this.transform.position = new Vector3(loc.y, loc.x, this.transform.position.z); //X and Y swapped cause map.grid is has x and y swapped in it
+            }
+        }
+        return success;
     }
 
     private void MeleeAttack(GameObject player) {
         player.GetComponent<PlayerController>().TakeDmg(dmg);
     }
 
-    private Vector2 Search(Vector2 location, int enemyRange, int enemyMovement) {
-        int playerLayer = 1 << 12;
-        Vector2 direction = Vector2.up;
-        RaycastHit2D hit = Physics2D.Raycast(location, direction, 1f, playerLayer);
-        if (hit.rigidbody == null) {
+    private List<Position> Search(Position location, int enemyRange, int enemyMovement, List<Position> path) {
+        path.Add(location);
+        Position playerLoc = map.getPlayerPosition();
+        Position newPos = new Position(location.x, location.y + 1); //UP
+        Queue searchQ = new Queue();
+        if (playerLoc != newPos) {
             if (enemyMovement > 0) {
-                Search(location + direction, enemyRange, enemyMovement - 1);
-            }
-            direction = Vector2.down;
-            hit = Physics2D.Raycast(location, direction, 1f, playerLayer);
-            if (hit.rigidbody == null) {
-                if (enemyMovement > 0) {
-                    Search(location + direction, enemyRange, enemyMovement - 1);
+                if (map.canMoveTo(newPos.x, newPos.y)) {
+                    searchQ.Enqueue(newPos);
                 }
-                direction = Vector2.left;
-                hit = Physics2D.Raycast(location, direction, 1f, playerLayer);
-                if (hit.rigidbody == null) {
-                    if (enemyMovement > 0) {
-                        Search(location + direction, enemyRange, enemyMovement - 1);
-                    }
-                    direction = Vector2.right;
-                    hit = Physics2D.Raycast(location, direction, 1f, playerLayer);
-                    if (hit.rigidbody == null) {
-                        if (enemyMovement > 0) {
-                            Search(location + direction, enemyRange, enemyMovement - 1);
-                        }
-                    }
-                    else {
-                        transform.position = new Vector3(location.x, location.y, transform.position.z);
-                        target = hit.rigidbody.gameObject;
-                    }
-                }
-                else {
-                    transform.position = new Vector3(location.x, location.y, transform.position.z);
-                    target = hit.rigidbody.gameObject;
-                }
-            }
-            else {
-                transform.position = new Vector3(location.x, location.y, transform.position.z);
-                target = hit.rigidbody.gameObject;
             }
         }
         else {
-            transform.position = new Vector3 (location.x, location.y, transform.position.z);
-            target = hit.rigidbody.gameObject;
+            success = true;
+            return path;
         }
-        return direction;
+        newPos = new Position(location.x, location.y + -1); //DOWN
+        if (playerLoc != newPos) {
+            if (enemyMovement > 0) {
+                if (map.canMoveTo(newPos.x, newPos.y)) {
+                    searchQ.Enqueue(newPos);
+                }
+            }
+        }
+        else {
+            success = true;
+            return path;
+        }
+        newPos = new Position(location.x - 1, location.y); //LEFT
+        if (playerLoc != newPos) {
+            if (enemyMovement > 0) {
+                if (map.canMoveTo(newPos.x, newPos.y)) {
+                    searchQ.Enqueue(newPos);
+                }
+            }
+        }
+        else {
+            success = true;
+            return path;
+        }
+        newPos = new Position(location.x + 1, location.y);//RIGHT
+        if (playerLoc != newPos) {
+            if (enemyMovement > 0) {
+                if (map.canMoveTo(newPos.x, newPos.y)) {
+                    searchQ.Enqueue(newPos);
+                }
+            }
+        }
+        else {
+            success = true;
+            return path;
+        }
+        for (int i = 0; i < searchQ.Count; i++) {
+            path = Search((Position)searchQ.Dequeue(), enemyRange, enemyMovement - 1, path);
+        }
+        return path;
     }
 }

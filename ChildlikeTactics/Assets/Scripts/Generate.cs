@@ -33,8 +33,8 @@ public class Map
     public int renderHeight { get; set; }
     public int renderWidth { get; set; }
 
-    private List<Position> enemyPositions;
-    private Position playerPosition;
+    private List<Position> enemyPositions = new List<Position>();
+    private Position playerPosition = new Position (0,0);
 
     private TileType[,] grid;
 
@@ -150,10 +150,10 @@ public class Map
         return playerPosition;
     }
 
-    public void addEnemy(Position enemyPosition)
+    public void addEnemy(Position enemyPosition, TileType type)
     {
         enemyPositions.Add(enemyPosition);
-        grid[enemyPosition.x, enemyPosition.y] = TileType.ENEMY;
+        grid[enemyPosition.x, enemyPosition.y] = type;
     }
 
     public List<Position> getAllEnemyPositions()
@@ -183,6 +183,15 @@ public class Map
     public void setTileAt(int x, int y, TileType type)
     {
         grid[x, y] = type;
+    }
+
+    public void destroyEnemy(int index) {
+        Position pos = getEnemyPosition(index);
+        destroyEnemy(pos.x, pos.y);
+    }
+
+    public void destroyEnemy(int x, int y) {
+        setTileAt(x, y, TileType.WALKABLE);
     }
 }
 
@@ -252,7 +261,7 @@ public class Generate : MonoBehaviour
     public int wallHeight       = 1;
 
 	public float spriteSize     = 1;
-    public static Map map;
+    public Map map;
     public static List<Room> rooms;
  
     private Transform boardHolder;
@@ -331,6 +340,7 @@ public class Generate : MonoBehaviour
          */
         GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight / 9) * 5, (map.renderWidth / 9) * 5, 1), Quaternion.Euler(-90, 0, 0));
         instance.transform.localScale = new Vector3(map.renderHeight / 9, 1, map.renderWidth / 9);
+        GameObject enemy;
 
         for (int i = 0; i < map.renderWidth; i++)
         {
@@ -355,11 +365,13 @@ public class Generate : MonoBehaviour
                         break;
 
                     case TileType.ENEMY:
-                        Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        enemy = (GameObject)Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.BOSS:
-                        Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        enemy = (GameObject)Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.ITEM:
@@ -423,16 +435,16 @@ public class Generate : MonoBehaviour
                     if (!spawnedPlayer && curRoom == 1)
                     {
                         spawnedPlayer = true;
-                        map.setTileAt(i, j, TileType.PLAYER);
+                        map.setPlayerPosition(i, j);
                     }
                     else if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
                     {
-                        map.setTileAt(i, j, TileType.ENEMY);
+                        map.addEnemy(new Position(i, j), TileType.ENEMY);
                         numEnemies -= 1;
                     }
                     else if (curRoom == numRooms && !spawnedBoss)
                     {
-                        map.setTileAt(i, j, TileType.BOSS);
+                        map.addEnemy(new Position(i, j), TileType.BOSS);
                         spawnedBoss = true;
                     }
                     else

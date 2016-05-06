@@ -335,11 +335,11 @@ public class Generate : MonoBehaviour
         print("Render Height: " + map.renderHeight);
         print("Render Width: " + map.renderWidth);
 
-        /* We got some magic numbers up the ass here. Basically, when divided by 9, the floor *almost* fits, but then we have to multiply that by 5 because Unity planes are 5 units long, 
-         * so if we want the bottom left corner to be aligned correctly, it needs to be moved by 5 * length and 5 * height. This is a shitty implementation, but it works for now. 
+        /* Fit the plane properly to the map size. Now a much better implementation (Thanks Ryan!). 
          */
-        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight / 9) * 5, (map.renderWidth / 9) * 5, 1), Quaternion.Euler(-90, 0, 0));
-        instance.transform.localScale = new Vector3(map.renderHeight / 9, 1, map.renderWidth / 9);
+        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight - 1) / 2.0f, (map.renderWidth - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));
+        instance.transform.localScale = new Vector3(0.1f * map.renderHeight, 1, 0.1f * map.renderWidth);
+
         GameObject enemy;
 
         for (int i = 0; i < map.renderWidth; i++)

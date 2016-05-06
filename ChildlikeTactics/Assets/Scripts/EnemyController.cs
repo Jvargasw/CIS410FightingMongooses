@@ -12,7 +12,8 @@ public class EnemyController : MonoBehaviour {
 
     private GameObject tileManager;
     private bool success;
-    private Map map;
+
+    private int test = 0;
 
     void Start () {
         if (health == 0) {
@@ -21,7 +22,7 @@ public class EnemyController : MonoBehaviour {
         if(dmg == 0) {
             dmg = 5;
         }
-        map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
+        tileManager = GameObject.FindGameObjectWithTag("TileManager");
 
     }
 	
@@ -40,18 +41,19 @@ public class EnemyController : MonoBehaviour {
 
     public void Die() {
         //placeholder for giving player experience, gold, etc.
-        map.destroyEnemy(index);
+        tileManager.GetComponent<Generate>().map.destroyEnemy(index);
         gameObject.gameObject.SetActive(false);
     }
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
         success = false;
-        List<Position> path = Search(map.getEnemyPosition(index), enemyRange, enemyMovement, new List<Position>());
+        test = 0;
+        List<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index), enemyRange, enemyMovement, new List<Position>());
+        test = 1;
+        Position temp = tileManager.GetComponent<Generate>().map.getPlayerPosition();
         if (success) {
-            print("SUCCESS");
             foreach ( Position loc in path) {
-                map.setEnemyPosition(index, loc);
-                print(loc.x + " " + loc.y);
+                tileManager.GetComponent<Generate>().map.setEnemyPosition(index, loc);
                 this.transform.position = new Vector3(loc.y, loc.x, this.transform.position.z); //X and Y swapped cause map.grid is has x and y swapped in it
             }
         }
@@ -63,60 +65,59 @@ public class EnemyController : MonoBehaviour {
     }
 
     private List<Position> Search(Position location, int enemyRange, int enemyMovement, List<Position> path) {
-        path.Add(location);
-        Position playerLoc = map.getPlayerPosition();
-        Position newPos = new Position(location.x, location.y + 1); //UP
+        if (enemyMovement <= 0) {
+            return new List<Position>();
+        }
+        Position playerLoc = tileManager.GetComponent<Generate>().map.getPlayerPosition();
+        Position newPos = new Position(location.x + 1, location.y); //UP (all these have the +1/-1 applied to the "wrong" side due to x and y being flipped)
         Queue searchQ = new Queue();
-        if (playerLoc != newPos) {
-            if (enemyMovement > 0) {
-                if (map.canMoveTo(newPos.x, newPos.y)) {
-                    searchQ.Enqueue(newPos);
-                }
-            }
-        }
-        else {
+        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
             success = true;
+            path.Add(location);
             return path;
         }
-        newPos = new Position(location.x, location.y + -1); //DOWN
-        if (playerLoc != newPos) {
-            if (enemyMovement > 0) {
-                if (map.canMoveTo(newPos.x, newPos.y)) {
-                    searchQ.Enqueue(newPos);
-                }
+        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
+            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
+            if (success) {
+                return temp;
             }
         }
-        else {
+        newPos = new Position(location.x - 1, location.y); //DOWN
+        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
             success = true;
+            path.Add(location);
             return path;
         }
-        newPos = new Position(location.x - 1, location.y); //LEFT
-        if (playerLoc != newPos) {
-            if (enemyMovement > 0) {
-                if (map.canMoveTo(newPos.x, newPos.y)) {
-                    searchQ.Enqueue(newPos);
-                }
+        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
+            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
+            if (success) {
+                return temp;
             }
         }
-        else {
+        newPos = new Position(location.x, location.y - 1); //LEFT
+        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
             success = true;
+            path.Add(location);
             return path;
         }
-        newPos = new Position(location.x + 1, location.y);//RIGHT
-        if (playerLoc != newPos) {
-            if (enemyMovement > 0) {
-                if (map.canMoveTo(newPos.x, newPos.y)) {
-                    searchQ.Enqueue(newPos);
-                }
+        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
+            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
+            if (success) {
+                return temp;
             }
         }
-        else {
+        newPos = new Position(location.x, location.y + 1);//RIGHT
+        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
             success = true;
+            path.Add(location);
             return path;
         }
-        for (int i = 0; i < searchQ.Count; i++) {
-            path = Search((Position)searchQ.Dequeue(), enemyRange, enemyMovement - 1, path);
+        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
+            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
+            if (success) {
+                return temp;
+            }
         }
-        return path;
+        return new List<Position>();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
+using System;
 
 public enum TileType
 {
@@ -177,12 +178,30 @@ public class Map
 
     public TileType getTileAt(int x, int y)
     {
-        return grid[x, y];
+        try
+        {
+            TileType toReturn = grid[x, y];
+            return toReturn;
+        }
+        catch 
+        {
+            MonoBehaviour.print("Invalid getTileAt array access using: X = " + x + " Y = " + y);
+            throw;
+        }
     }
 
     public void setTileAt(int x, int y, TileType type)
     {
-        grid[x, y] = type;
+
+        try
+        {
+            grid[x, y] = type;
+        }
+        catch
+        {
+            MonoBehaviour.print("Invalid setTileAt array access using: X = " + x + " Y = " + y);
+            throw;
+        }
     }
 
     public void destroyEnemy(int index) {
@@ -294,13 +313,25 @@ public class Generate : MonoBehaviour
 
             width = Mathf.Min(63 - currentX, randWidth);
             height = Mathf.Min(63 - currentY, randHeight);
+            print("randWidth: " + randWidth + " randHeight: " + randHeight);
+            print("width: " + width + " height: " + height);
             if(width != randWidth)
             {
                 print("Width overide: " + width);
+                if(width <= 0)
+                {
+                    width = Mathf.Max(63 - currentX, randWidth);
+                    print("Double width override: " + width);
+                }
             }
             if (height != randHeight)
             {
                 print("Height overide: " + height);
+                if(height <= 0)
+                {
+                    height = Mathf.Max(63 - currentY, randHeight);
+                    print("Double height override: " + height);
+                }
             }
 
             rooms.Add(generateRoom(map, width, height, currentX, currentY, hallwayDirection));
@@ -353,7 +384,7 @@ public class Generate : MonoBehaviour
                         // Woooo. Abusing logical fall throughs!
 
                     case TileType.UNWALKABLE:
-                        instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
 
                         // Make the wall 2 units high. 
                         // FIXME: This currently only increases it's height by 0.5 (I believe), because unity scales both ends.
@@ -361,16 +392,17 @@ public class Generate : MonoBehaviour
                         break;
 
                     case TileType.PLAYER:
-                        Instantiate(playerPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        print("RENDERING PLAYER");
+                        Instantiate(playerPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
                         break;
 
                     case TileType.ENEMY:
-                        enemy = (GameObject)Instantiate(enemyPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        enemy = (GameObject)Instantiate(enemyPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
                         enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.BOSS:
-                        enemy = (GameObject)Instantiate(bossPrefab, new Vector3(currentX, currentY, 0), transform.rotation);
+                        enemy = (GameObject)Instantiate(bossPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
                         enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
@@ -392,6 +424,12 @@ public class Generate : MonoBehaviour
         */
 
         // Useful values
+
+        if(startX >= map.width || startY >= map.height)
+        {
+            return null;
+        }
+
         int topSide = startY + roomHeight;
         int rightSide = startX + roomWidth; 
 
@@ -399,6 +437,10 @@ public class Generate : MonoBehaviour
         bool spawnedBoss = false;
         int numEnemies = (int)Mathf.Floor(Mathf.Log(numRooms));
 
+        int playerX = Random.Range(startX + 2, rightSide - 2);
+        int playerY = Random.Range(startY + 2, topSide - 2);
+
+        print("StartX: " + startX + " StartY: " + startY);
 
         // FIXME: Apparently our x and y are getting swapped somewhere. We should fix that. 
         // Create a hallway on the top of the room previous room to the bottom of the current room.
@@ -408,9 +450,16 @@ public class Generate : MonoBehaviour
             {
                 for (int j = startY + 1; j < startY + hallwayHeight; j++)
                 {
-                    map.setTileAt(i, j, TileType.WALKABLE);
+                    if (i < map.width && j < map.height)
+                    {
+                        map.setTileAt(i, j, TileType.WALKABLE);
+                    }
+                    else
+                    {
+                        print("We overwrote on downwards hallway generation!");
+                    }
                 }
-            }          
+            }       
         }
   
         // Create a hallway on the right side of the previous room to the left side of the current room.
@@ -420,7 +469,14 @@ public class Generate : MonoBehaviour
             {
                 for (int j = startY - 5; j < startY + 5; j++)
                 {
-                    map.setTileAt(i, j, TileType.WALKABLE);
+                    if(i < map.width && j < map.height)
+                    {
+                        map.setTileAt(i, j, TileType.WALKABLE);
+                    }
+                    else
+                    {
+                        print("We overwote on rightwards (leftwards?) hallway generation!");
+                    }
                 }
             }
         }
@@ -430,14 +486,9 @@ public class Generate : MonoBehaviour
 			for(int j = startY; j < startY + roomHeight; j++)
 			{
                 /* Handle drawing pathable sprites on the interior and unpathable sprites on the exterior. */
-				if(i != startX && i != rightSide - 1 && j != startY && j != topSide- 1)
+				if(i != startX && i != rightSide - 1 && j != startY && j != topSide - 1 && i < map.width && j < map.height)
 				{
-                    if (!spawnedPlayer && curRoom == 1)
-                    {
-                        spawnedPlayer = true;
-                        map.setPlayerPosition(i, j);
-                    }
-                    else if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
+                    if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
                     {
                         map.addEnemy(new Position(i, j), TileType.ENEMY);
                         numEnemies -= 1;
@@ -456,6 +507,12 @@ public class Generate : MonoBehaviour
 			}
             map.renderWidth = Mathf.Max(map.renderWidth, i + 2);
 		}
+
+        if (curRoom == 1)
+        {
+            map.setPlayerPosition(playerX, playerY);
+        }
+
         return new Room(startX, startY, roomWidth, roomHeight, numEnemies);
     }
 }

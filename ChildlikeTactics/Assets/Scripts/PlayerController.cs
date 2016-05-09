@@ -90,6 +90,28 @@ public class PlayerController : PlayerUnit
                     movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
                     transform.position = movePosition;
                 }
+                else {
+                    if (map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.ITEM) {
+                        int index = map.getPlayerCollidedWith((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x));
+                        foreach (GameObject item in GameObject.FindGameObjectsWithTag("Item")) {
+                            ItemController ic = item.GetComponent<ItemController>();
+                            if (index == ic.index) {
+                                ItemType itemType = ic.GetItemType();
+                                if(itemType == ItemType.HP) {
+                                    Heal(ic.stats[0]);
+                                    map.pickupItem(index);
+                                    item.gameObject.SetActive(false);
+                                    AttemptMove(moveDirection);
+                                    return;
+                                }
+                                return;
+                            }
+                            else {
+                                print("Error with fighting enemies");
+                            }
+                        }
+                    }
+                }
             }
             return;
         }
@@ -130,6 +152,14 @@ public class PlayerController : PlayerUnit
         if(health <= 0) {
             Die();
         }
+    }
+
+    override public void Heal(int heal) {
+        health += heal;
+        if (health >= maxHealth) {
+            health = maxHealth;
+        }
+        healthText.text = "HP: " + health;
     }
 
     override public void MeleeAttack(GameObject enemy) {

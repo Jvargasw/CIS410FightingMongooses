@@ -35,6 +35,7 @@ public class Map
     public int renderWidth { get; set; }
 
     private List<Position> enemyPositions = new List<Position>();
+    private List<Position> itemPositions = new List<Position>();
     private Position playerPosition = new Position (0,0);
 
     private TileType[,] grid;
@@ -62,6 +63,11 @@ public class Map
         {
             if(enemyPositions[i].x == x && enemyPositions[i].y == y)
             {
+                return i;
+            }
+        }
+        for (int i = 0; i < itemPositions.Count; i++) {
+            if (itemPositions[i].x == x && itemPositions[i].y == y) {
                 return i;
             }
         }
@@ -157,6 +163,11 @@ public class Map
         grid[enemyPosition.x, enemyPosition.y] = type;
     }
 
+    public void addItem(Position pos, TileType type) {
+        itemPositions.Add(pos);
+        grid[pos.x, pos.y] = type;
+    }
+
     public List<Position> getAllEnemyPositions()
     {
         return enemyPositions;
@@ -165,6 +176,10 @@ public class Map
     public Position getEnemyPosition(int index)
     {
         return enemyPositions[index];
+    }
+
+    public Position getItemPosition(int index) {
+        return itemPositions[index];
     }
 
     public void setEnemyPosition(int index, Position position)
@@ -210,6 +225,15 @@ public class Map
     }
 
     public void destroyEnemy(int x, int y) {
+        setTileAt(x, y, TileType.WALKABLE);
+    }
+
+    public void pickupItem(int index) {
+        Position pos = getItemPosition(index);
+        destroyEnemy(pos.x, pos.y);
+    }
+
+    public void pickupItem(int x, int y) {
         setTileAt(x, y, TileType.WALKABLE);
     }
 }
@@ -270,6 +294,7 @@ public class Generate : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public GameObject bossPrefab;
+    public GameObject itemHPPrefab;
 
     public int minRoomSize      = 10;
 	public int maxRoomSize      = 20;
@@ -372,6 +397,7 @@ public class Generate : MonoBehaviour
         instance.transform.localScale = new Vector3(0.1f * map.renderHeight, 1, 0.1f * map.renderWidth);
 
         GameObject enemy;
+        GameObject item;
 
         for (int i = 0; i < map.renderWidth; i++)
         {
@@ -407,7 +433,8 @@ public class Generate : MonoBehaviour
                         break;
 
                     case TileType.ITEM:
-                        // Future proofing.
+                        item = (GameObject)Instantiate(itemHPPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(i, j);
                         break;
                 }
                 currentX += spriteSize;
@@ -436,9 +463,7 @@ public class Generate : MonoBehaviour
         bool spawnedPlayer = false;
         bool spawnedBoss = false;
         int numEnemies = (int)Mathf.Floor(Mathf.Log(numRooms));
-
-        int playerX = Random.Range(startX + 2, rightSide - 2);
-        int playerY = Random.Range(startY + 2, topSide - 2);
+        int numItems = 1;
 
         print("StartX: " + startX + " StartY: " + startY);
 
@@ -510,9 +535,30 @@ public class Generate : MonoBehaviour
 
         if (curRoom == 1)
         {
-            map.setPlayerPosition(playerX, playerY);
+            Position pos = RandomPosition(roomWidth, roomHeight, startX, startY);
+            map.setPlayerPosition(pos.x, pos.y);
+        }
+        else {
+            if (numItems != 0) {
+                numItems -= 1;
+                Position pos = RandomPosition(roomWidth, roomHeight, startX, startY);
+                while (map.getTileAt(pos.x, pos.y) != TileType.WALKABLE) {
+                    pos = RandomPosition(roomWidth, roomHeight, startX, startY);
+                }
+                map.addItem(pos, TileType.ITEM);
+
+            }
         }
 
         return new Room(startX, startY, roomWidth, roomHeight, numEnemies);
+    }
+
+    public Position RandomPosition(int width, int height, int x, int y) {
+        int topSide = x + height;
+        int rightSide = x + width;
+        int endX = Random.Range(x + 2, rightSide - 2);
+        int endY = Random.Range(y + 2, topSide - 2);
+
+        return new Position(endX, endY);
     }
 }

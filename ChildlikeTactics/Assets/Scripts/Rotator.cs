@@ -1,0 +1,10 @@
+﻿using UnityEngine;
+using System.Collections;
+
+//Rotator script taken directly from Roll a Ball assignment/tutorial
+public class Rotator : MonoBehaviour {
+
+	void Update () {
+		transform.Rotate (new Vector3 (15, 30, 45) * Time.deltaTime);
+	}
+}

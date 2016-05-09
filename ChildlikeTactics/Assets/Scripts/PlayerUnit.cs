@@ -10,6 +10,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int maxMoveDistance = 3; //the most spaces the player can move in a turn
 	public int playerDmg = 10;
 	public int health = 100;
+    public int maxHealth = 100;
 
 	public bool isMoving; //represents moving vs attacking
 
@@ -45,7 +46,9 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	public abstract void TakeDmg (int enemyDmg);
 
-	public abstract void MeleeAttack (GameObject enemy);
+    public abstract void Heal(int heal);
+
+    public abstract void MeleeAttack (GameObject enemy);
 
 	public abstract void Die ();
 

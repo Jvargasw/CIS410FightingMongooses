@@ -27,6 +27,7 @@ public class PlayerController : PlayerUnit
         turnText = GameObject.Find("TurnText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
         StartMoving();
+        turnText.text = "Moving";
         healthText.text = "HP: " + health;
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
@@ -59,6 +60,7 @@ public class PlayerController : PlayerUnit
 			} else if (Input.GetKeyDown (KeyCode.Return)) {
                 if (isMoving) {
                     StopMoving();
+                    turnText.text = "Attacking";
                 }
                 else {
                     PlayerEndTurn();
@@ -116,6 +118,7 @@ public class PlayerController : PlayerUnit
         turnText.text = "Enemy Turn";
         TurnManager.playerTurn = false;
         StartMoving();
+        turnText.text = "Moving";
         spacesMoved = 0;
         transform.position = movePosition;
     }

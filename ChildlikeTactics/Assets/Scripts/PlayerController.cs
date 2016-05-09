@@ -27,6 +27,7 @@ public class PlayerController : PlayerUnit
 		base.Start();
 
         healthText.text = "HP: " + health;
+        dmgText.text = "DMG: " + playerDmg;
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
@@ -104,6 +105,16 @@ public class PlayerController : PlayerUnit
                                     AttemptMove(moveDirection);
                                     return;
                                 }
+                                else if (itemType == ItemType.DMG) {
+                                    IncreaseDmg(ic.stats[0]);
+                                    map.pickupItem(index);
+                                    item.gameObject.SetActive(false);
+                                    AttemptMove(moveDirection);
+                                    return;
+                                }
+                                else {
+                                    print("Unknown Item Type on Pickup");
+                                }
                                 return;
                             }
                             else {
@@ -160,6 +171,16 @@ public class PlayerController : PlayerUnit
             health = maxHealth;
         }
         healthText.text = "HP: " + health;
+    }
+
+    override public void IncreaseDmg(int dmg) {
+        playerDmg += dmg;
+        dmgText.text = "DMG: " + playerDmg;
+    }
+
+    override public void DecreaseDmg(int dmg) {
+        playerDmg -= dmg;
+        dmgText.text = "DMG: " + playerDmg;
     }
 
     override public void MeleeAttack(GameObject enemy) {

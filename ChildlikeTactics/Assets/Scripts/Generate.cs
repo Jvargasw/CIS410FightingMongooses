@@ -295,6 +295,7 @@ public class Generate : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject bossPrefab;
     public GameObject itemHPPrefab;
+    public GameObject itemDMGPrefab;
 
     public int minRoomSize      = 10;
 	public int maxRoomSize      = 20;
@@ -312,6 +313,7 @@ public class Generate : MonoBehaviour
     private Transform hallwayHolder;
     private int curHallway;
     private int curRoom;
+    private int itemCount;
 
 	void Awake() 
 	{
@@ -324,6 +326,7 @@ public class Generate : MonoBehaviour
 
         curRoom     = 1;
         curHallway  = 1;
+        itemCount = 2;
 
         map = new Map(mapHeight, mapHeight);
         int hallwayDirection = -1;
@@ -433,7 +436,17 @@ public class Generate : MonoBehaviour
                         break;
 
                     case TileType.ITEM:
-                        item = (GameObject)Instantiate(itemHPPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        int type = Random.Range(0, itemCount);
+                        if(type == 0) {
+                            item = (GameObject)Instantiate(itemHPPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        }
+                        else if(type == 1) {
+                            item = (GameObject)Instantiate(itemDMGPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        }
+                        else {
+                            print("Invalid item type");
+                            break;
+                        }
                         item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(i, j);
                         break;
                 }

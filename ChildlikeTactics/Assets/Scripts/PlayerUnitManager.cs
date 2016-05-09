@@ -15,7 +15,7 @@ public class PlayerUnitManager : MonoBehaviour {
 	public PlayerUnit activeUnit;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		units = new List<PlayerUnit>();
 
 		map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;

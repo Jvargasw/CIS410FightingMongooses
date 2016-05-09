@@ -32,6 +32,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 		manager = GameObject.Find ("GameManager").GetComponent<PlayerUnitManager>().units;
 		//register this unit with the PlayerUnitManager
 		manager.Add(this);
+		print ("unit registered");
 
 		StartMoving();
 		//healthText.text = "HP: " + health;

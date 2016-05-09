@@ -2,20 +2,20 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : PlayerUnit
 {
 
-    public float playerSpeed = 3.0f;
+    //public float playerSpeed = 3.0f;
 
-	public int maxMoveDistance = 3; //the most spaces the player can move in a turn
-    public int playerDmg = 10;
-    public int health = 100;
+	//public int maxMoveDistance = 3; //the most spaces the player can move in a turn
+    //public int playerDmg = 10;
+    //public int health = 100;
 
-    private bool isMoving; //represents moving vs attacking
+    //private bool isMoving; //represents moving vs attacking
 
-	private Vector3 movePosition;
-	private Vector3 startPosition;
-	private int spacesMoved = 0;
+	//private Vector3 movePosition;
+	//private Vector3 startPosition;
+	//private int spacesMoved = 0;
     private Text turnText;
     private Text healthText;
     private Map map;
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
 		StartCoroutine (PlayerTurn ());
+
         turnText = GameObject.Find("TurnText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
         StartMoving();
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 
-	public void AttemptMove(Vector2 moveDirection) {
+	override public void AttemptMove(Vector2 moveDirection) {
         //Moving
         if(isMoving){
             //have we already moved the max number of spaces?
@@ -118,18 +119,18 @@ public class PlayerController : MonoBehaviour
         spacesMoved = 0;
         transform.position = movePosition;
     }
-
-    private void StopMoving() {
+	/*
+    override public void StopMoving() {
         isMoving = false;
         turnText.text = "Attacking";
     }
 
-    public void StartMoving() {
+    override public void StartMoving() {
         isMoving = true;
         turnText.text = "Moving";
     }
-
-    public void TakeDmg(int enemyDmg) {
+	*/
+    override public void TakeDmg(int enemyDmg) {
         health -= enemyDmg;
         healthText.text = "HP: " + health;
         if(health <= 0) {
@@ -137,11 +138,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MeleeAttack(GameObject enemy) {
+    override public void MeleeAttack(GameObject enemy) {
         enemy.GetComponent<EnemyController>().TakeDmg(playerDmg);
     }
 
-    private void Die() {
+    override public void Die() {
         healthText.text = "YOU DIED!";
         print("You died, loser.");
     }

@@ -66,14 +66,17 @@ public class PlayerController : PlayerUnit
                     PlayerEndTurn();
                 }
 				yield return null;
-			} else if (Input.GetKeyDown (KeyCode.Backspace)) {
+			}
+            //Removed undo movement capability due to it not being implemented to work with the grid system, as well as conflicts with item pickups. 
+            //(e.g. go pickup an item, undo movement, still have item without using up movement)
+            /*else if (Input.GetKeyDown (KeyCode.Backspace)) {
                 if (isMoving) {
                     spacesMoved = 0;
                     movePosition = startPosition;
                     transform.position = movePosition;
                 }
 				yield return null;
-			}
+			}*/
 			yield return null;
 		}
 
@@ -100,25 +103,17 @@ public class PlayerController : PlayerUnit
                                 ItemType itemType = ic.GetItemType();
                                 if(itemType == ItemType.HP) {
                                     Heal(ic.stats[0]);
-                                    map.pickupItem(index);
-                                    item.gameObject.SetActive(false);
-                                    AttemptMove(moveDirection);
-                                    return;
                                 }
                                 else if (itemType == ItemType.DMG) {
                                     IncreaseDmg(ic.stats[0]);
-                                    map.pickupItem(index);
-                                    item.gameObject.SetActive(false);
-                                    AttemptMove(moveDirection);
-                                    return;
                                 }
                                 else {
                                     print("Unknown Item Type on Pickup");
                                 }
+                                map.pickupItem(index);
+                                item.gameObject.SetActive(false);
+                                AttemptMove(moveDirection);
                                 return;
-                            }
-                            else {
-                                print("Error with fighting enemies");
                             }
                         }
                     }

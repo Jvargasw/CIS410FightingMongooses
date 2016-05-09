@@ -1,37 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class PlayerController : PlayerUnit
 {
+	/* vvv These are declared in PlayerUnit vvv
+    public float playerSpeed = 3.0f;
 
-    //public float playerSpeed = 3.0f;
+	public int maxMoveDistance = 3; //the most spaces the player can move in a turn
+    public int playerDmg = 10;
+    public int health = 100;
 
-	//public int maxMoveDistance = 3; //the most spaces the player can move in a turn
-    //public int playerDmg = 10;
-    //public int health = 100;
+    private bool isMoving; //represents moving vs attacking
 
-    //private bool isMoving; //represents moving vs attacking
-
-	//private Vector3 movePosition;
-	//private Vector3 startPosition;
-	//private int spacesMoved = 0;
-    private Text turnText;
-    private Text healthText;
-    private Map map;
+	private Vector3 movePosition;
+	private Vector3 startPosition;
+	private int spacesMoved = 0;
+	*/
+    
+	private Map map;
 
     void Start()
     {
-		StartCoroutine (PlayerTurn ());
+		//execute PlayerUnit's start code
+		base.Start();
 
-        turnText = GameObject.Find("TurnText").GetComponent<Text>();
-        healthText = GameObject.Find("HealthText").GetComponent<Text>();
-        StartMoving();
         healthText.text = "HP: " + health;
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
-	IEnumerator PlayerTurn() {
+
+	override public IEnumerator PlayerTurn() {
 		movePosition = transform.position;
 		startPosition = transform.position;
 
@@ -112,13 +112,6 @@ public class PlayerController : PlayerUnit
 		return;
 	}
 
-    public void PlayerEndTurn() {
-        turnText.text = "Enemy Turn";
-        TurnManager.playerTurn = false;
-        StartMoving();
-        spacesMoved = 0;
-        transform.position = movePosition;
-    }
 	/*
     override public void StopMoving() {
         isMoving = false;

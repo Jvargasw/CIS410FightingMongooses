@@ -11,6 +11,7 @@ public class PlayerUnitManager : MonoBehaviour {
 
 	private Text turnText;
 	private Text healthText;
+    private List<IEnumerator> routines = new List<IEnumerator>();
 
 	public PlayerUnit activeUnit;
 	public int activeUnitIndex = 0;
@@ -33,7 +34,8 @@ public class PlayerUnitManager : MonoBehaviour {
 			if (units.Count >= 1) {
 				activeUnit = units [activeUnitIndex];
 				print("activeUnit initialized");
-				StartCoroutine (activeUnit.PlayerTurn ());
+                routines.Add(activeUnit.PlayerTurn());
+                StartCoroutine (routines[activeUnitIndex]);
 				print ("PlayerTurn started");
 				yield break;
 			} else {
@@ -46,13 +48,13 @@ public class PlayerUnitManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.Tab)) {
-			StopCoroutine (activeUnit.PlayerTurn ());
+			StopCoroutine (routines[activeUnitIndex]);
 			activeUnitIndex += 1;
 			if (activeUnitIndex > units.Count - 1) {
 				activeUnitIndex = 0;
 			}
 			activeUnit = units [activeUnitIndex];
-			StartCoroutine (activeUnit.PlayerTurn ());
+			StartCoroutine (routines[activeUnitIndex]);
 		}
 	}
 }

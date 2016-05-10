@@ -13,6 +13,7 @@ public class PlayerUnitManager : MonoBehaviour {
 	private Text healthText;
 
 	public PlayerUnit activeUnit;
+	public int activeUnitIndex = 0;
 
 	// Use this for initialization
 	void Awake () {
@@ -30,7 +31,7 @@ public class PlayerUnitManager : MonoBehaviour {
 		//wait for a unit to be added to units, then set activeUnit to that unit and start its PlayerTurn coroutine
 		while (activeUnit == null) {
 			if (units.Count >= 1) {
-				activeUnit = units [0];
+				activeUnit = units [activeUnitIndex];
 				print("activeUnit initialized");
 				StartCoroutine (activeUnit.PlayerTurn ());
 				print ("PlayerTurn started");
@@ -44,6 +45,14 @@ public class PlayerUnitManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.GetKeyDown (KeyCode.Tab)) {
+			StopCoroutine (activeUnit.PlayerTurn ());
+			activeUnitIndex += 1;
+			if (activeUnitIndex > units.Count - 1) {
+				activeUnitIndex = 0;
+			}
+			activeUnit = units [activeUnitIndex];
+			StartCoroutine (activeUnit.PlayerTurn ());
+		}
 	}
 }

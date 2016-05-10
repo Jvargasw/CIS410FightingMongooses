@@ -18,6 +18,8 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public Vector3 startPosition;
 	public int spacesMoved = 0;
 
+	public GameObject healthBar;
+
 	protected Text turnText;
 	protected Text healthText;
     protected Text dmgText;
@@ -39,6 +41,10 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 		StartMoving();
 		//healthText.text = "HP: " + health;
+	}
+
+	protected void Update(){
+		//healthBar.transform.localScale = new Vector3 ((float)health / 100, 0f, 0f);
 	}
 
 	//abstract methods to be defined per player unit

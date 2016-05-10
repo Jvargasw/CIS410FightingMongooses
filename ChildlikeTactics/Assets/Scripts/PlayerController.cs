@@ -31,6 +31,9 @@ public class PlayerController : PlayerUnit
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
+	void Update(){
+		base.Update ();
+	}
 
 	override public IEnumerator PlayerTurn() {
 		movePosition = transform.position;

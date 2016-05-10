@@ -44,7 +44,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	}
 
 	protected void Update(){
-		//healthBar.transform.localScale = new Vector3 ((float)health / 100, 0f, 0f);
+		healthBar.transform.localScale = new Vector3 ((health*1.3f)/100, 0.25f, 1f);
 	}
 
 	//abstract methods to be defined per player unit

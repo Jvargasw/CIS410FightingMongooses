@@ -37,6 +37,7 @@ public class Map
     private List<Position> enemyPositions = new List<Position>();
     private List<Position> itemPositions = new List<Position>();
     private Position playerPosition = new Position (0,0);
+    private int currentRoomIndex = 0;
 
     private TileType[,] grid;
 
@@ -45,6 +46,26 @@ public class Map
         this.width = width;
         this.height = height;
         grid = new TileType[width, height];
+    }
+
+    public bool playerInRoomWithEnemies()
+    {
+        return Generate.rooms[currentRoomIndex].hasEnemies();
+    }
+
+    private void updatePlayerRoom()
+    {
+        if(Generate.rooms.Count == 0 || currentRoomIndex == Generate.rooms.Count)
+        {
+            // Assume that rooms haven't been generated yet.
+            return;
+        }
+
+        Room currentRoom    = Generate.rooms[currentRoomIndex];
+        if (!(currentRoom.x <= playerPosition.x && currentRoom.x + currentRoom.width >= playerPosition.x && currentRoom.y <= playerPosition.y && currentRoom.y + currentRoom.height >= playerPosition.y))
+        {
+            currentRoomIndex += 1;
+        }
     }
 
     public int getPlayerCollidedWith(int x, int y)
@@ -150,6 +171,8 @@ public class Map
 
         playerPosition.x = x;
         playerPosition.y = y;
+
+        updatePlayerRoom();
     }
 
     public Position getPlayerPosition()
@@ -178,7 +201,8 @@ public class Map
         return enemyPositions[index];
     }
 
-    public Position getItemPosition(int index) {
+    public Position getItemPosition(int index)
+    {
         return itemPositions[index];
     }
 
@@ -219,72 +243,50 @@ public class Map
         }
     }
 
-    public void destroyEnemy(int index) {
+    public void destroyEnemy(int index)
+    {
         Position pos = getEnemyPosition(index);
         destroyEnemy(pos.x, pos.y);
     }
 
-    public void destroyEnemy(int x, int y) {
+    public void destroyEnemy(int x, int y)
+    {
         setTileAt(x, y, TileType.WALKABLE);
     }
 
-    public void pickupItem(int index) {
+    public void pickupItem(int index)
+    {
         Position pos = getItemPosition(index);
         destroyEnemy(pos.x, pos.y);
     }
 
-    public void pickupItem(int x, int y) {
+    public void pickupItem(int x, int y)
+    {
         setTileAt(x, y, TileType.WALKABLE);
     }
 }
 
 public class Room
 {
-    private int numEnemies;
-    private int x;
-    private int y;
-    private int height;
-    private int width;
+    public int enemyCount { get; set; }
+    public int x { get; private set; }
+    public int y { get; private set; }
+    public int height { get; private set; }
+    public int width { get; private set; }
 
-    public Room(int x, int y, int width, int height, int numEnemies)
+    public Room(int x, int y, int width, int height, int enemyCount)
     {
         this.x = x;
         this.y = y;
-        this.numEnemies = numEnemies;
         this.width = width;
         this.height = height;
+        this.enemyCount = enemyCount;
     }
 
     public bool hasEnemies()
     {
-        return numEnemies == 0;
+        return enemyCount != 0;
     }
-
-    public int getNumEnemies()
-    {
-        return numEnemies;
-    }
-
-    public int getHeight()
-    {
-        return height;
-    }
-
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public int getX()
-    {
-        return x;
-    }
-
-    public int getY()
-    {
-        return y;
-    }
-    
 }
 
 public class Generate : MonoBehaviour 
@@ -476,8 +478,9 @@ public class Generate : MonoBehaviour
 
         bool spawnedPlayer = false;
         bool spawnedBoss = false;
-        int numEnemies = (int)Mathf.Floor(Mathf.Log(numRooms));
+        int numEnemies = (int)Mathf.Floor(Mathf.Log(curRoom));
         int numItems = 1;
+        Room room = new Room(startX, startY, roomWidth, roomHeight, numEnemies);
 
         print("StartX: " + startX + " StartY: " + startY);
 
@@ -530,7 +533,8 @@ public class Generate : MonoBehaviour
                     if (curRoom != 1 && curRoom != numRooms && numEnemies != 0)
                     {
                         map.addEnemy(new Position(i, j), TileType.ENEMY);
-                        numEnemies -= 1;
+                        numEnemies--;
+                
                     }
                     else if (curRoom == numRooms && !spawnedBoss)
                     {
@@ -552,11 +556,14 @@ public class Generate : MonoBehaviour
             Position pos = RandomPosition(roomWidth, roomHeight, startX, startY);
             map.setPlayerPosition(pos.x, pos.y);
         }
-        else {
-            if (numItems != 0) {
+        else
+        {
+            if (numItems != 0)
+            {
                 numItems -= 1;
                 Position pos = RandomPosition(roomWidth, roomHeight, startX, startY);
-                while (map.getTileAt(pos.x, pos.y) != TileType.WALKABLE) {
+                while (map.getTileAt(pos.x, pos.y) != TileType.WALKABLE)
+                {
                     pos = RandomPosition(roomWidth, roomHeight, startX, startY);
                 }
                 map.addItem(pos, TileType.ITEM);
@@ -564,7 +571,7 @@ public class Generate : MonoBehaviour
             }
         }
 
-        return new Room(startX, startY, roomWidth, roomHeight, numEnemies);
+        return room;
     }
 
     public Position RandomPosition(int width, int height, int x, int y) {

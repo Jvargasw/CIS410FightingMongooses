@@ -91,11 +91,15 @@ public class PlayerController : PlayerUnit
         //Moving
         if(isMoving){
             //have we already moved the max number of spaces?
-            if ((spacesMoved + 1 <= maxMoveDistance)) {
+            if ((spacesMoved + 1 <= maxMoveDistance) || !map.playerInRoomWithEnemies()) {
                 if (map.movePlayerTo((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x))) { //OK, the X and Y being swapped is kinda a problem.
                     spacesMoved++;
                     movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
                     transform.position = movePosition;
+                    if(!map.playerInRoomWithEnemies())
+                    {
+                        spacesMoved = 0;
+                    }
                 }
                 else {
                     if (map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.ITEM) {

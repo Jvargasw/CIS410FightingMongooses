@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class PlayerUnitManager : MonoBehaviour {
 
 	public List<PlayerUnit> units;
+	public List<IEnumerator> routines = new List<IEnumerator>();
 
 	private Map map;
 
 	private Text turnText;
 	private Text healthText;
-    private List<IEnumerator> routines = new List<IEnumerator>();
 
 	public PlayerUnit activeUnit;
 	public int activeUnitIndex = 0;
@@ -27,14 +27,13 @@ public class PlayerUnitManager : MonoBehaviour {
 
 		StartCoroutine (ActivateUnit ());
 	}
-	
+
 	IEnumerator ActivateUnit() {
 		//wait for a unit to be added to units, then set activeUnit to that unit and start its PlayerTurn coroutine
 		while (activeUnit == null) {
 			if (units.Count >= 1) {
 				activeUnit = units [activeUnitIndex];
 				print("activeUnit initialized");
-                routines.Add(activeUnit.PlayerTurn());
                 StartCoroutine (routines[activeUnitIndex]);
 				print ("PlayerTurn started");
 				yield break;

@@ -24,7 +24,8 @@ public abstract class PlayerUnit : MonoBehaviour {
 	protected Text healthText;
     protected Text dmgText;
 
-    protected List<PlayerUnit> manager;
+    protected List<PlayerUnit> unitManager;
+	protected List<IEnumerator> routineManager;
 
 	protected void Start()
 	{
@@ -34,9 +35,11 @@ public abstract class PlayerUnit : MonoBehaviour {
 		healthText = GameObject.Find("HealthText").GetComponent<Text>();
         dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
-        manager = GameObject.Find ("GameManager").GetComponent<PlayerUnitManager>().units;
+        unitManager = GameObject.Find ("GameManager").GetComponent<PlayerUnitManager>().units;
+		routineManager = GameObject.Find ("GameManager").GetComponent<PlayerUnitManager>().routines;
 		//register this unit with the PlayerUnitManager
-		manager.Add(this);
+		unitManager.Add(this);
+		routineManager.Add (PlayerTurn());
 		print ("unit registered");
 
 		StartMoving();

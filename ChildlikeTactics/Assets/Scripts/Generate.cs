@@ -423,6 +423,7 @@ public class Generate : MonoBehaviour
                     case TileType.PLAYER:
                         print("RENDERING PLAYER");
                         Instantiate(playerPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+						Instantiate(playerPrefab, new Vector3((float)currentX+1, (float)currentY+1, 0f), transform.rotation); //spawn a second player (for testing)
                         break;
 
                     case TileType.ENEMY:

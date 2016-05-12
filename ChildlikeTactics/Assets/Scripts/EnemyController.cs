@@ -69,7 +69,6 @@ public class EnemyController : MonoBehaviour {
         }
         List<Position> players = tileManager.GetComponent<Generate>().map.getPlayerPositions();
         Position newPos = new Position(location.x + 1, location.y); //UP (all these have the +1/-1 applied to the "wrong" side due to x and y being flipped)
-        Queue searchQ = new Queue();
         foreach (Position playerLoc in players) {
             if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
                 target = whichUnit(playerLoc);

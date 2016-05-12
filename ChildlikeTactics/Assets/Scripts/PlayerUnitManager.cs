@@ -10,9 +10,6 @@ public class PlayerUnitManager : MonoBehaviour {
 
 	private Map map;
 
-	private Text turnText;
-	private Text healthText;
-
 	public PlayerUnit activeUnit;
 	public int activeUnitIndex = 0;
 
@@ -21,9 +18,6 @@ public class PlayerUnitManager : MonoBehaviour {
 		units = new List<PlayerUnit>();
 
 		map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
-
-		turnText = GameObject.Find("TurnText").GetComponent<Text>();
-		healthText = GameObject.Find("HealthText").GetComponent<Text>();
 
 		StartCoroutine (ActivateUnit ());
 	}

@@ -21,7 +21,7 @@ public class PlayerController : PlayerUnit
     
 	private Map map;
 
-    void Start()
+    new void Start()
     {
 		//execute PlayerUnit's start code
 		base.Start();
@@ -31,7 +31,7 @@ public class PlayerController : PlayerUnit
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
-	void Update(){
+	new void Update(){
 		base.Update ();
 	}
 

@@ -287,7 +287,6 @@ public class Generate : MonoBehaviour {
 
     private Transform boardHolder;
     private Transform hallwayHolder;
-    private int curHallway;
     private int curRoom;
     private int itemCount;
 
@@ -300,7 +299,6 @@ public class Generate : MonoBehaviour {
         int height;
 
         curRoom = 1;
-        curHallway = 1;
         itemCount = 2;
 
         map = new Map(mapHeight, mapHeight);
@@ -381,7 +379,7 @@ public class Generate : MonoBehaviour {
 
                         // Make the wall 2 units high. 
                         // FIXME: This currently only increases it's height by 0.5 (I believe), because unity scales both ends.
-                        Vector3 unwalkableScale = instance.transform.localScale = new Vector3(1, 1, 2);
+                        instance.transform.localScale = new Vector3(1, 1, 2);
                         break;
 
                     case TileType.PLAYER:
@@ -435,7 +433,6 @@ public class Generate : MonoBehaviour {
         int topSide = startY + roomHeight;
         int rightSide = startX + roomWidth;
 
-        bool spawnedPlayer = false;
         bool spawnedBoss = false;
         int numEnemies = (int)Mathf.Floor(Mathf.Log(curRoom));
         int numItems = 1;
@@ -531,13 +528,14 @@ public class Generate : MonoBehaviour {
 
     void OnDrawGizmos() {
         if (drawGizmos) {
-            Gizmos.DrawWireCube(transform.position, new Vector3(map.width, 1, map.height));
-
-            if (map.grid != null) {
-                for (int i = 0; i < mapWidth; i++) {
-                    for (int j = 0; j < mapHeight; j++) {
-                        Gizmos.color = (map.grid[i, j] == TileType.WALKABLE) ? Color.white : Color.red;
-                        Gizmos.DrawCube(new Vector3(j, i, -3f), Vector3.one * (.9f));
+            if (map != null) {
+                Gizmos.DrawWireCube(transform.position, new Vector3(map.width, 1, map.height));
+                if (map.grid != null) {
+                    for (int i = 0; i < mapWidth; i++) {
+                        for (int j = 0; j < mapHeight; j++) {
+                            Gizmos.color = (map.grid[i, j] == TileType.WALKABLE) ? Color.white : Color.red;
+                            Gizmos.DrawCube(new Vector3(j, i, -3f), Vector3.one * (.9f));
+                        }
                     }
                 }
             }

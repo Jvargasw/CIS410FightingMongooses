@@ -36,8 +36,8 @@ public class PlayerController : PlayerUnit
 	}
 
 	override public IEnumerator PlayerTurn() {
-		movePosition = transform.position;
-		startPosition = transform.position;
+		//movePosition = transform.position;
+		//startPosition = transform.position;
 
 		//while it's the player's turn
 		while (TurnManager.playerTurn) {
@@ -94,14 +94,13 @@ public class PlayerController : PlayerUnit
             if ((spacesMoved + 1 <= maxMoveDistance) || !map.playerInRoomWithEnemies()) {
                 if (map.movePlayerTo((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x))) { //OK, the X and Y being swapped is kinda a problem.
                     spacesMoved++;
-                    movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
+                    movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
                     Vector3 oldPosition = transform.position;
                     transform.position = movePosition;
                     if(!map.playerInRoomWithEnemies())
                     {
                         spacesMoved = 0;
                         if (playerUnitManager.activeUnitIndex != 0) {
-                            Heal(maxHealth);
                             playerUnitManager.setUnit(0);
                         }
                         else {

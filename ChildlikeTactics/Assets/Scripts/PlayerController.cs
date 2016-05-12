@@ -117,10 +117,14 @@ public class PlayerController : PlayerUnit
                             if (index == ic.index) {
                                 ItemType itemType = ic.GetItemType();
                                 if(itemType == ItemType.HP) {
-                                    Heal(ic.stats[0]);
+                                    foreach (PlayerUnit player in unitManager) {
+                                        player.Heal(ic.stats[0]);
+                                    }
                                 }
                                 else if (itemType == ItemType.DMG) {
-                                    IncreaseDmg(ic.stats[0]);
+                                    foreach (PlayerUnit player in unitManager) {
+                                        player.IncreaseDmg(ic.stats[0]);
+                                    }
                                 }
                                 else {
                                     print("Unknown Item Type on Pickup");

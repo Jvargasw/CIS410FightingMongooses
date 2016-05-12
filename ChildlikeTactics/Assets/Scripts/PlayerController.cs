@@ -95,10 +95,19 @@ public class PlayerController : PlayerUnit
                 if (map.movePlayerTo((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x))) { //OK, the X and Y being swapped is kinda a problem.
                     spacesMoved++;
                     movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
+                    Vector3 oldPosition = transform.position;
                     transform.position = movePosition;
                     if(!map.playerInRoomWithEnemies())
                     {
                         spacesMoved = 0;
+                        if (playerUnitManager.activeUnitIndex != 0) {
+                            Heal(maxHealth);
+                            playerUnitManager.setUnit(0);
+                        }
+                        else {
+                            int index = playerUnitManager.activeUnitIndex + 1;
+                            unitManager[index].Follow(oldPosition, index);
+                        }
                     }
                 }
                 else {
@@ -192,5 +201,10 @@ public class PlayerController : PlayerUnit
     override public void Die() {
         healthText.text = "YOU DIED!";
         print("You died, loser.");
+    }
+
+    override public void Follow(Vector3 pos, int index) {
+        transform.position = pos;
+        playerUnitManager.updateMap(index, (int)pos.y, (int)pos.x);
     }
 }

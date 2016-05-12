@@ -46,15 +46,28 @@ public class PlayerUnitManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Tab)) {
-			StopCoroutine (routines[activeUnitIndex]);
-			activeUnitIndex += 1;
-			if (activeUnitIndex > units.Count - 1) {
-				activeUnitIndex = 0;
-			}
-            map.setActivePlayer(activeUnitIndex);
-			activeUnit = units [activeUnitIndex];
-			StartCoroutine (routines[activeUnitIndex]);
+		if ((Input.GetKeyDown (KeyCode.Tab) && map.playerInRoomWithEnemies())) {
+
+            setUnit(activeUnitIndex+1);
 		}
 	}
+
+    public void setUnit(int index) {
+        StopCoroutine(routines[activeUnitIndex]);
+        activeUnitIndex = index;
+        if (activeUnitIndex > units.Count - 1) {
+            activeUnitIndex = 0;
+        }
+        map.setActivePlayer(activeUnitIndex);
+        activeUnit = units[activeUnitIndex];
+        StartCoroutine(routines[activeUnitIndex]);
+    }
+
+    public void updateMap(int index, int x, int y) {
+        map.setActivePlayer(index);
+        if (!map.movePlayerTo(x, y)) {
+            print("Error with following player on grid.");
+        }
+        map.setActivePlayer(activeUnitIndex);
+    }
 }

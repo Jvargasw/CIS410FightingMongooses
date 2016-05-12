@@ -24,6 +24,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	protected Text healthText;
     protected Text dmgText;
 
+    protected PlayerUnitManager playerUnitManager;
     protected List<PlayerUnit> unitManager;
 	protected List<IEnumerator> routineManager;
 
@@ -35,8 +36,9 @@ public abstract class PlayerUnit : MonoBehaviour {
 		healthText = GameObject.Find("HealthText").GetComponent<Text>();
         dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
-        unitManager = GameObject.Find ("GameManager").GetComponent<PlayerUnitManager>().units;
-		routineManager = GameObject.Find ("GameManager").GetComponent<PlayerUnitManager>().routines;
+        playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
+        unitManager = playerUnitManager.units;
+		routineManager = playerUnitManager.routines;
 		//register this unit with the PlayerUnitManager
 		unitManager.Add(this);
 		routineManager.Add (PlayerTurn());
@@ -66,6 +68,8 @@ public abstract class PlayerUnit : MonoBehaviour {
     public abstract void MeleeAttack (GameObject enemy);
 
 	public abstract void Die ();
+
+    public abstract void Follow(Vector3 pos, int index);
 
 
 	public void PlayerEndTurn() {

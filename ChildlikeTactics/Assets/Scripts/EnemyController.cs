@@ -50,7 +50,6 @@ public class EnemyController : MonoBehaviour {
         test = 0;
         List<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index), enemyRange, enemyMovement, new List<Position>());
         test = 1;
-        Position temp = tileManager.GetComponent<Generate>().map.getPlayerPosition();
         if (success) {
             foreach ( Position loc in path) {
                 tileManager.GetComponent<Generate>().map.setEnemyPosition(index, loc);
@@ -68,14 +67,35 @@ public class EnemyController : MonoBehaviour {
         if (enemyMovement <= 0) {
             return new List<Position>();
         }
-        Position playerLoc = tileManager.GetComponent<Generate>().map.getPlayerPosition();
+        List<Position> players = tileManager.GetComponent<Generate>().map.getPlayerPositions();
         Position newPos = new Position(location.x + 1, location.y); //UP (all these have the +1/-1 applied to the "wrong" side due to x and y being flipped)
         Queue searchQ = new Queue();
-        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-            success = true;
-            path.Add(location);
-            return path;
+        foreach (Position playerLoc in players) {
+            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                success = true;
+                path.Add(location);
+                return path;
+            }
+            newPos = new Position(location.x - 1, location.y); //DOWN
+            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                success = true;
+                path.Add(location);
+                return path;
+            }
+            newPos = new Position(location.x, location.y - 1); //LEFT
+            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                success = true;
+                path.Add(location);
+                return path;
+            }
+            newPos = new Position(location.x, location.y + 1);//RIGHT
+            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                success = true;
+                path.Add(location);
+                return path;
+            }
         }
+        newPos = new Position(location.x + 1, location.y); //UP
         if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
             List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
             if (success) {
@@ -83,11 +103,6 @@ public class EnemyController : MonoBehaviour {
             }
         }
         newPos = new Position(location.x - 1, location.y); //DOWN
-        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-            success = true;
-            path.Add(location);
-            return path;
-        }
         if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
             List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
             if (success) {
@@ -95,11 +110,6 @@ public class EnemyController : MonoBehaviour {
             }
         }
         newPos = new Position(location.x, location.y - 1); //LEFT
-        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-            success = true;
-            path.Add(location);
-            return path;
-        }
         if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
             List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
             if (success) {
@@ -107,11 +117,6 @@ public class EnemyController : MonoBehaviour {
             }
         }
         newPos = new Position(location.x, location.y + 1);//RIGHT
-        if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-            success = true;
-            path.Add(location);
-            return path;
-        }
         if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
             List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
             if (success) {

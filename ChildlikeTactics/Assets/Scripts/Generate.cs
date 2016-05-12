@@ -40,7 +40,7 @@ public class Map
     private List<Position> playerPositions = new List<Position>();
     private int currentRoomIndex = 0;
 
-    private TileType[,] grid;
+    public TileType[,] grid;
 
     public Map(int width, int height)
     {
@@ -279,6 +279,7 @@ public class Map
 
 public class Room
 {
+
     public int enemyCount { get; set; }
     public int x { get; private set; }
     public int y { get; private set; }
@@ -302,6 +303,8 @@ public class Room
 
 public class Generate : MonoBehaviour 
 {
+	public bool drawGizmos; //determines whether or not to draw the grid gizmos
+
     public GameObject unwalkablePrefab;
     public GameObject walkablePrefab;
     public GameObject playerPrefab;
@@ -593,4 +596,21 @@ public class Generate : MonoBehaviour
 
         return new Position(endX, endY);
     }
+
+
+	void OnDrawGizmos() {
+		if (drawGizmos) {
+			Gizmos.DrawWireCube (transform.position, new Vector3 (map.width, 1, map.height));
+
+			if (map.grid != null) {
+				for (int i = 0; i < mapWidth; i++) {
+					for (int j = 0; j < mapHeight; j++) {
+						Gizmos.color = (map.grid [i, j] == TileType.WALKABLE) ? Color.white : Color.red;
+						Gizmos.DrawCube (new Vector3 (j, i, -3f), Vector3.one * (.9f));
+					}
+				}
+			}
+		}
+	}
+
 }

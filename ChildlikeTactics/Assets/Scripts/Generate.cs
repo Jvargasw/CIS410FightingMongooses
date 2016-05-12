@@ -34,9 +34,10 @@ public class Map
     public int renderHeight { get; set; }
     public int renderWidth { get; set; }
 
+    private int activePlayer = 0;
     private List<Position> enemyPositions = new List<Position>();
     private List<Position> itemPositions = new List<Position>();
-    private Position playerPosition = new Position (0,0);
+    private List<Position> playerPositions = new List<Position>();
     private int currentRoomIndex = 0;
 
     private TileType[,] grid;
@@ -46,6 +47,14 @@ public class Map
         this.width = width;
         this.height = height;
         grid = new TileType[width, height];
+    }
+
+    public void setActivePlayer(int index) {
+        activePlayer = index;
+    }
+
+    public void incrementActivePlayer() {
+        activePlayer++;
     }
 
     public bool playerInRoomWithEnemies()
@@ -62,7 +71,7 @@ public class Map
         }
 
         Room currentRoom    = Generate.rooms[currentRoomIndex];
-        if (!(currentRoom.x <= playerPosition.x && currentRoom.x + currentRoom.width >= playerPosition.x && currentRoom.y <= playerPosition.y && currentRoom.y + currentRoom.height >= playerPosition.y))
+        if (!(currentRoom.x <= playerPositions[activePlayer].x && currentRoom.x + currentRoom.width >= playerPositions[activePlayer].x && currentRoom.y <= playerPositions[activePlayer].y && currentRoom.y + currentRoom.height >= playerPositions[activePlayer].y))
         {
             currentRoomIndex += 1;
         }
@@ -161,23 +170,25 @@ public class Map
     public void setPlayerPosition(int x, int y)
     {
         // Update the grid
-        grid[playerPosition.x, playerPosition.y]    = TileType.WALKABLE;
-        grid[x, y]                                  = TileType.PLAYER;
-
-        if (playerPosition == null)
-        {
-            playerPosition = new Position(x, y);
+        if (playerPositions.Count <= activePlayer) {
+            playerPositions.Add(new Position(x, y));
         }
+        else {
+            grid[playerPositions[activePlayer].x, playerPositions[activePlayer].y] = TileType.WALKABLE;
+        }
+        grid[x, y]                                                                 = TileType.PLAYER;
 
-        playerPosition.x = x;
-        playerPosition.y = y;
+        playerPositions[activePlayer].x = x;
+        playerPositions[activePlayer].y = y;
 
-        updatePlayerRoom();
+        if (activePlayer == 0) {
+            updatePlayerRoom();
+        }
     }
 
     public Position getPlayerPosition()
     {
-        return playerPosition;
+        return playerPositions[activePlayer];
     }
 
     public void addEnemy(Position enemyPosition, TileType type)

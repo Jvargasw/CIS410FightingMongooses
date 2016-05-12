@@ -52,6 +52,7 @@ public class PlayerUnitManager : MonoBehaviour {
 			if (activeUnitIndex > units.Count - 1) {
 				activeUnitIndex = 0;
 			}
+            map.setActivePlayer(activeUnitIndex);
 			activeUnit = units [activeUnitIndex];
 			StartCoroutine (routines[activeUnitIndex]);
 		}

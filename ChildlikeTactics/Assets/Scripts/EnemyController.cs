@@ -11,9 +11,10 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
+    private List<PlayerUnit> unitManager;
     private bool success;
 
-    private int test = 0;
+    private PlayerUnit target;
 
     void Start () {
         if (health == 0) {
@@ -23,12 +24,13 @@ public class EnemyController : MonoBehaviour {
             dmg = 5;
         }
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
+        unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
 
     }
 	
 	public void Attack() {
         if (SeekAndDestroy(range,movement)) {
-            MeleeAttack(GameObject.FindGameObjectWithTag("Player"));//Change this once we add multiple Players
+            MeleeAttack(target);//Change this once we add multiple Players
         }
     }
 
@@ -47,9 +49,7 @@ public class EnemyController : MonoBehaviour {
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
         success = false;
-        test = 0;
         List<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index), enemyRange, enemyMovement, new List<Position>());
-        test = 1;
         if (success) {
             foreach ( Position loc in path) {
                 tileManager.GetComponent<Generate>().map.setEnemyPosition(index, loc);
@@ -59,7 +59,7 @@ public class EnemyController : MonoBehaviour {
         return success;
     }
 
-    private void MeleeAttack(GameObject player) {
+    private void MeleeAttack(PlayerUnit player) {
         player.GetComponent<PlayerController>().TakeDmg(dmg);
     }
 
@@ -72,24 +72,28 @@ public class EnemyController : MonoBehaviour {
         Queue searchQ = new Queue();
         foreach (Position playerLoc in players) {
             if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                target = whichUnit(playerLoc);
                 success = true;
                 path.Add(location);
                 return path;
             }
             newPos = new Position(location.x - 1, location.y); //DOWN
             if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                target = whichUnit(playerLoc);
                 success = true;
                 path.Add(location);
                 return path;
             }
             newPos = new Position(location.x, location.y - 1); //LEFT
             if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                target = whichUnit(playerLoc);
                 success = true;
                 path.Add(location);
                 return path;
             }
             newPos = new Position(location.x, location.y + 1);//RIGHT
             if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                target = whichUnit(playerLoc);
                 success = true;
                 path.Add(location);
                 return path;
@@ -124,5 +128,17 @@ public class EnemyController : MonoBehaviour {
             }
         }
         return new List<Position>();
+    }
+
+    private PlayerUnit whichUnit(Position pos) {
+        int i = 0;
+        foreach (Position posPlayer in tileManager.GetComponent<Generate>().map.getPlayerPositions()) {
+            if(pos.x == posPlayer.x && pos.y == posPlayer.y) {
+                return unitManager[i];
+            }
+            i++;
+        }
+        print("Error, could not find player for enemy attack");
+        return null;
     }
 }

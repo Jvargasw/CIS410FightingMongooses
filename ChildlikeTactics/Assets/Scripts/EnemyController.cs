@@ -11,7 +11,11 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
+	private Map map;
     private bool success;
+
+	private TileType[,] grid;
+	private bool[,] tiles; //array of bools for whether or not each tile is walkable
 
     private int test = 0;
 
@@ -24,7 +28,24 @@ public class EnemyController : MonoBehaviour {
         }
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
 
+		map = tileManager.GetComponent<Generate> ().map;
+
     }
+
+	private void updateWalkables() {
+
+	}
+
+	private void FindPath (Vector3 start, Vector3 end) {
+		List<Vector3> openSet;
+		HashSet<Vector3> closedSet = new HashSet<Vector3> ();
+		openSet.Add (start);
+		openSet.Add (end);
+
+		while (openSet.Count > 0) {
+
+		}
+	}
 	
 	public void Attack() {
         if (SeekAndDestroy(range,movement)) {

@@ -6,7 +6,6 @@ using System.Collections;
 public class TurnManager : MonoBehaviour {
 
 	public static bool playerTurn = true;
-
 	// Use this for initialization
 	void Start () {
 	
@@ -17,7 +16,8 @@ public class TurnManager : MonoBehaviour {
 		if (!playerTurn) {
 			enemyTurn ();
 		}
-	}
+
+    }
 
 	private void enemyTurn() {
         this.GetComponent<EnemyManager>().EnemyTurn();

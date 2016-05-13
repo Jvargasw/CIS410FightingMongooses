@@ -25,6 +25,9 @@ public class Position {
 }
 
 public class Map {
+    //temp variable for current level. may delete later
+    public int currLevel = 1;
+
     public int width { get; private set; }
     public int height { get; private set; }
 

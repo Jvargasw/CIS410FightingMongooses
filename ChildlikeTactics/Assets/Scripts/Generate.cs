@@ -526,19 +526,25 @@ public class Generate : MonoBehaviour {
         return new Position(endX, endY);
     }
 
-    void OnDrawGizmos() {
-        if (drawGizmos) {
-            if (map != null) {
-                Gizmos.DrawWireCube(transform.position, new Vector3(map.width, 1, map.height));
-                if (map.grid != null) {
-                    for (int i = 0; i < mapWidth; i++) {
-                        for (int j = 0; j < mapHeight; j++) {
-                            Gizmos.color = (map.grid[i, j] == TileType.WALKABLE) ? Color.white : Color.red;
-                            Gizmos.DrawCube(new Vector3(j, i, -3f), Vector3.one * (.9f));
-                        }
-                    }
-                }
-            }
-        }
-    }
+
+	void OnDrawGizmos() {
+		if (drawGizmos) {
+			Gizmos.DrawWireCube (transform.position, new Vector3 (map.width, 1, map.height));
+
+			if (map.grid != null) {
+				for (int i = 0; i < mapWidth; i++) {
+					for (int j = 0; j < mapHeight; j++) {
+						TileType tile = map.grid [i, j];
+						if (tile == TileType.WALKABLE)
+							Gizmos.color = Color.white;
+						else if (tile == TileType.PLAYER)
+							Gizmos.color = Color.blue;
+						else
+							Gizmos.color = Color.red;
+						Gizmos.DrawCube (new Vector3 (j, i, -3f), Vector3.one * (.9f));
+					}
+				}
+			}
+		}
+	}
 }

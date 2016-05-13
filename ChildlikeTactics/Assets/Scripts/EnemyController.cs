@@ -11,7 +11,6 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
-<<<<<<< HEAD
 	private Map map;
     private bool success;
 
@@ -19,12 +18,9 @@ public class EnemyController : MonoBehaviour {
 	private bool[,] tiles; //array of bools for whether or not each tile is walkable
 
     private int test = 0;
-=======
     private List<PlayerUnit> unitManager;
-    private bool success;
 
     private PlayerUnit target;
->>>>>>> 7e6b4579197b213785937b9d4202502456045293
 
     void Start () {
         if (health == 0) {
@@ -45,7 +41,7 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	private void FindPath (Vector3 start, Vector3 end) {
-		List<Vector3> openSet;
+		List<Vector3> openSet = new List<Vector3>();
 		HashSet<Vector3> closedSet = new HashSet<Vector3> ();
 		openSet.Add (start);
 		openSet.Add (end);
@@ -57,7 +53,7 @@ public class EnemyController : MonoBehaviour {
 	
 	public void Attack() {
         if (SeekAndDestroy(range,movement)) {
-            MeleeAttack(target);//Change this once we add multiple Players
+            MeleeAttack(target); //Change this once we add multiple Players
         }
     }
 

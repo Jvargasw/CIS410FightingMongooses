@@ -526,7 +526,6 @@ public class Generate : MonoBehaviour {
         return new Position(endX, endY);
     }
 
-<<<<<<< HEAD
 
 	void OnDrawGizmos() {
 		if (drawGizmos) {
@@ -548,21 +547,4 @@ public class Generate : MonoBehaviour {
 			}
 		}
 	}
-=======
-    void OnDrawGizmos() {
-        if (drawGizmos) {
-            if (map != null) {
-                Gizmos.DrawWireCube(transform.position, new Vector3(map.width, 1, map.height));
-                if (map.grid != null) {
-                    for (int i = 0; i < mapWidth; i++) {
-                        for (int j = 0; j < mapHeight; j++) {
-                            Gizmos.color = (map.grid[i, j] == TileType.WALKABLE) ? Color.white : Color.red;
-                            Gizmos.DrawCube(new Vector3(j, i, -3f), Vector3.one * (.9f));
-                        }
-                    }
-                }
-            }
-        }
-    }
->>>>>>> 7e6b4579197b213785937b9d4202502456045293
 }

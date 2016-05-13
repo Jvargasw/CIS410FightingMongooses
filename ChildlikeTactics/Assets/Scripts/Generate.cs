@@ -67,8 +67,13 @@ public class Map {
         }
 
         Room currentRoom = Generate.rooms[currentRoomIndex];
-        if (!(currentRoom.x <= playerPositions[activePlayer].x && currentRoom.x + currentRoom.width >= playerPositions[activePlayer].x && currentRoom.y <= playerPositions[activePlayer].y && currentRoom.y + currentRoom.height >= playerPositions[activePlayer].y)) {
-            currentRoomIndex += 1;
+        if (!(currentRoom.x <= playerPositions[0].x && currentRoom.x + currentRoom.width >= playerPositions[0].x && currentRoom.y <= playerPositions[0].y && currentRoom.y + currentRoom.height >= playerPositions[0].y)) {
+            if (currentRoom.x > playerPositions[0].x || currentRoom.y > playerPositions[0].y) {
+                currentRoomIndex -= 1;
+            }
+            else {
+                currentRoomIndex += 1;
+            }
         }
     }
 

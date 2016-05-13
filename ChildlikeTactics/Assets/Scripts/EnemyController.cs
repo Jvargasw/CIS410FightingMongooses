@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class EnemyController : MonoBehaviour {
     public int health;
     public int dmg;
     public int movement = 5;
+    //bool for the boss prefab
+    public bool isBoss;
     private int range = 1;
 
     private GameObject tileManager;
@@ -68,6 +71,10 @@ public class EnemyController : MonoBehaviour {
         //placeholder for giving player experience, gold, etc.
         tileManager.GetComponent<Generate>().map.destroyEnemy(index);
         gameObject.gameObject.SetActive(false);
+        if (isBoss)
+        {
+            //Re-generate new level? (simple restart of the room does generate a new map, but gets an error immediately freezing the game)
+        }
     }
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {

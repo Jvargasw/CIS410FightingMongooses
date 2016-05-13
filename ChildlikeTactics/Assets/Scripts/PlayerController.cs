@@ -21,7 +21,7 @@ public class PlayerController : PlayerUnit
     
 	private Map map;
 
-    void Start()
+    new void Start()
     {
 		//execute PlayerUnit's start code
 		base.Start();
@@ -31,13 +31,13 @@ public class PlayerController : PlayerUnit
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
-	void Update(){
+	new void Update(){
 		base.Update ();
 	}
 
 	override public IEnumerator PlayerTurn() {
-		movePosition = transform.position;
-		startPosition = transform.position;
+		//movePosition = transform.position;
+		//startPosition = transform.position;
 
 		//while it's the player's turn
 		while (TurnManager.playerTurn) {
@@ -94,11 +94,19 @@ public class PlayerController : PlayerUnit
             if ((spacesMoved + 1 <= maxMoveDistance) || !map.playerInRoomWithEnemies()) {
                 if (map.movePlayerTo((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x))) { //OK, the X and Y being swapped is kinda a problem.
                     spacesMoved++;
-                    movePosition += new Vector3(moveDirection.x, moveDirection.y, 0);
+                    movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
+                    Vector3 oldPosition = transform.position;
                     transform.position = movePosition;
                     if(!map.playerInRoomWithEnemies())
                     {
                         spacesMoved = 0;
+                        if (playerUnitManager.activeUnitIndex != 0) {
+                            playerUnitManager.setUnit(0);
+                        }
+                        else {
+                            int index = playerUnitManager.activeUnitIndex + 1;
+                            unitManager[index].Follow(oldPosition, index);
+                        }
                     }
                 }
                 else {
@@ -109,10 +117,14 @@ public class PlayerController : PlayerUnit
                             if (index == ic.index) {
                                 ItemType itemType = ic.GetItemType();
                                 if(itemType == ItemType.HP) {
-                                    Heal(ic.stats[0]);
+                                    foreach (PlayerUnit player in unitManager) {
+                                        player.Heal(ic.stats[0]);
+                                    }
                                 }
                                 else if (itemType == ItemType.DMG) {
-                                    IncreaseDmg(ic.stats[0]);
+                                    foreach (PlayerUnit player in unitManager) {
+                                        player.IncreaseDmg(ic.stats[0]);
+                                    }
                                 }
                                 else {
                                     print("Unknown Item Type on Pickup");
@@ -192,5 +204,10 @@ public class PlayerController : PlayerUnit
     override public void Die() {
         healthText.text = "YOU DIED!";
         print("You died, loser.");
+    }
+
+    override public void Follow(Vector3 pos, int index) {
+        transform.position = pos;
+        playerUnitManager.updateMap(index, (int)pos.y, (int)pos.x);
     }
 }

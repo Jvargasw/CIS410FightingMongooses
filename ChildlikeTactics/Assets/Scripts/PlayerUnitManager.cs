@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerUnitManager : MonoBehaviour {
 
+	private FollowActiveUnit unitIndicator;
+
 	public List<PlayerUnit> units;
 	public List<IEnumerator> routines = new List<IEnumerator>();
 
@@ -15,9 +17,12 @@ public class PlayerUnitManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+
 		units = new List<PlayerUnit>();
 
 		map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
+
+		unitIndicator = GameObject.Find ("ActiveUnitIndicator").GetComponent<FollowActiveUnit>();
 
 		StartCoroutine (ActivateUnit ());
 	}
@@ -54,6 +59,7 @@ public class PlayerUnitManager : MonoBehaviour {
         }
         map.setActivePlayer(activeUnitIndex);
         activeUnit = units[activeUnitIndex];
+		unitIndicator.UpdateActiveUnit (activeUnit);
         StartCoroutine(routines[activeUnitIndex]);
     }
 

@@ -294,11 +294,13 @@ public class Generate : MonoBehaviour {
     public static List<Room> rooms;
 
     private Transform boardHolder;
-    private Transform hallwayHolder;
     private int curRoom;
     private int itemCount;
 
     void Awake() {
+        // Bugged seed.
+        //Random.seed = 1463179365;
+
         int currentX = 0;
         int currentY = 0;
         int randWidth;
@@ -360,17 +362,13 @@ public class Generate : MonoBehaviour {
     void renderMap(Map map, float startX, float startY) {
         boardHolder = new GameObject("Board").transform;
 
-
-        float currentX = startX;
-        float currentY = startY;
-
         print("Render Height: " + map.renderHeight);
         print("Render Width: " + map.renderWidth);
 
         /* Fit the plane properly to the map size. Now a much better implementation (Thanks Ryan!). 
          */
-        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight - 1) / 2.0f, (map.renderWidth - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));
-        instance.transform.localScale = new Vector3(0.1f * map.renderHeight, 1, 0.1f * map.renderWidth);
+        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderWidth - 1) / 2.0f, (map.renderHeight - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));
+        instance.transform.localScale = new Vector3(0.1f * map.renderWidth, 1, 0.1f * map.renderHeight);
 
         GameObject enemy;
         GameObject item;
@@ -383,35 +381,34 @@ public class Generate : MonoBehaviour {
                     // Woooo. Abusing logical fall throughs!
 
                     case TileType.UNWALKABLE:
-                        instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(i, j, 0f), transform.rotation);
 
                         // Make the wall 2 units high. 
-                        // FIXME: This currently only increases it's height by 0.5 (I believe), because unity scales both ends.
                         instance.transform.localScale = new Vector3(1, 1, 2);
                         break;
 
                     case TileType.PLAYER:
                         print("RENDERING PLAYER");
-                        Instantiate(playerPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        Instantiate(playerPrefab, new Vector3(i, j, 0f), transform.rotation);
                         break;
 
                     case TileType.ENEMY:
-                        enemy = (GameObject)Instantiate(enemyPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        enemy = (GameObject)Instantiate(enemyPrefab, new Vector3(i, j, 0f), transform.rotation);
                         enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.BOSS:
-                        enemy = (GameObject)Instantiate(bossPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                        enemy = (GameObject)Instantiate(bossPrefab, new Vector3(i, j, 0f), transform.rotation);
                         enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.ITEM:
                         int type = Random.Range(0, itemCount);
                         if (type == 0) {
-                            item = (GameObject)Instantiate(itemHPPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                            item = (GameObject)Instantiate(itemHPPrefab, new Vector3(i, j, 0f), transform.rotation);
                         }
                         else if (type == 1) {
-                            item = (GameObject)Instantiate(itemDMGPrefab, new Vector3((float)currentX, (float)currentY, 0f), transform.rotation);
+                            item = (GameObject)Instantiate(itemDMGPrefab, new Vector3(i, j, 0f), transform.rotation);
                         }
                         else {
                             print("Invalid item type");
@@ -420,11 +417,8 @@ public class Generate : MonoBehaviour {
                         item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(i, j);
                         break;
                 }
-                currentX += spriteSize;
                 instance.transform.SetParent(boardHolder);
             }
-            currentX = startX;
-            currentY += spriteSize;
         }
     }
 

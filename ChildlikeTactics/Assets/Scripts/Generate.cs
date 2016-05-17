@@ -325,21 +325,14 @@ public class Generate : MonoBehaviour {
         // Bugged seed.
         Random.seed = 1463179365;
 
-        int currentX = 0;
-        int currentY = 0;
-        int randWidth;
-        int randHeight;
-        int width;
-        int height;
-
         curRoom = 1;
         itemCount = 2;
 
         map = new Map(mapHeight, mapHeight);
-        map.renderHeight = 63;
-        map.renderWidth = 63;
+        rooms = new List<Room>();
 
-        generateMap(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
+        generateRooms(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
+        generateHallways();
 
         // Render the map, starting at (0.0, 0.0)
         renderMap(map, 0.0f, 0.0f);
@@ -430,7 +423,7 @@ public class Generate : MonoBehaviour {
         return true;
     }
 
-    void fillRoom(int startX, int startY, int roomWidth, int roomHeight)
+    Room fillRoom(int startX, int startY, int roomWidth, int roomHeight)
     {
         for(int i = startX; i < startX + roomWidth; i++)
         {
@@ -439,9 +432,38 @@ public class Generate : MonoBehaviour {
                 map.setTileAt(i, j, TileType.WALKABLE);
             }
         }
+
+        // FIXME: Don't hardcode the enemy count, silly. Spawn enemies.
+        return new Room(startX, startY, roomWidth, roomHeight, 0);
     }
 
-    void generateMap(int startX, int startY, List<Direction> directions, int roomWidth, int roomHeight)
+    void generateHallways()
+    {
+        foreach(Room room in rooms)
+        {
+            int top = room.y + room.height;
+            int right = room.x + room.width;
+            int bottom = room.y;
+            int left = room.x;
+
+            if(canPlaceRoom(right, (top - bottom) / 2, 1, hallwayHeight))
+            {
+                fillRoom(right, (top - bottom) / 2, 1, hallwayHeight);
+            }
+
+            if (canPlaceRoom(left, (top - bottom) / 2, 1, hallwayHeight))
+            {
+                fillRoom(left, (top - bottom) / 2, 1, hallwayHeight);
+            }
+
+            if (canPlaceRoom((right - left) / 2, top, hallwayHeight, 1))
+            {
+                fillRoom((right - left) / 2, top, hallwayHeight, 1);
+            }
+        }
+    }
+
+    void generateRooms(int startX, int startY, List<Direction> directions, int roomWidth, int roomHeight)
     {
         /* Generate a room given the specifications and return a new Room. 
         */
@@ -452,37 +474,42 @@ public class Generate : MonoBehaviour {
         int bottom = startY;
         int left = startX;
 
-        // Update the render 
-
         if(canPlaceRoom(startX, startY, roomWidth, roomHeight))
         {
-            fillRoom(startX, startY, roomWidth, roomHeight);
+            // Update the render height/width
+            map.renderHeight = Mathf.Max(map.renderHeight, (startY + roomHeight) + 1);
+            map.renderWidth = Mathf.Max(map.renderWidth, (startX + roomWidth) + 1);
+
+            // Fill the area with walkables and add the room generated to the list of rooms
+            rooms.Add(fillRoom(startX, startY, roomWidth, roomHeight));
         }
         else
         {
+            // If you can't place a room here, we don't want to be here. 
             return;
         }
 
+        // Only generate a fixed width room, so that we keep the 1 tile border.
         foreach (Direction direction in directions)
         {
             if (direction == Direction.NORTH)
             {
-                generateMap(startX, startY + (roomHeight + 1), directions, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
+                generateRooms(startX, startY + (roomHeight + 1), directions, roomWidth, roomHeight);
             }
             
             if(direction == Direction.EAST)
             {
-                generateMap(startX + (roomWidth + 1), startY, directions, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));    
+                generateRooms(startX + (roomWidth + 1), startY, directions, roomWidth, roomHeight);    
             }
 
             if (direction == Direction.WEST)
             {
-                generateMap(startX - (roomWidth + 1), startY, directions, roomWidth, Random.Range(minRoomHeight, maxRoomHeight));
+                generateRooms(startX - (roomWidth + 1), startY, directions, roomWidth, roomHeight);
             }
 
             if (direction == Direction.SOUTH)
             {
-                generateMap(startX, startY - (roomWidth + 1), directions, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
+                generateRooms(startX, startY - (roomHeight + 1), directions, roomWidth, roomHeight);
             }
         }
     }
@@ -497,7 +524,8 @@ public class Generate : MonoBehaviour {
     }
 
 
-	void OnDrawGizmos() {
+	void OnDrawGizmos()
+    {
 		if (drawGizmos) {
 			Gizmos.DrawWireCube (transform.position, new Vector3 (map.width, 1, map.height));
 

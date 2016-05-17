@@ -11,6 +11,10 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int playerDmg = 10;
 	public int health = 100;
     public int maxHealth = 100;
+    public int level = 1;
+    public int nxtlvlxp = 100;
+    public int exp = 0;
+    public int def = 0;
 
 	public bool isMoving; //represents moving vs attacking
 
@@ -20,8 +24,10 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	public GameObject healthBar;
 
-	protected Text turnText;
-	protected Text healthText;
+    public int lvlUp = 0;
+
+    protected Text turnText;
+	protected Text expText;
     protected Text dmgText;
 
     protected PlayerUnitManager playerUnitManager;
@@ -33,7 +39,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 		print ("PlayerUnit start");
 
 		turnText = GameObject.Find("TurnText").GetComponent<Text>();
-		healthText = GameObject.Find("HealthText").GetComponent<Text>();
+		expText = GameObject.Find("HealthText").GetComponent<Text>();
         dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
@@ -71,8 +77,17 @@ public abstract class PlayerUnit : MonoBehaviour {
 
     public abstract void Follow(Vector3 pos, int index);
 
+    public abstract void CheckLevelUp();
 
-	public void PlayerEndTurn() {
+    public abstract void LevelUp();
+
+    public abstract void ExpDisplayUpdate();
+
+    public abstract void DmgDisplayUpdate();
+
+
+
+    public void PlayerEndTurn() {
 		turnText.text = "Enemy Turn";
 		TurnManager.playerTurn = false;
 		StartMoving();

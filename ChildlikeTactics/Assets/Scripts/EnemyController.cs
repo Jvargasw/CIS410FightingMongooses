@@ -11,6 +11,9 @@ public class EnemyController : MonoBehaviour {
     public int movement = 5;
     //bool for the boss prefab
     public bool isBoss;
+    public int def = 0;
+    public int exp = 10;
+
     private int range = 1;
 
     private GameObject tileManager;
@@ -60,9 +63,12 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    public void TakeDmg(int dmgTaken) {
-        health -= dmgTaken;
-        if(health <= 0) {
+    public void TakeDmg(int playerDmg) {
+        int dmgTaken = playerDmg - def;
+        if (dmgTaken > 0) {
+            health -= dmgTaken;
+        }
+        if (health <= 0) {
             Die();
         }
     }

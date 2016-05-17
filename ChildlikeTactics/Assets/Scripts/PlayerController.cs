@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class PlayerController : PlayerUnit
 {
@@ -26,8 +27,8 @@ public class PlayerController : PlayerUnit
 		//execute PlayerUnit's start code
 		base.Start();
 
-        healthText.text = "HP: " + health;
-        dmgText.text = "DMG: " + playerDmg;
+        //.text = "HP: " + health;
+        DmgDisplayUpdate();
         map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
     }
 
@@ -172,8 +173,10 @@ public class PlayerController : PlayerUnit
     }
 	*/
     override public void TakeDmg(int enemyDmg) {
-        health -= enemyDmg;
-        healthText.text = "HP: " + health;
+        int dmgTaken = enemyDmg - def;
+        if(dmgTaken > 0) {
+            health -= dmgTaken;
+        }
         if(health <= 0) {
             Die();
         }
@@ -184,25 +187,32 @@ public class PlayerController : PlayerUnit
         if (health >= maxHealth) {
             health = maxHealth;
         }
-        healthText.text = "HP: " + health;
+        //healthText.text = "HP: " + health;
     }
 
     override public void IncreaseDmg(int dmg) {
         playerDmg += dmg;
-        dmgText.text = "DMG: " + playerDmg;
+        DmgDisplayUpdate();
     }
 
     override public void DecreaseDmg(int dmg) {
         playerDmg -= dmg;
-        dmgText.text = "DMG: " + playerDmg;
+        DmgDisplayUpdate();
     }
 
     override public void MeleeAttack(GameObject enemy) {
-        enemy.GetComponent<EnemyController>().TakeDmg(playerDmg);
+        EnemyController enemyC = enemy.GetComponent<EnemyController>();
+        int enemyXP = enemyC.exp;
+        enemyC.TakeDmg(playerDmg);
+        if (!enemy.GetComponent<EnemyController>().isActiveAndEnabled) {
+            exp += enemyXP;
+            ExpDisplayUpdate();
+            CheckLevelUp();
+        }
     }
 
     override public void Die() {
-        healthText.text = "YOU DIED!";
+        //healthText.text = "YOU DIED!";
         print("You died, loser.");
     }
 
@@ -210,4 +220,53 @@ public class PlayerController : PlayerUnit
         transform.position = pos;
         playerUnitManager.updateMap(index, (int)pos.y, (int)pos.x);
     }
+
+    override public void CheckLevelUp() {
+        if(exp >= nxtlvlxp) {
+            exp -= nxtlvlxp;
+            nxtlvlxp = nxtlvlxp * 2;
+            ExpDisplayUpdate();
+            health += maxHealth;
+            LevelUp();
+            CheckLevelUp();
+        }
+    }
+
+    public override void LevelUp() {
+        lvlUp +=1;
+    }
+
+    public override void ExpDisplayUpdate() {
+        expText.text = exp + "/" + nxtlvlxp;
+    }
+
+    public override void DmgDisplayUpdate() {
+        dmgText.text = "DMG: " + playerDmg;
+    }
+
+    void OnGUI() {
+        int w = Screen.width;
+        int h = Screen.height;
+        if (lvlUp > 0) {
+            if (GUI.Button(new Rect(0, (h * 2) / 5, h / 5, w / 4), "HP+50%")) {
+                maxHealth += maxHealth / 2;
+                health += maxHealth;
+                lvlUp -= 1;
+            }
+            if (GUI.Button(new Rect(w/4, (h * 2) / 5, h / 5, w / 4), "DMG+50%")) {
+                playerDmg += playerDmg / 2;
+                DmgDisplayUpdate();
+                lvlUp -= 1;
+            }
+            if (GUI.Button(new Rect(w/2, (h * 2) / 5, h / 5, w / 4), "MOV+1")) {
+                maxMoveDistance += 1;
+                lvlUp -= 1;
+            }
+            if (GUI.Button(new Rect(3*w/2, (h * 2) / 5, h / 5, w / 4), "DEF+1")) {
+                def += 1;
+                lvlUp -= 1;
+            }
+        }
+    }
+
 }

@@ -14,6 +14,14 @@ public enum TileType {
     NONE
 };
 
+public enum Direction
+{
+    NORTH,
+    EAST,
+    WEST,
+    SOUTH
+};
+
 public class Position {
     public int x { get; set; }
     public int y { get; set; }
@@ -46,6 +54,19 @@ public class Map {
         this.width = width;
         this.height = height;
         grid = new TileType[width, height];
+        initializeGrid();
+    }
+
+    private void initializeGrid()
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                setTileAt(i, j, TileType.UNWALKABLE);
+            }
+        }
+        return;
     }
 
     public void setActivePlayer(int index) {
@@ -281,8 +302,11 @@ public class Generate : MonoBehaviour {
     public GameObject itemHPPrefab;
     public GameObject itemDMGPrefab;
 
-    public int minRoomSize = 10;
-    public int maxRoomSize = 20;
+    // Public values useful for generation
+    public int minRoomWidth = 10;
+    public int maxRoomWidth = 20;
+    public int minRoomHeight = 10;
+    public int maxRoomHeight = 20;
     public int hallwayHeight = 4;
     public int numRooms = 3;
     public int mapHeight = 64;
@@ -299,7 +323,7 @@ public class Generate : MonoBehaviour {
 
     void Awake() {
         // Bugged seed.
-        //Random.seed = 1463179365;
+        Random.seed = 1463179365;
 
         int currentX = 0;
         int currentY = 0;
@@ -312,48 +336,10 @@ public class Generate : MonoBehaviour {
         itemCount = 2;
 
         map = new Map(mapHeight, mapHeight);
-        int hallwayDirection = -1;
-        rooms = new List<Room>();
+        map.renderHeight = 63;
+        map.renderWidth = 63;
 
-        // Generate each room
-        for (int i = 0; i < numRooms; i++) {
-
-            randWidth = Random.Range(minRoomSize, maxRoomSize);
-            randHeight = Random.Range(minRoomSize, maxRoomSize);
-
-            width = Mathf.Min(63 - currentX, randWidth);
-            height = Mathf.Min(63 - currentY, randHeight);
-            print("randWidth: " + randWidth + " randHeight: " + randHeight);
-            print("width: " + width + " height: " + height);
-            if (width != randWidth) {
-                print("Width overide: " + width);
-                if (width <= 0) {
-                    width = Mathf.Max(63 - currentX, randWidth);
-                    print("Double width override: " + width);
-                }
-            }
-            if (height != randHeight) {
-                print("Height overide: " + height);
-                if (height <= 0) {
-                    height = Mathf.Max(63 - currentY, randHeight);
-                    print("Double height override: " + height);
-                }
-            }
-
-            rooms.Add(generateRoom(map, width, height, currentX, currentY, hallwayDirection));
-
-            // Randomize if the next room will be above or to the right of the current room.
-            // TODO: Add in left or below? 
-            if (Random.Range(0, 100) >= 50) {
-                hallwayDirection = 0;
-                currentX += randWidth;
-            }
-            else {
-                hallwayDirection = 1;
-                currentY += randHeight;
-            }
-            curRoom++;
-        }
+        generateMap(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
 
         // Render the map, starting at (0.0, 0.0)
         renderMap(map, 0.0f, 0.0f);
@@ -422,101 +408,83 @@ public class Generate : MonoBehaviour {
         }
     }
 
-    Room generateRoom(Map map, int roomWidth, int roomHeight, int startX, int startY, int hallwayDirection) {
+    bool canPlaceRoom(int startX, int startY, int roomWidth, int roomHeight)
+    {
+        if (startX + roomWidth < map.width && startY + roomHeight < map.height && startX >= 0 && startY >= 0)
+        {
+            for (int i = startX; i < startX + roomWidth; i++)
+            {
+                for (int j = startY; j < startY + roomHeight; j++)
+                {
+                    if (map.getTileAt(i, j) != TileType.UNWALKABLE)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
+
+    void fillRoom(int startX, int startY, int roomWidth, int roomHeight)
+    {
+        for(int i = startX; i < startX + roomWidth; i++)
+        {
+            for(int j = startY; j < startY + roomHeight; j++)
+            {
+                map.setTileAt(i, j, TileType.WALKABLE);
+            }
+        }
+    }
+
+    void generateMap(int startX, int startY, List<Direction> directions, int roomWidth, int roomHeight)
+    {
         /* Generate a room given the specifications and return a new Room. 
         */
-
+        
         // Useful values
+        int top = startY + roomHeight;
+        int right = startX + roomWidth;
+        int bottom = startY;
+        int left = startX;
 
-        if (startX >= map.width || startY >= map.height) {
-            return null;
+        // Update the render 
+
+        if(canPlaceRoom(startX, startY, roomWidth, roomHeight))
+        {
+            fillRoom(startX, startY, roomWidth, roomHeight);
+        }
+        else
+        {
+            return;
         }
 
-        int topSide = startY + roomHeight;
-        int rightSide = startX + roomWidth;
+        foreach (Direction direction in directions)
+        {
+            if (direction == Direction.NORTH)
+            {
+                generateMap(startX, startY + (roomHeight + 1), directions, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
+            }
+            
+            if(direction == Direction.EAST)
+            {
+                generateMap(startX + (roomWidth + 1), startY, directions, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));    
+            }
 
-        bool spawnedBoss = false;
-        int numEnemies = (int)Mathf.Floor(Mathf.Log(curRoom));
-        int numItems = 1;
-        Room room = new Room(startX, startY, roomWidth, roomHeight, numEnemies);
+            if (direction == Direction.WEST)
+            {
+                generateMap(startX - (roomWidth + 1), startY, directions, roomWidth, Random.Range(minRoomHeight, maxRoomHeight));
+            }
 
-        print("StartX: " + startX + " StartY: " + startY);
-
-        // FIXME: Apparently our x and y are getting swapped somewhere. We should fix that. 
-        // Create a hallway on the top of the room previous room to the bottom of the current room.
-        if (hallwayDirection == 0) {
-            for (int i = startX - 5; i < startX + 5; i++) {
-                for (int j = startY + 1; j < startY + hallwayHeight; j++) {
-                    if (i < map.width && j < map.height) {
-                        map.setTileAt(i, j, TileType.WALKABLE);
-                    }
-                    else {
-                        print("We overwrote on downwards hallway generation!");
-                    }
-                }
+            if (direction == Direction.SOUTH)
+            {
+                generateMap(startX, startY - (roomWidth + 1), directions, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
             }
         }
-
-        // Create a hallway on the right side of the previous room to the left side of the current room.
-        else if (hallwayDirection == 1) {
-            for (int i = startX + 1; i < startX + hallwayHeight; i++) {
-                for (int j = startY - 5; j < startY + 5; j++) {
-                    if (i < map.width && j < map.height) {
-                        map.setTileAt(i, j, TileType.WALKABLE);
-                    }
-                    else {
-                        print("We overwote on rightwards (leftwards?) hallway generation!");
-                    }
-                }
-            }
-        }
-
-        for (int i = startX; i < startX + roomWidth; i++) {
-            for (int j = startY; j < startY + roomHeight; j++) {
-                /* Handle drawing pathable sprites on the interior and unpathable sprites on the exterior. */
-                if (i != startX && i != rightSide - 1 && j != startY && j != topSide - 1 && i < map.width && j < map.height) {
-                    if (curRoom != 1 && curRoom != numRooms && numEnemies != 0) {
-                        map.addEnemy(new Position(i, j), TileType.ENEMY);
-                        numEnemies--;
-
-                    }
-                    else if (curRoom == numRooms && !spawnedBoss) {
-                        map.addEnemy(new Position(i, j), TileType.BOSS);
-                        spawnedBoss = true;
-                    }
-                    else {
-                        map.renderHeight = Mathf.Max(map.renderHeight, j + 2);
-                        map.setTileAt(i, j, TileType.WALKABLE);
-                    }
-                }
-            }
-            map.renderWidth = Mathf.Max(map.renderWidth, i + 2);
-        }
-
-        if (curRoom == 1) {
-            Position pos = RandomPosition(roomWidth, roomHeight, startX, startY);
-            map.setPlayerPosition(pos.x, pos.y);
-
-            //spawn a second player (for testing)
-            map.setActivePlayer(1);
-            map.setPlayerPosition(pos.x + 1, pos.y + 1);
-            map.setActivePlayer(0);
-            //
-
-        }
-        else {
-            if (numItems != 0) {
-                numItems -= 1;
-                Position pos = RandomPosition(roomWidth, roomHeight, startX, startY);
-                while (map.getTileAt(pos.x, pos.y) != TileType.WALKABLE) {
-                    pos = RandomPosition(roomWidth, roomHeight, startX, startY);
-                }
-                map.addItem(pos, TileType.ITEM);
-
-            }
-        }
-
-        return room;
     }
 
     public Position RandomPosition(int width, int height, int x, int y) {

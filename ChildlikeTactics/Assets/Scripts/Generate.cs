@@ -446,19 +446,22 @@ public class Generate : MonoBehaviour {
             int bottom = room.y;
             int left = room.x;
 
-            if(canPlaceRoom(right, (top - bottom) / 2, 1, hallwayHeight))
+            // Draw hallway to the right if possible
+            if(canPlaceRoom(right, (top + bottom) / 2, 1, hallwayHeight) && (right + 1) != map.renderWidth)
             {
-                fillRoom(right, (top - bottom) / 2, 1, hallwayHeight);
+                fillRoom(right, (top + bottom) / 2, 1, hallwayHeight);
             }
 
-            if (canPlaceRoom(left, (top - bottom) / 2, 1, hallwayHeight))
+            // Draw hallway to the left if possible
+            if (canPlaceRoom(left, (top + bottom) / 2, 1, hallwayHeight))
             {
-                fillRoom(left, (top - bottom) / 2, 1, hallwayHeight);
+                fillRoom(left, (top + bottom) / 2, 1, hallwayHeight);
             }
 
-            if (canPlaceRoom((right - left) / 2, top, hallwayHeight, 1))
+            // Draw hallway above if possible (don't draw hallways on the top of the map)
+            if (canPlaceRoom((right + left) / 2, top, hallwayHeight, 1) && (top + 1) != map.renderHeight)
             {
-                fillRoom((right - left) / 2, top, hallwayHeight, 1);
+                fillRoom((right + left) / 2, top, hallwayHeight, 1);
             }
         }
     }

@@ -46,7 +46,7 @@ public class Map {
     private List<Position> enemyPositions = new List<Position>();
     private List<Position> itemPositions = new List<Position>();
     private List<Position> playerPositions = new List<Position>();
-    private int currentRoomIndex = 0;
+    public int currentRoomIndex = 0;
 
     public TileType[,] grid;
 
@@ -78,7 +78,15 @@ public class Map {
     }
 
     public bool playerInRoomWithEnemies() {
-        return Generate.rooms[currentRoomIndex].hasEnemies();
+        foreach (Room room in Generate.rooms)
+        {
+            if(room.containsPlayer)
+            {
+                return room.hasEnemies();
+            }
+        }
+
+        return false;
     }
 
     private void updatePlayerRoom() {
@@ -278,13 +286,15 @@ public class Room {
     public int y { get; private set; }
     public int height { get; private set; }
     public int width { get; private set; }
+    public bool containsPlayer { get; set; }
 
-    public Room(int x, int y, int width, int height, int enemyCount) {
+    public Room(int x, int y, int width, int height, int enemyCount, bool containsPlayer) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.enemyCount = enemyCount;
+        this.containsPlayer = containsPlayer;
     }
 
     public bool hasEnemies() {
@@ -320,6 +330,7 @@ public class Generate : MonoBehaviour {
     private Transform boardHolder;
     private int curRoom;
     private int itemCount;
+    private bool spawnedPlayer;
 
     void Awake() {
         // Bugged seed.
@@ -327,12 +338,14 @@ public class Generate : MonoBehaviour {
 
         curRoom = 1;
         itemCount = 2;
+        spawnedPlayer = false;
 
         map = new Map(mapHeight, mapHeight);
         rooms = new List<Room>();
 
         generateRooms(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
         generateHallways();
+        populateRooms();
 
         // Render the map, starting at (0.0, 0.0)
         renderMap(map, 0.0f, 0.0f);
@@ -367,7 +380,6 @@ public class Generate : MonoBehaviour {
                         break;
 
                     case TileType.PLAYER:
-                        print("RENDERING PLAYER");
                         Instantiate(playerPrefab, new Vector3(i, j, 0f), transform.rotation);
                         break;
 
@@ -433,8 +445,35 @@ public class Generate : MonoBehaviour {
             }
         }
 
-        // FIXME: Don't hardcode the enemy count, silly. Spawn enemies.
-        return new Room(startX, startY, roomWidth, roomHeight, 0);
+        curRoom++;
+
+        // Create a new room with a random amount of enemies and no player (by default)
+        return new Room(startX, startY, roomWidth, roomHeight, (int)Mathf.Floor(Mathf.Log(curRoom)), false);
+    }
+
+    void populateRooms()
+    {
+        foreach(Room room in rooms)
+        {
+            if(!spawnedPlayer)
+            {
+                spawnedPlayer = true;
+                map.setPlayerPosition(RandomPosition(room.width, room.height, room.x, room.y));
+                map.setActivePlayer(1);
+                map.setPlayerPosition(RandomPosition(room.width, room.height, room.x, room.y));
+                map.setActivePlayer(0);
+
+                room.enemyCount = 0;
+                room.containsPlayer = true;
+            }
+            else
+            {
+                for(int i = 0; i < room.enemyCount; i++)
+                {
+                    map.addEnemy(RandomPosition(room.width, room.height, room.x, room.y), TileType.ENEMY);
+                }
+            }
+        }
     }
 
     void generateHallways()

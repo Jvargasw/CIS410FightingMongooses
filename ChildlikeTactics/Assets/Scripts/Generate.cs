@@ -149,7 +149,8 @@ public class Map
             }
 
             if (room.x <= playerPositions[0].x && room.x + room.width >= playerPositions[0].x && room.y <= playerPositions[0].y && room.y + room.height >= playerPositions[0].y)
-            { 
+            {
+                MonoBehaviour.print("Assuming the player is in room: " + Generate.rooms.IndexOf(room) + " has enemies?: " + room.hasEnemies());
                 // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
                 room.containsPlayer = true;
                 break;
@@ -462,10 +463,10 @@ public class Generate : MonoBehaviour
         /* Called when the script first "wakes up" */
 
         // Random seed bruh
-        Random.seed = (int)DateTime.Now.Ticks;
+        Random.seed = -774579528;//(int)DateTime.Now.Ticks;
         seed = Random.seed;
 
-        curRoom = 1;
+        curRoom = 0;
         itemCount = 2;
         spawnedPlayer = false;
 
@@ -652,10 +653,11 @@ public class Generate : MonoBehaviour
                 room.containsPlayer = true;
             }
             else
-            {
+            { 
                 for(int i = 0; i < room.enemyCount; i++)
                 {
-                    map.addEnemy(RandomPosition(room.width, room.height, room.x, room.y), TileType.ENEMY);
+                    Position random = RandomPosition(room.width, room.height, room.x, room.y);
+                    map.addEnemy(random, TileType.ENEMY);
                 }
             }
         }
@@ -778,7 +780,7 @@ public class Generate : MonoBehaviour
          *      A Position object that has a random x and y
          */
 
-        int topSide = x + height;
+        int topSide = y + height;
         int rightSide = x + width;
         int endX = Random.Range(x + 2, rightSide - 2);
         int endY = Random.Range(y + 2, topSide - 2);

@@ -408,6 +408,7 @@ public class Room
     public int height { get; private set; }
     public int width { get; private set; }
     public bool containsPlayer { get; set; }
+    public bool containsBoss { get; set; }
 
     public Room(int x, int y, int width, int height, int enemyCount, bool containsPlayer)
     {
@@ -421,7 +422,7 @@ public class Room
 
     public bool hasEnemies()
     {
-        return enemyCount != 0;
+        return enemyCount != 0 || containsBoss;
     }
 }
 
@@ -463,7 +464,7 @@ public class Generate : MonoBehaviour
         /* Called when the script first "wakes up" */
 
         // Random seed bruh
-        Random.seed = -774579528;//(int)DateTime.Now.Ticks;
+        Random.seed = (int)DateTime.Now.Ticks;
         seed = Random.seed;
 
         curRoom = 0;
@@ -651,6 +652,13 @@ public class Generate : MonoBehaviour
 
                 room.enemyCount = 0;
                 room.containsPlayer = true;
+            }
+            else if(rooms.IndexOf(room) == rooms.Count - 1)
+            {
+                room.enemyCount = 0;
+                room.containsBoss = true;
+                Position random = RandomPosition(room.width, room.height, room.x, room.y);
+                map.addEnemy(random, TileType.BOSS);
             }
             else
             { 

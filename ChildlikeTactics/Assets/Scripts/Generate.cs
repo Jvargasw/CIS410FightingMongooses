@@ -500,17 +500,18 @@ public class Generate : MonoBehaviour
         print("Render Width: " + map.renderWidth);
 
         // Fit the plane properly to the map size. Now a much better implementation (Thanks Ryan!). 
-        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderWidth - 1) / 2.0f, (map.renderHeight - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));
-        instance.transform.localScale = new Vector3(0.1f * map.renderWidth, 1, 0.1f * map.renderHeight);
+        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight - 1) / 2.0f, (map.renderWidth - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));//XY issue: height and width are switched
+        instance.transform.localScale = new Vector3(0.1f * map.renderHeight, 1, 0.1f * map.renderWidth);
 
         GameObject enemy;
         GameObject item;
 
-        for (int i = 0; i < map.renderWidth; i++)
+        //XY issue: XY are still swapped somehow, this is altered to handle that
+        for (int j = 0; j < map.renderWidth; j++)
         {
-            for (int j = 0; j < map.renderHeight; j++)
+            for (int i = 0; i < map.renderHeight; i++)
             {
-                TileType curTile = map.getTileAt(i, j);
+                TileType curTile = map.getTileAt(j, i); //XY issue: these should be swapped (as well as the loop variable names) if XY swap is changed
                 switch (curTile)
                 {
                     case TileType.NONE:
@@ -529,12 +530,12 @@ public class Generate : MonoBehaviour
 
                     case TileType.ENEMY:
                         enemy = (GameObject)Instantiate(enemyPrefab, new Vector3(i, j, 0f), transform.rotation);
-                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
+                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(j, i);//XY issue: swapped here
                         break;
 
                     case TileType.BOSS:
                         enemy = (GameObject)Instantiate(bossPrefab, new Vector3(i, j, 0f), transform.rotation);
-                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
+                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(j, i);//XY issue: and here
                         break;
 
                     case TileType.ITEM:
@@ -552,7 +553,7 @@ public class Generate : MonoBehaviour
                             print("Invalid item type");
                             break;
                         }
-                        item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(i, j);
+                        item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(j, i); //XY issue: and here
                         break;
                 }
 
@@ -787,26 +788,27 @@ public class Generate : MonoBehaviour
     }
 
 
-	void OnDrawGizmos()
-    {
+    void OnDrawGizmos() {
         /* Dunno. Tegan wrote this. */
-		if (drawGizmos) {
-			Gizmos.DrawWireCube (transform.position, new Vector3 (map.width, 1, map.height));
+        if (drawGizmos) {
+            if (map != null) {
+                Gizmos.DrawWireCube(transform.position, new Vector3(map.width, 1, map.height));
 
-			if (map.grid != null) {
-				for (int i = 0; i < mapWidth; i++) {
-					for (int j = 0; j < mapHeight; j++) {
-						TileType tile = map.grid [i, j];
-						if (tile == TileType.WALKABLE)
-							Gizmos.color = Color.white;
-						else if (tile == TileType.PLAYER)
-							Gizmos.color = Color.blue;
-						else
-							Gizmos.color = Color.red;
-						Gizmos.DrawCube (new Vector3 (j, i, -3f), Vector3.one * (.9f));
-					}
-				}
-			}
-		}
-	}
+                if (map.grid != null) {
+                    for (int i = 0; i < mapWidth; i++) {
+                        for (int j = 0; j < mapHeight; j++) {
+                            TileType tile = map.grid[i, j];
+                            if (tile == TileType.WALKABLE)
+                                Gizmos.color = Color.white;
+                            else if (tile == TileType.PLAYER)
+                                Gizmos.color = Color.blue;
+                            else
+                                Gizmos.color = Color.red;
+                            Gizmos.DrawCube(new Vector3(j, i, -3f), Vector3.one * (.9f));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

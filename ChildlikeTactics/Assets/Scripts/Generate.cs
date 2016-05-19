@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
+using System;
 
 public enum TileType
 {
@@ -446,6 +447,7 @@ public class Generate : MonoBehaviour
     public float spriteSize = 1;
     public Map map;
     public static List<Room> rooms;
+    public int seed;
 
     private Transform boardHolder;
     private int curRoom;
@@ -456,8 +458,9 @@ public class Generate : MonoBehaviour
     {
         /* Called when the script first "wakes up" */
 
-        // Bugged seed.
-        Random.seed = 1463179365;
+        // Random seed bruh
+        Random.seed = (int)DateTime.Now.Ticks;
+        seed = Random.seed;
 
         curRoom = 1;
         itemCount = 2;

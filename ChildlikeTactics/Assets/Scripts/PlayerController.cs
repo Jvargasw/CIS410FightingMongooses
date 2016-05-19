@@ -153,10 +153,8 @@ public class PlayerController : PlayerUnit
                     PlayerEndTurn();
                     return;
                 }
-                else {
-                    print("Error with fighting enemies");
-                }
             }
+            print("Error with fighting enemies");
         }
 		return;
 	}

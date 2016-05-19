@@ -9,23 +9,28 @@ public class TurnManager : MonoBehaviour {
 
 	public static bool playerTurn = true;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (!playerTurn) {
-			enemyTurn();
-		}
+    void Update() {
+        if (!playerTurn) {
+            EnemyTurn();
+        }
 
     }
 
-	private void enemyTurn() {
-        this.GetComponent<EnemyManager>().EnemyTurn();
-		playerTurn = true;
-		return;
-	}
+    //public int maxEnemies = 10;
+    public GameObject[] enemies;
+
+    void Start() {
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+    }
+
+    public void EnemyTurn() {
+        foreach (GameObject enemy in enemies) {
+            if (enemy.GetComponent<EnemyController>().isActiveAndEnabled) {
+                enemy.GetComponent<EnemyController>().Attack();
+            }
+        }
+        playerTurn = true;
+        return;
+    }
 		
 }

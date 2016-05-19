@@ -246,21 +246,21 @@ public class PlayerController : PlayerUnit
         int w = Screen.width;
         int h = Screen.height;
         if (lvlUp > 0) {
-            if (GUI.Button(new Rect(0, (h * 2) / 5, h / 5, w / 4), "HP+50%")) {
+            if (GUI.Button(new Rect(0, (h * 2) / 5, w / 4, h / 5), "HP+50%")) {
                 maxHealth += maxHealth / 2;
                 health += maxHealth;
                 lvlUp -= 1;
             }
-            if (GUI.Button(new Rect(w/4, (h * 2) / 5, h / 5, w / 4), "DMG+50%")) {
+            if (GUI.Button(new Rect(w/4, (h * 2) / 5, w / 4, h / 5), "DMG+50%")) {
                 playerDmg += playerDmg / 2;
                 DmgDisplayUpdate();
                 lvlUp -= 1;
             }
-            if (GUI.Button(new Rect(w/2, (h * 2) / 5, h / 5, w / 4), "MOV+1")) {
+            if (GUI.Button(new Rect(w/2, (h * 2) / 5, w / 4, h / 5), "MOV+1")) {
                 maxMoveDistance += 1;
                 lvlUp -= 1;
             }
-            if (GUI.Button(new Rect(3*w/2, (h * 2) / 5, h / 5, w / 4), "DEF+1")) {
+            if (GUI.Button(new Rect(3*w/4, (h * 2) / 5, w / 4, h / 5), "DEF+1")) {
                 def += 1;
                 lvlUp -= 1;
             }

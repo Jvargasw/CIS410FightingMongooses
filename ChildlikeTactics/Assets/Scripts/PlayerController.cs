@@ -93,7 +93,7 @@ public class PlayerController : PlayerUnit
         if(isMoving){
             //have we already moved the max number of spaces?
             if ((spacesMoved + 1 <= maxMoveDistance) || !map.playerInRoomWithEnemies()) {
-                if (map.movePlayerTo((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x))) { //OK, the X and Y being swapped is kinda a problem.
+                if (map.movePlayerTo((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y))) { //OK, the X and Y being swapped is kinda a problem.
                     spacesMoved++;
                     movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
                     Vector3 oldPosition = transform.position;
@@ -111,8 +111,8 @@ public class PlayerController : PlayerUnit
                     }
                 }
                 else {
-                    if (map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.ITEM) {
-                        int index = map.getPlayerCollidedWith((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x));
+                    if (map.getTileAt((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y)) == TileType.ITEM) {
+                        int index = map.getPlayerCollidedWith((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y));
                         foreach (GameObject item in GameObject.FindGameObjectsWithTag("Item")) {
                             ItemController ic = item.GetComponent<ItemController>();
                             if (index == ic.index) {
@@ -143,10 +143,10 @@ public class PlayerController : PlayerUnit
         }
 
         //Attacking
-        if (map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.ENEMY ||
-            map.getTileAt((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x)) == TileType.BOSS){
+        if (map.getTileAt((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y)) == TileType.ENEMY ||
+            map.getTileAt((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y)) == TileType.BOSS){
 
-            int index = map.getPlayerCollidedWith((int)(moveDirection.y + transform.position.y), (int)(moveDirection.x + transform.position.x));
+            int index = map.getPlayerCollidedWith((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y));
             foreach(GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
                 if(index == enemy.GetComponent<EnemyController>().index) {
                     MeleeAttack(enemy);
@@ -216,7 +216,7 @@ public class PlayerController : PlayerUnit
 
     override public void Follow(Vector3 pos, int index) {
         transform.position = pos;
-        playerUnitManager.updateMap(index, (int)pos.y, (int)pos.x);
+        playerUnitManager.updateMap(index, (int)pos.x, (int)pos.y);
     }
 
     override public void CheckLevelUp() {

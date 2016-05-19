@@ -89,7 +89,7 @@ public class EnemyController : MonoBehaviour {
         if (success) {
             foreach ( Position loc in path) {
                 tileManager.GetComponent<Generate>().map.setEnemyPosition(index, loc);
-                this.transform.position = new Vector3(loc.y, loc.x, this.transform.position.z); //X and Y swapped cause map.grid is has x and y swapped in it
+                this.transform.position = new Vector3(loc.x, loc.y, this.transform.position.z);
             }
         }
         return success;

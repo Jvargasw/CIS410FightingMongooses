@@ -500,18 +500,17 @@ public class Generate : MonoBehaviour
         print("Render Width: " + map.renderWidth);
 
         // Fit the plane properly to the map size. Now a much better implementation (Thanks Ryan!). 
-        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderHeight - 1) / 2.0f, (map.renderWidth - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));//XY issue: height and width are switched
-        instance.transform.localScale = new Vector3(0.1f * map.renderHeight, 1, 0.1f * map.renderWidth);
+        GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderWidth - 1) / 2.0f, (map.renderHeight - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));
+        instance.transform.localScale = new Vector3(0.1f * map.renderWidth, 1, 0.1f * map.renderHeight);
 
         GameObject enemy;
         GameObject item;
 
-        //XY issue: XY are still swapped somehow, this is altered to handle that
-        for (int j = 0; j < map.renderWidth; j++)
+        for (int i = 0; i < map.renderWidth; i++)
         {
-            for (int i = 0; i < map.renderHeight; i++)
+            for (int j = 0; j < map.renderHeight; j++)
             {
-                TileType curTile = map.getTileAt(j, i); //XY issue: these should be swapped (as well as the loop variable names) if XY swap is changed
+                TileType curTile = map.getTileAt(i, j);
                 switch (curTile)
                 {
                     case TileType.NONE:
@@ -530,12 +529,12 @@ public class Generate : MonoBehaviour
 
                     case TileType.ENEMY:
                         enemy = (GameObject)Instantiate(enemyPrefab, new Vector3(i, j, 0f), transform.rotation);
-                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(j, i);//XY issue: swapped here
+                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.BOSS:
                         enemy = (GameObject)Instantiate(bossPrefab, new Vector3(i, j, 0f), transform.rotation);
-                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(j, i);//XY issue: and here
+                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
                         break;
 
                     case TileType.ITEM:
@@ -553,7 +552,7 @@ public class Generate : MonoBehaviour
                             print("Invalid item type");
                             break;
                         }
-                        item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(j, i); //XY issue: and here
+                        item.GetComponent<ItemController>().index = map.getPlayerCollidedWith(i, j);
                         break;
                 }
 
@@ -804,7 +803,7 @@ public class Generate : MonoBehaviour
                                 Gizmos.color = Color.blue;
                             else
                                 Gizmos.color = Color.red;
-                            Gizmos.DrawCube(new Vector3(j, i, -3f), Vector3.one * (.9f));
+                            Gizmos.DrawCube(new Vector3(i, j, -3f), Vector3.one * (.9f));
                         }
                     }
                 }

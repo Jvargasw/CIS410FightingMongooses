@@ -124,7 +124,7 @@ public class Map
 
     private void updatePlayerRoom()
     {
-        /* Updates which romo the player is currently in, so that
+        /* Updates which room the player is currently in, so that
          * playerInRoomWithEnemies actually returns an accurate value.
          * 
          * Args:
@@ -140,16 +140,19 @@ public class Map
             return;
         }
 
-        Room currentRoom = Generate.rooms[currentRoomIndex];
-        if (!(currentRoom.x <= playerPositions[0].x && currentRoom.x + currentRoom.width >= playerPositions[0].x && currentRoom.y <= playerPositions[0].y && currentRoom.y + currentRoom.height >= playerPositions[0].y))
+        foreach (Room room in Generate.rooms)
         {
-            if (currentRoom.x > playerPositions[0].x || currentRoom.y > playerPositions[0].y)
+            if(room.containsPlayer)
             {
-                currentRoomIndex -= 1;
+                // Set the previous room we were in to not containing the player
+                room.containsPlayer = false;
             }
-            else
-            {
-                currentRoomIndex += 1;
+
+            if (room.x <= playerPositions[0].x && room.x + room.width >= playerPositions[0].x && room.y <= playerPositions[0].y && room.y + room.height >= playerPositions[0].y)
+            { 
+                // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
+                room.containsPlayer = true;
+                break;
             }
         }
     }

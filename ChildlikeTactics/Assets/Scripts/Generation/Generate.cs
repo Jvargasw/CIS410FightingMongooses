@@ -65,7 +65,7 @@ public class Room
 
     public bool hasEnemies()
     {
-        return enemyCount != 0 || containsBoss;
+        return enemyCount != 0 /*|| containsBoss*/;
     }
 }
 
@@ -359,7 +359,7 @@ public class Generate : MonoBehaviour
             }
             else if(rooms.IndexOf(room) == rooms.Count - 1)
             {
-                room.enemyCount = 0;
+                room.enemyCount = 1;
                 room.containsBoss = true;
                 Position random = RandomPosition(room.width, room.height, room.x, room.y);
                 map.addEnemy(random, TileType.BOSS);

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerUnitManager : MonoBehaviour {
 
 	private FollowActiveUnit unitIndicator;
+	private bool paused = false;
 
 	public List<PlayerUnit> units;
 	public List<IEnumerator> routines = new List<IEnumerator>();
@@ -15,10 +16,11 @@ public class PlayerUnitManager : MonoBehaviour {
 	public PlayerUnit activeUnit;
 	public int activeUnitIndex = 0;
 
-	public GameObject healthPanel, attackPanel, defensePanel, movementPanel, expPanel;
+	public GameObject healthPanel, attackPanel, defensePanel, movementPanel, expPanel, pauseMenu;
+    public AudioClip attackSound;
 
-	// Use this for initialization
-	void Awake () {
+    // Use this for initialization
+    void Awake () {
 
 		units = new List<PlayerUnit>();
 
@@ -58,7 +60,16 @@ public class PlayerUnitManager : MonoBehaviour {
 	void Update () {
 		if ((Input.GetKeyDown (KeyCode.Tab) && map.playerInRoomWithEnemies())) {
 
-            setUnit(activeUnitIndex+1);
+            NextPlayer();
+		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			paused = !paused;
+			pauseMenu.SetActive (paused);
+			if (paused)
+				Time.timeScale = 0;
+			else
+				Time.timeScale = 1;
 		}
 	}
 
@@ -72,6 +83,7 @@ public class PlayerUnitManager : MonoBehaviour {
         activeUnit = units[activeUnitIndex];
 		unitIndicator.UpdateActiveUnit (activeUnit);
 		UpdateStatsPanel ();
+        print("Started: " + activeUnitIndex);
         StartCoroutine(routines[activeUnitIndex]);
     }
 
@@ -81,5 +93,9 @@ public class PlayerUnitManager : MonoBehaviour {
             print("Error with following player on grid.");
         }
         map.setActivePlayer(activeUnitIndex);
+    }
+
+    public void NextPlayer() {
+        setUnit(activeUnitIndex + 1);
     }
 }

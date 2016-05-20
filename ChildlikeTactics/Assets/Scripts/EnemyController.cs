@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour {
     public int health;
     public int dmg;
     public int movement = 5;
+    public int initiative = 15;
     //bool for the boss prefab
     public bool isBoss;
     public int def = 0;
@@ -17,6 +18,7 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
+    private TurnManager turnManager;
 	private Map map;
     private bool success;
 
@@ -37,8 +39,10 @@ public class EnemyController : MonoBehaviour {
         }
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
         unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
+        turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
+        //turnManager.combatants.Add(this.gameObject);
 
-		map = tileManager.GetComponent<Generate> ().map;
+        map = tileManager.GetComponent<Generate> ().map;
 
     }
 
@@ -61,6 +65,7 @@ public class EnemyController : MonoBehaviour {
         if (SeekAndDestroy(range,movement)) {
             MeleeAttack(target); //Change this once we add multiple Players
         }
+        turnManager.NextTurn();
     }
 
     public void TakeDmg(int playerDmg) {
@@ -80,6 +85,8 @@ public class EnemyController : MonoBehaviour {
         if (isBoss)
         {
             //Re-generate new level? (simple restart of the room does generate a new map, but gets an error immediately freezing the game)
+			LevelHolder.level++;
+			SceneManager.LoadScene("Main_Play");
         }
     }
 

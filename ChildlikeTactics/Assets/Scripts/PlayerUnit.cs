@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public abstract class PlayerUnit : MonoBehaviour {
 
@@ -118,6 +119,12 @@ public abstract class PlayerUnit : MonoBehaviour {
 	{
 		isMoving = false;
 		turnText.text = "Attacking";
+	}
+
+	void OnTriggerEnter(Collider coll) {
+		if (coll.CompareTag ("Exit")) {
+			SceneManager.LoadScene("Main_Play");
+		}
 	}
 
 

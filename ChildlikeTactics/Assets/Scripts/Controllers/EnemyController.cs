@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour {
 
+	public GameObject exitTile;
+
     public int index;
     public int health;
     public int dmg;
@@ -80,14 +82,13 @@ public class EnemyController : MonoBehaviour {
 
     public void Die() {
         //placeholder for giving player experience, gold, etc.
-        tileManager.GetComponent<Generate>().map.destroyEnemy(index);
-        gameObject.gameObject.SetActive(false);
         if (isBoss)
         {
-            //Re-generate new level? (simple restart of the room does generate a new map, but gets an error immediately freezing the game)
 			LevelHolder.level++;
-			SceneManager.LoadScene("Main_Play");
+			Instantiate (exitTile, transform.position - new Vector3(0, 0, .3f), Quaternion.identity);
         }
+		tileManager.GetComponent<Generate>().map.destroyEnemy(index);
+		gameObject.gameObject.SetActive(false);
     }
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {

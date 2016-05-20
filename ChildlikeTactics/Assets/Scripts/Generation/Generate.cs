@@ -117,11 +117,12 @@ public class Generate : MonoBehaviour
         map = new Map(mapHeight, mapHeight);
         rooms = new List<Room>();
 
-        // Generate all the rooms, then generate all the hallways for the rooms, then generate the obstacles for the rooms, then populate the rooms with enemies/items/players/etc.
+        // Generate all the rooms, then generate all the hallways for the rooms, then populate the rooms with enemies/items/players/etc, then generate the obstacles for the rooms, .
         generateRooms(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
         generateHallways();
-        generateObstacles();
         populateRooms();
+        generateObstacles();
+        
 
         // Render the map, starting at (0.0, 0.0)
         renderMap(map, 0, 0);
@@ -363,7 +364,15 @@ public class Generate : MonoBehaviour
                 map.addEnemy(random, TileType.BOSS);
             }
             else
-            { 
+            {
+                bool generateItems = Random.Range(0, 100) > 75;
+                while(generateItems)
+                { 
+                    Position random = RandomPosition(room.width, room.height, room.x, room.y);
+                    map.addItem(random, TileType.ITEM);
+                    generateItems = Random.Range(0, 100) > 75;
+                }
+
                 for(int i = 0; i < room.enemyCount; i++)
                 {
                     Position random = RandomPosition(room.width, room.height, room.x, room.y);
@@ -380,15 +389,15 @@ public class Generate : MonoBehaviour
             bool createObstacle = Random.Range(0, 100) > 50;
             while(createObstacle)
             {
-                int obstacleHeight = Random.Range(1, room.height / 2);
-                int obstacleWidth = Random.Range(1, room.width / 2);
+                int obstacleHeight = Random.Range(1, room.height);
+                int obstacleWidth = Random.Range(1, room.width);
                 Position obstaclePosition = RandomPosition(obstacleWidth, obstacleHeight, room.x, room.y);
                 if (canPlaceObstacle(obstaclePosition.x, obstaclePosition.y, obstacleWidth, obstacleHeight))
                 {
                     print("Creating obstacle in room: " + rooms.IndexOf(room));
                     fillUnwalkable(obstaclePosition.x, obstaclePosition.y, obstacleWidth, obstacleHeight);
                 }
-                createObstacle = Random.Range(0, 100) > 50;
+                createObstacle = Random.Range(0, 100) > 25;
             }
         }
     }

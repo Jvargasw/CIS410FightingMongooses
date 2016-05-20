@@ -226,8 +226,10 @@ public class PlayerController : PlayerUnit
 	}
 
 	override public void Die() {
-		//healthText.text = "YOU DIED!";
-		print("You died, loser.");
+        //healthText.text = "YOU DIED!";
+        Time.timeScale = 0;
+        playerUnitManager.DiedMenu.SetActive(true);
+        
 	}
 
 	override public void Follow(Vector3 pos, int index) {

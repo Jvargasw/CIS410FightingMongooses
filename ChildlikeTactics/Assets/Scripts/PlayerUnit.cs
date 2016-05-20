@@ -24,7 +24,6 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	public GameObject healthBar;
 	protected GameObject playerRenderer;
-	protected Quaternion startRot;
 	protected Animator animController;
 
     public int lvlUp = 0;
@@ -47,7 +46,6 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 		//get reference to PlayerRenderer parented to this unit
 		playerRenderer = transform.Find("PlayerRenderer").gameObject;
-		startRot = playerRenderer.transform.rotation;
 		animController = playerRenderer.GetComponent<Animator>();
 
 		//init reference to PlayerUnitManager script and vars
@@ -65,7 +63,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	protected void Update(){
 		//update healthbar
-		healthBar.transform.localScale = new Vector3 (((float) health/(float) maxHealth)*.8f, 0.25f, 1f);
+		healthBar.transform.localScale = new Vector3 (((float) health/(float) maxHealth), 0.25f, 1f);
 	}
 
 	//abstract methods to be defined per player unit

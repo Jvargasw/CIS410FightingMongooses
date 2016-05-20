@@ -67,9 +67,8 @@ public class EnemyController : MonoBehaviour {
 	
 	public void Attack() {
         if (SeekAndDestroy(range,movement)) {
-            MeleeAttack(target); //Change this once we add multiple Players
+            MeleeAttack(target);
         }
-        turnManager.NextTurn();
     }
 
     public bool TakeDmg(int playerDmg) {

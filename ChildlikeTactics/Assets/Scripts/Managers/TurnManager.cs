@@ -32,6 +32,8 @@ public class TurnManager : MonoBehaviour {
             }
             else {
                 inCombat = false;
+                playerUnitManager.units[0].myTurn = true;
+                playerUnitManager.units[1].myTurn = false;
             }
         }
 
@@ -58,14 +60,15 @@ public class TurnManager : MonoBehaviour {
     }
 
     public void NextTurn() {
-        /*playerUnitManager.units[player].myTurn = false;
+        playerUnitManager.units[player].myTurn = false;
         player++;
-        if(player >= 2) {*/
-            playerTurn = false;/*
+        if(player >= 2) {
+            playerTurn = false;
             player = 0;
+            //EnemyTurn();
         }
         playerUnitManager.units[player].myTurn = true;
-        playerUnitManager.NextPlayer();*/
+        //playerUnitManager.NextPlayer();
     }
 		
 }

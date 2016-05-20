@@ -3,13 +3,8 @@ using System.Collections;
 
 public class SetPlayerRotation : MonoBehaviour {
 
-	// Use this for initialization
+	//this script sets PlayerRenderer's rotation to 270 around x
 	void Start () {
 		transform.rotation = Quaternion.AngleAxis (270f, new Vector3 (1, 0, 0));
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

@@ -1,11 +1,28 @@
 fileFormatVersion: 2
 guid: fd5d56d3828889d4db92294f58719415
+<<<<<<< HEAD
+timeCreated: 1463729297
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - activeUnit: {instanceID: 0}
+  - healthPanel: {instanceID: 0}
+  - attackPanel: {instanceID: 0}
+  - defensePanel: {instanceID: 0}
+  - movementPanel: {instanceID: 0}
+  - expPanel: {instanceID: 0}
+  - pauseMenu: {instanceID: 0}
+  - attackSound: {fileID: 8300000, guid: d33eaf77702419440b626b1bcb2a991e, type: 3}
+  executionOrder: 0
+=======
 timeCreated: 1463728619
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 100
+>>>>>>> origin/master
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

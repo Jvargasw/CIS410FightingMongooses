@@ -83,7 +83,6 @@ public class PlayerController : PlayerUnit
 			}*/
 			yield return null;
 		}
-
 		yield break;
 	}
 
@@ -234,7 +233,8 @@ public class PlayerController : PlayerUnit
 	override public void Follow(Vector3 pos, int index) {
 		transform.position = pos;
 		playerUnitManager.updateMap(index, (int)pos.x, (int)pos.y);
-	}
+        movePosition = new Vector3(pos.x, pos.y, 0);
+    }
 
 	override public void CheckLevelUp() {
 		if(exp >= nxtlvlxp) {

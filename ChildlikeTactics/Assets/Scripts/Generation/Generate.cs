@@ -81,6 +81,7 @@ public class Generate : MonoBehaviour
     public GameObject bossPrefab;
     public GameObject itemHPPrefab;
     public GameObject itemDMGPrefab;
+    public GameObject itemDEFPrefab;
 
     // Public values useful for generation
     public int minRoomWidth = 10;
@@ -108,7 +109,7 @@ public class Generate : MonoBehaviour
         seed = Random.seed;
 
         curRoom = 0;
-        itemCount = 2;
+        itemCount = 3;
         spawnedPlayer = false;
 
         map = new Map(mapHeight, mapHeight);
@@ -190,6 +191,9 @@ public class Generate : MonoBehaviour
                         else if (type == 1)
                         {
                             item = (GameObject)Instantiate(itemDMGPrefab, new Vector3(i, j, 0f), transform.rotation);
+                        }
+                        else if (type == 2) {
+                            item = (GameObject)Instantiate(itemDEFPrefab, new Vector3(i, j, 0f), transform.rotation);
                         }
                         else
                         {

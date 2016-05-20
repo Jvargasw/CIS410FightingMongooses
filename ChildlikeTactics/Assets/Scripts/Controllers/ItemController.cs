@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 public enum ItemType {
     HP,
-    DMG
+    DMG,
+	DEF
 };
 
 public class ItemController : MonoBehaviour {
 
-    public int setType = -1;//-1 = unset, 0 = HP, 1 = DMG, add as needed
+    public int setType = -1;//-1 = unset, 0 = HP, 1 = DMG, 2 = DEF, add as needed
     public int index;
     public List<int> stats = new List<int>();
 
@@ -26,6 +27,9 @@ public class ItemController : MonoBehaviour {
         else if(setType == 1){
             type = ItemType.DMG;
         }
+		else if(setType == 2){
+			type = ItemType.DEF;
+		}
         //stats[0] = 30; //will vary with item
     }
 	

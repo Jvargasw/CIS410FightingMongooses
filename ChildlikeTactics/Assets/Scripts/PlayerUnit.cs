@@ -83,6 +83,8 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	public abstract void DecreaseDmg(int dmg);
 
+	public abstract void IncreaseDef(int dmg);
+
 	public abstract void MeleeAttack (GameObject enemy);
 
 	public abstract void Die ();

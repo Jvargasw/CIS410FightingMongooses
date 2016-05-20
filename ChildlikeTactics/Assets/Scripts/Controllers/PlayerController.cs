@@ -127,6 +127,11 @@ public class PlayerController : PlayerUnit
 										player.IncreaseDmg(ic.stats[0]);
 									}
 								}
+								else if (itemType == ItemType.DEF) {
+									foreach (PlayerUnit player in unitManager) {
+										player.IncreaseDef(ic.stats[0]);
+									}
+								}
 								else {
 									print("Unknown Item Type on Pickup");
 								}
@@ -192,13 +197,16 @@ public class PlayerController : PlayerUnit
 
 	override public void IncreaseDmg(int dmg) {
 		playerDmg += dmg;
-		DmgDisplayUpdate();
 		playerUnitManager.UpdateStatsPanel ();
 	}
 
 	override public void DecreaseDmg(int dmg) {
 		playerDmg -= dmg;
-		DmgDisplayUpdate();
+		playerUnitManager.UpdateStatsPanel ();
+	}
+
+	override public void IncreaseDef(int defense) {
+		def += defense;
 		playerUnitManager.UpdateStatsPanel ();
 	}
 

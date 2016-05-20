@@ -94,7 +94,10 @@ public class PlayerController : PlayerUnit
             //have we already moved the max number of spaces?
             if ((spacesMoved + 1 <= maxMoveDistance) || !map.playerInRoomWithEnemies()) {
                 if (map.movePlayerTo((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y))) { //OK, the X and Y being swapped is kinda a problem.
-                    spacesMoved++;
+                    //make player face in the direction of movement. NOT WORKIN YET
+					//playerRenderer.transform.rotation = Quaternion.LookRotation(moveDirection);
+
+					spacesMoved++;
                     movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
                     Vector3 oldPosition = transform.position;
                     transform.position = movePosition;

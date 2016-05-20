@@ -366,7 +366,13 @@ public class Map
     public void destroyEnemy(int index)
     {
         Position pos = getEnemyPosition(index);
-        Generate.rooms[currentRoomIndex].enemyCount--;
+        foreach (Room room in Generate.rooms) {
+            if (room.x <= pos.x && room.x + room.width >= pos.x && room.y <= pos.y && room.y + room.height >= pos.y) {
+                // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
+                room.enemyCount--;
+                break;
+            }
+        }
         destroyThing(pos.x, pos.y);
     }
 

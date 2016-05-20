@@ -25,6 +25,9 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int spacesMoved = 0;
 
 	public GameObject healthBar;
+	protected GameObject playerRenderer;
+	protected Animator animController;
+
     public int lvlUp = 0;
     public bool myTurn = false;
 
@@ -45,10 +48,16 @@ public abstract class PlayerUnit : MonoBehaviour {
 		expText = GameObject.Find("HealthText").GetComponent<Text>();
         dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
+		//get reference to PlayerRenderer parented to this unit
+		playerRenderer = transform.Find("PlayerRenderer").gameObject;
+		animController = playerRenderer.GetComponent<Animator>();
+
+		//init reference to PlayerUnitManager script and vars
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
         unitManager = playerUnitManager.units;
 		routineManager = playerUnitManager.routines;
+
 		//register this unit with the PlayerUnitManager
 		unitManager.Add(this);
 		routineManager.Add (PlayerTurn());
@@ -57,11 +66,11 @@ public abstract class PlayerUnit : MonoBehaviour {
         turnManager.combatants.Add(this.gameObject);
 
 		StartMoving();
-		//healthText.text = "HP: " + health;
 	}
 
 	protected void Update(){
-		healthBar.transform.localScale = new Vector3 ((health*1.3f)/100, 0.25f, 1f);
+		//update healthbar
+		healthBar.transform.localScale = new Vector3 (((float) health/(float) maxHealth), 0.25f, 1f);
 	}
 
 	//abstract methods to be defined per player unit

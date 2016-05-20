@@ -35,8 +35,5 @@ public class startMenuManager : MonoBehaviour {
     {
         SceneManager.LoadScene("Main_Play");
     }
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
+
 }

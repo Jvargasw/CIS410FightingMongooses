@@ -6,7 +6,7 @@ using System;
 
 public class PlayerController : PlayerUnit
 {
-	/* vvv These are declared in PlayerUnit vvv
+    /* vvv These are declared in PlayerUnit vvv
     public float playerSpeed = 3.0f;
 	public int maxMoveDistance = 3; //the most spaces the player can move in a turn
     public int playerDmg = 10;
@@ -16,7 +16,6 @@ public class PlayerController : PlayerUnit
 	private Vector3 startPosition;
 	private int spacesMoved = 0;
 	*/
-
 	private Map map;
 
 	new void Start()
@@ -205,8 +204,9 @@ public class PlayerController : PlayerUnit
 	override public void MeleeAttack(GameObject enemy) {
 		//trigger attack animation
 		animController.SetTrigger ("Attack");
-
-		EnemyController enemyC = enemy.GetComponent<EnemyController>();
+        //play attack sound
+        AudioSource.PlayClipAtPoint(playerUnitManager.attackSound, Camera.main.transform.position);
+        EnemyController enemyC = enemy.GetComponent<EnemyController>();
 		int enemyXP = enemyC.exp;
 		enemyC.TakeDmg(playerDmg);
 		if (!enemy.GetComponent<EnemyController>().isActiveAndEnabled) {

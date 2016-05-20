@@ -17,9 +17,10 @@ public class PlayerUnitManager : MonoBehaviour {
 	public int activeUnitIndex = 0;
 
 	public GameObject healthPanel, attackPanel, defensePanel, movementPanel, expPanel, pauseMenu;
+    public AudioClip attackSound;
 
-	// Use this for initialization
-	void Awake () {
+    // Use this for initialization
+    void Awake () {
 
 		units = new List<PlayerUnit>();
 

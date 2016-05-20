@@ -230,7 +230,7 @@ public class PlayerController : PlayerUnit
             exp -= nxtlvlxp;
             nxtlvlxp = nxtlvlxp * 2;
             ExpDisplayUpdate();
-            health += maxHealth;
+            health = maxHealth;
             LevelUp();
             CheckLevelUp();
         }
@@ -254,7 +254,7 @@ public class PlayerController : PlayerUnit
         if (lvlUp > 0) {
             if (GUI.Button(new Rect(0, (h * 2) / 5, w / 4, h / 5), "HP+50%")) {
                 maxHealth += maxHealth / 2;
-                health += maxHealth;
+                health = maxHealth;
                 lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
             }

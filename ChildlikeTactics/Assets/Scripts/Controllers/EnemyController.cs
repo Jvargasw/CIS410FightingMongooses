@@ -20,15 +20,14 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
-    private TurnManager turnManager;
-	private Map map;
+    //private TurnManager turnManager;
+	//private Map map;
     private bool success;
 	private bool isDead;
 
 	private TileType[,] grid;
 	private bool[,] tiles; //array of bools for whether or not each tile is walkable
 
-    private int test = 0;
     private List<PlayerUnit> unitManager;
 
     private PlayerUnit target;
@@ -44,10 +43,10 @@ public class EnemyController : MonoBehaviour {
         }
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
         unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
-        turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
+        //turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
         //turnManager.combatants.Add(this.gameObject);
 
-        map = tileManager.GetComponent<Generate> ().map;
+        //map = tileManager.GetComponent<Generate> ().map;
 
 		meshRenderer = GetComponent<MeshRenderer> ();
 
@@ -56,7 +55,7 @@ public class EnemyController : MonoBehaviour {
 	//stub of an A* function to be added later
 	private void FindPath (Vector3 start, Vector3 end) {
 		List<Vector3> openSet = new List<Vector3>();
-		HashSet<Vector3> closedSet = new HashSet<Vector3> ();
+		//HashSet<Vector3> closedSet = new HashSet<Vector3> ();
 		openSet.Add (start);
 		openSet.Add (end);
 

@@ -6,7 +6,8 @@ using System.Collections;
 
 public class DeathManager : MonoBehaviour
 {
-    string[] messageArray = new string[] { "Good work there kid, you're dead", "Nice going dingus", "A mind is a terrible thing to waste...", "What an immature way to die...", "Insert death message here" };
+    /// TBA, commented out for warnings reasons
+    //string[] messageArray = new string[] { "Good work there kid, you're dead", "Nice going dingus", "A mind is a terrible thing to waste...", "What an immature way to die...", "Insert death message here" };
     public GameObject DiedText;
     void OnEnable()
     {

@@ -483,9 +483,10 @@ public class Generate : MonoBehaviour
         map = new Map(mapHeight, mapHeight);
         rooms = new List<Room>();
 
-        // Generate all the rooms, then generate all the hallways for the rooms, then populate the rooms with enemies/items/players/etc.
+        // Generate all the rooms, then generate all the hallways for the rooms, then generate the obstacles for the rooms, then populate the rooms with enemies/items/players/etc.
         generateRooms(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
         generateHallways();
+        generateObstacles();
         populateRooms();
 
         // Render the map, starting at (0.0, 0.0)
@@ -637,6 +638,64 @@ public class Generate : MonoBehaviour
         return new Room(startX, startY, roomWidth, roomHeight, (int)Mathf.Floor(Mathf.Log(curRoom)), false);
     }
 
+    void fillUnwalkable(int startX, int startY, int roomWidth, int roomHeight)
+    {
+        /* Fills in a structure of the given dimensions at the given coordinates with UNWALKABLE's.
+         *
+         * Args:
+         *      int startX - The starting x position 
+         *      int startY - The starting y position
+         *      int roomWidth - The width of the room
+         *      int roomheight - The height of the room
+         *      
+         * Returns:
+         *      Nothing
+         */
+
+        for (int i = startX; i < startX + roomWidth; i++)
+        {
+            for (int j = startY; j < startY + roomHeight; j++)
+            {
+                map.setTileAt(i, j, TileType.UNWALKABLE);
+            }
+        }
+    }
+
+    bool canPlaceObstacle(int startX, int startY, int obstacleWidth, int obstacleHeight)
+    {
+        /* Checks to see if it can place a room with the given dimensions, without
+         * running out of the grid, or without colliding with a preexisting structure.
+         * 
+         * Args:
+         *      int startX - The starting x position (lower left corner) of the structure
+         *      int startY - The starting y position (lower left corner) of the structure
+         *      int roomWidth - The width of the room
+         *      int roomHeight - The height of the room
+         * 
+         * Returns:
+         *      True if you can place the room with the given dimensions, false if not.
+         */
+
+        if (startX + obstacleWidth < map.width && startY + obstacleHeight < map.height && startX >= 0 && startY >= 0)
+        {
+            for (int i = startX; i < startX + obstacleWidth; i++)
+            {
+                for (int j = startY; j < startY + obstacleHeight; j++)
+                {
+                    if (map.getTileAt(i, j) != TileType.WALKABLE)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
+
     void populateRooms()
     {
         /* Attempts to populate each room with players/enemies. FIXME: This should
@@ -676,6 +735,26 @@ public class Generate : MonoBehaviour
                     Position random = RandomPosition(room.width, room.height, room.x, room.y);
                     map.addEnemy(random, TileType.ENEMY);
                 }
+            }
+        }
+    }
+
+    void generateObstacles()
+    {
+        foreach(Room room in rooms)
+        {
+            bool createObstacle = Random.Range(0, 100) > 50;
+            while(createObstacle)
+            {
+                int obstacleHeight = Random.Range(1, room.height / 2);
+                int obstacleWidth = Random.Range(1, room.width / 2);
+                Position obstaclePosition = RandomPosition(obstacleWidth, obstacleHeight, room.x, room.y);
+                if (canPlaceObstacle(obstaclePosition.x, obstaclePosition.y, obstacleWidth, obstacleHeight))
+                {
+                    print("Creating obstacle in room: " + rooms.IndexOf(room));
+                    fillUnwalkable(obstaclePosition.x, obstaclePosition.y, obstacleWidth, obstacleHeight);
+                }
+                createObstacle = Random.Range(0, 100) > 50;
             }
         }
     }

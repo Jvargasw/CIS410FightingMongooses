@@ -20,7 +20,7 @@ public class LevelHolder : MonoBehaviour {
 	}
 
 	public void Start() {
-		levelText.GetComponent<Text>().text = "level: " + (level + 1).ToString ();
+		levelText.GetComponent<Text>().text = "Level: " + (level + 1).ToString ();
 	}
 	
 	// Update is called once per frame

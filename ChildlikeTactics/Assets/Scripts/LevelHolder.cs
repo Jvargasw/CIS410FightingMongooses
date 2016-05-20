@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class LevelHolder : MonoBehaviour {
 
 	public static int level = 0;
 
 	public static LevelHolder instance = null;
+
+	public GameObject levelText;
 
 	public void Awake()
 	{
@@ -17,7 +20,7 @@ public class LevelHolder : MonoBehaviour {
 	}
 
 	public void Start() {
-		print ("level: " + level.ToString ());
+		levelText.GetComponent<Text>().text = "level: " + (level + 1).ToString ();
 	}
 	
 	// Update is called once per frame

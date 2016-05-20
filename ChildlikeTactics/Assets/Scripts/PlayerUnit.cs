@@ -109,6 +109,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 		spacesMoved = 0;
 		transform.position = movePosition;
 		turnManager.NextTurn();
+		playerUnitManager.UpdateStatsPanel ();
 	}
 
 	public void StartMoving()

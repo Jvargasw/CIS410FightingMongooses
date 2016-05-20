@@ -88,13 +88,10 @@ public class Generate : MonoBehaviour
     public int minRoomHeight = 10;
     public int maxRoomHeight = 20;
     public int hallwayHeight = 4;
-    public int numRooms = 3;
     public int mapHeight = 64;
     public int mapWidth = 64;
-    public int wallHeight = 1;
-    public float spriteSize = 1;
     public Map map;
-    public List<Room> rooms;
+    public static List<Room> rooms;
     public int seed;
 
     private Transform boardHolder;

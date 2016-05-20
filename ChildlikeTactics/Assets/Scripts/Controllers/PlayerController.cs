@@ -47,16 +47,24 @@ public class PlayerController : PlayerUnit
 			if (Input.GetButtonDown ("Horizontal")) {
 				if (Input.GetAxisRaw ("Horizontal") > 0) {
 					AttemptMove (Vector2.right);
+					//look right
+					playerRenderer.transform.rotation = Quaternion.Euler (0f, 270f, -270f);
 				} else {
 					AttemptMove (Vector2.left);
+					//look left
+					playerRenderer.transform.rotation = Quaternion.Euler (0f, 90f, -90f);
 				}
 				yield return null;
 				//vertical movement
 			} else if (Input.GetButtonDown ("Vertical")) {
 				if (Input.GetAxisRaw ("Vertical") > 0) {
 					AttemptMove (Vector2.up);
+					//look up
+					playerRenderer.transform.rotation = Quaternion.Euler (-270f, 180f, 0f);
 				} else {
 					AttemptMove (Vector2.down);
+					//look down
+					playerRenderer.transform.rotation = Quaternion.Euler (-90f, 0f, -0f);
 				}
 				yield return null;
 

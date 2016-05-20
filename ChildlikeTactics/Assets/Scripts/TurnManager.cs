@@ -7,7 +7,7 @@ using UnityEngine.UI;
 //Handles the enemy's turn, and switching between player/enemy turns
 public class TurnManager : MonoBehaviour {
 
-	public static bool playerTurn = true;
+	public bool playerTurn = true;
     public bool inCombat = false;
 
     public List<GameObject> combatants = new List<GameObject>();

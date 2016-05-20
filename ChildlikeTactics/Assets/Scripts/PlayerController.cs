@@ -42,7 +42,7 @@ public class PlayerController : PlayerUnit
 		if (!turnManager.inCombat) {
 			myTurn = true;
 		}
-		while (/*myTurn &&*/ TurnManager.playerTurn) {
+		while (/*myTurn &&*/ turnManager.playerTurn) {
 
 			//horizontal movement
 			if (Input.GetButtonDown ("Horizontal")) {

@@ -41,7 +41,7 @@ public class PlayerController : PlayerUnit
 		//startPosition = transform.position;
 
 		//while it's the player's turn
-		while (TurnManager.playerTurn) {
+		while (turnManager.playerTurn) {
 
 			//horizontal movement
 			if (Input.GetButtonDown ("Horizontal")) {

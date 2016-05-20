@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TurnManager : MonoBehaviour {
 
 
-	public static bool playerTurn = true;
+	public bool playerTurn = true;
 
     void Update() {
         if (!playerTurn) {

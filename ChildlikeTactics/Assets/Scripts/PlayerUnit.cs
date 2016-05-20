@@ -32,6 +32,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	protected Text expText;
     protected Text dmgText;
 
+	public TurnManager turnManager;
     protected PlayerUnitManager playerUnitManager;
     protected List<PlayerUnit> unitManager;
 	protected List<IEnumerator> routineManager;
@@ -50,6 +51,8 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 		//init reference to PlayerUnitManager script and vars
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
+		turnManager = GameObject.Find ("GameManager").GetComponent<TurnManager> ();
+
         unitManager = playerUnitManager.units;
 		routineManager = playerUnitManager.routines;
 
@@ -97,7 +100,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 
     public void PlayerEndTurn() {
 		turnText.text = "Enemy Turn";
-		TurnManager.playerTurn = false;
+		turnManager.playerTurn = false;
 		StartMoving();
 		spacesMoved = 0;
 		transform.position = movePosition;

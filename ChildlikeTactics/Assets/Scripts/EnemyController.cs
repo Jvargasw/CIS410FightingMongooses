@@ -80,6 +80,8 @@ public class EnemyController : MonoBehaviour {
         if (isBoss)
         {
             //Re-generate new level? (simple restart of the room does generate a new map, but gets an error immediately freezing the game)
+			LevelHolder.level++;
+			SceneManager.LoadScene("Main_Play");
         }
     }
 

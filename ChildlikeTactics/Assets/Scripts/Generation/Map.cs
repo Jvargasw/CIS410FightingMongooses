@@ -29,7 +29,7 @@ public class Map
     private List<Position> playerPositions = new List<Position>();
     public int currentRoomIndex = 0;
 
-    Generate generator = GameObject.Find("TileManager").GetComponent<Generate>();
+    //Generate generator = GameObject.Find("TileManager").GetComponent<Generate>();
 
     public TileType[,] grid;
 

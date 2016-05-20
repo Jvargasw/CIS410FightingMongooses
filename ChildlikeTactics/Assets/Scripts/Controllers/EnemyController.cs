@@ -20,17 +20,19 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
-    private TurnManager turnManager;
-	private Map map;
+    //private TurnManager turnManager;
+	//private Map map;
     private bool success;
+	private bool isDead;
 
 	private TileType[,] grid;
 	private bool[,] tiles; //array of bools for whether or not each tile is walkable
 
-    private int test = 0;
     private List<PlayerUnit> unitManager;
 
     private PlayerUnit target;
+
+	private MeshRenderer meshRenderer;
 
     void Start () {
         if (health == 0) {
@@ -41,20 +43,19 @@ public class EnemyController : MonoBehaviour {
         }
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
         unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
-        turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
+        //turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
         //turnManager.combatants.Add(this.gameObject);
 
-        map = tileManager.GetComponent<Generate> ().map;
+        //map = tileManager.GetComponent<Generate> ().map;
+
+		meshRenderer = GetComponent<MeshRenderer> ();
 
     }
 
-	private void updateWalkables() {
-
-	}
-
+	//stub of an A* function to be added later
 	private void FindPath (Vector3 start, Vector3 end) {
 		List<Vector3> openSet = new List<Vector3>();
-		HashSet<Vector3> closedSet = new HashSet<Vector3> ();
+		//HashSet<Vector3> closedSet = new HashSet<Vector3> ();
 		openSet.Add (start);
 		openSet.Add (end);
 
@@ -65,31 +66,44 @@ public class EnemyController : MonoBehaviour {
 	
 	public void Attack() {
         if (SeekAndDestroy(range,movement)) {
-            MeleeAttack(target); //Change this once we add multiple Players
+            MeleeAttack(target);
         }
-        turnManager.NextTurn();
     }
 
-    public void TakeDmg(int playerDmg) {
+    public bool TakeDmg(int playerDmg) {
         int dmgTaken = playerDmg - def;
         if (dmgTaken > 0) {
             health -= dmgTaken;
         }
         if (health <= 0) {
             Die();
+			return true;
         }
+		return false;
     }
 
     public void Die() {
         //placeholder for giving player experience, gold, etc.
+		isDead = true;
         if (isBoss)
         {
 			LevelHolder.level++;
 			Instantiate (exitTile, transform.position - new Vector3(0, 0, .3f), Quaternion.identity);
         }
-		tileManager.GetComponent<Generate>().map.destroyEnemy(index);
-		gameObject.gameObject.SetActive(false);
+		StartCoroutine (fadeOutAndDeactivate ());
     }
+
+	IEnumerator fadeOutAndDeactivate() {
+		while (meshRenderer.material.color.a > 0) {
+			Color color = meshRenderer.material.color;
+			color.a -= 0.1f;
+			meshRenderer.material.color = color;		
+			yield return null;
+		}
+		tileManager.GetComponent<Generate>().map.destroyEnemy(index);
+		gameObject.SetActive(false);
+		yield break;
+	}
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
         success = false;
@@ -104,7 +118,8 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void MeleeAttack(PlayerUnit player) {
-        player.GetComponent<PlayerController>().TakeDmg(dmg);
+		if (!isDead)
+       		player.GetComponent<PlayerController>().TakeDmg(dmg);
     }
 
     private List<Position> Search(Position location, int enemyRange, int enemyMovement, List<Position> path) {

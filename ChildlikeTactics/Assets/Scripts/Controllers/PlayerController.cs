@@ -35,14 +35,13 @@ public class PlayerController : PlayerUnit
 	override public IEnumerator PlayerTurn() {
 		//movePosition = transform.position;
 		//startPosition = transform.position;
-		print("TURN");
+		//print("TURN");
 
 		//while it's the player's turn
-		if (!turnManager.inCombat) {
-			myTurn = true;
-		}
 		while (/*myTurn &&*/ turnManager.playerTurn) {
-
+            if (!myTurn) {
+                playerUnitManager.NextPlayer();
+            }
 			//horizontal movement
 			if (Input.GetButtonDown ("Horizontal")) {
 				if (Input.GetAxisRaw ("Horizontal") > 0) {
@@ -91,6 +90,7 @@ public class PlayerController : PlayerUnit
 			}*/
 			yield return null;
 		}
+        print("OH GOD HELP");
 		yield break;
 	}
 
@@ -224,8 +224,7 @@ public class PlayerController : PlayerUnit
         AudioSource.PlayClipAtPoint(playerUnitManager.attackSound, Camera.main.transform.position);
         EnemyController enemyC = enemy.GetComponent<EnemyController>();
 		int enemyXP = enemyC.exp;
-		enemyC.TakeDmg(playerDmg);
-		if (!enemy.GetComponent<EnemyController>().isActiveAndEnabled) {
+		if (enemyC.TakeDmg(playerDmg)) { //TakeDamage returns true when the enemy is killed
 			exp += enemyXP;
 			ExpDisplayUpdate();
 			CheckLevelUp();
@@ -234,8 +233,10 @@ public class PlayerController : PlayerUnit
 	}
 
 	override public void Die() {
-		//healthText.text = "YOU DIED!";
-		print("You died, loser.");
+        //healthText.text = "YOU DIED!";
+        Time.timeScale = 0;
+        playerUnitManager.DiedMenu.SetActive(true);
+        
 	}
 
 	override public void Follow(Vector3 pos, int index) {

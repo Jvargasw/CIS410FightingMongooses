@@ -461,10 +461,12 @@ public class Generate : MonoBehaviour
         */
         
         // Useful values
+        /* Warning Removal
         int top = startY + roomHeight;
         int right = startX + roomWidth;
         int bottom = startY;
         int left = startX;
+        */
 
         if(canPlaceRoom(startX, startY, roomWidth, roomHeight))
         {

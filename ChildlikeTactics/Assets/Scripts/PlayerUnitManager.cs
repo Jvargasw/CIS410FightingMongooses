@@ -58,7 +58,7 @@ public class PlayerUnitManager : MonoBehaviour {
 	void Update () {
 		if ((Input.GetKeyDown (KeyCode.Tab) && map.playerInRoomWithEnemies())) {
 
-            setUnit(activeUnitIndex+1);
+            NextPlayer();
 		}
 	}
 
@@ -72,6 +72,7 @@ public class PlayerUnitManager : MonoBehaviour {
         activeUnit = units[activeUnitIndex];
 		unitIndicator.UpdateActiveUnit (activeUnit);
 		UpdateStatsPanel ();
+        print("Started: " + activeUnitIndex);
         StartCoroutine(routines[activeUnitIndex]);
     }
 
@@ -81,5 +82,9 @@ public class PlayerUnitManager : MonoBehaviour {
             print("Error with following player on grid.");
         }
         map.setActivePlayer(activeUnitIndex);
+    }
+
+    public void NextPlayer() {
+        setUnit(activeUnitIndex + 1);
     }
 }

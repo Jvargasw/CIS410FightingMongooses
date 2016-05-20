@@ -37,11 +37,15 @@ public class PlayerController : PlayerUnit
 	}
 
 	override public IEnumerator PlayerTurn() {
-		//movePosition = transform.position;
-		//startPosition = transform.position;
+        //movePosition = transform.position;
+        //startPosition = transform.position;
+        print("TURN");
 
-		//while it's the player's turn
-		while (TurnManager.playerTurn) {
+        //while it's the player's turn
+        if (!turnManager.inCombat) {
+            myTurn = true;
+        }
+		while (/*myTurn &&*/ TurnManager.playerTurn) {
 
 			//horizontal movement
 			if (Input.GetButtonDown ("Horizontal")) {
@@ -87,18 +91,17 @@ public class PlayerController : PlayerUnit
 		yield break;
 	}
 
-
-	override public void AttemptMove(Vector2 moveDirection) {
+    override public void AttemptMove(Vector2 moveDirection) {
         //Moving
         if(isMoving){
             //have we already moved the max number of spaces?
-            if ((spacesMoved + 1 <= maxMoveDistance) || !map.playerInRoomWithEnemies()) {
+            if ((spacesMoved + 1 <= maxMoveDistance) || !turnManager.inCombat) {
                 if (map.movePlayerTo((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y))) { //OK, the X and Y being swapped is kinda a problem.
                     spacesMoved++;
                     movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
                     Vector3 oldPosition = transform.position;
                     transform.position = movePosition;
-                    if(!map.playerInRoomWithEnemies())
+                    if(!turnManager.inCombat)
                     {
                         spacesMoved = 0;
                         if (playerUnitManager.activeUnitIndex != 0) {

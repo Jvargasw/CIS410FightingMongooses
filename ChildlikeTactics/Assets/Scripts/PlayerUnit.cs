@@ -15,22 +15,25 @@ public abstract class PlayerUnit : MonoBehaviour {
     public int nxtlvlxp = 100;
     public int exp = 0;
     public int def = 0;
+    public int initiative = 10;
 
 	public bool isMoving; //represents moving vs attacking
 
 	public Vector3 movePosition;
 	public Vector3 startPosition;
+
 	public int spacesMoved = 0;
 
 	public GameObject healthBar;
-
     public int lvlUp = 0;
+    public bool myTurn = false;
 
     protected Text turnText;
 	protected Text expText;
     protected Text dmgText;
 
     protected PlayerUnitManager playerUnitManager;
+    protected TurnManager turnManager;
     protected List<PlayerUnit> unitManager;
 	protected List<IEnumerator> routineManager;
 
@@ -43,12 +46,15 @@ public abstract class PlayerUnit : MonoBehaviour {
         dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
+        turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
         unitManager = playerUnitManager.units;
 		routineManager = playerUnitManager.routines;
 		//register this unit with the PlayerUnitManager
 		unitManager.Add(this);
 		routineManager.Add (PlayerTurn());
 		print ("unit registered");
+
+        turnManager.combatants.Add(this.gameObject);
 
 		StartMoving();
 		//healthText.text = "HP: " + health;
@@ -89,10 +95,11 @@ public abstract class PlayerUnit : MonoBehaviour {
 
     public void PlayerEndTurn() {
 		turnText.text = "Enemy Turn";
-		TurnManager.playerTurn = false;
-		StartMoving();
+		myTurn = false;
+        StartMoving();
 		spacesMoved = 0;
 		transform.position = movePosition;
+        turnManager.NextTurn();
 	}
 
 	public void StartMoving()

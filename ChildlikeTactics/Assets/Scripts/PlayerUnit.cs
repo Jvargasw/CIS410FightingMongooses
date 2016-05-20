@@ -46,7 +46,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 		turnText = GameObject.Find("TurnText").GetComponent<Text>();
 
 		//get reference to PlayerRenderer parented to this unit
-		playerRenderer = transform.Find("PlayerRenderer").gameObject;
+		playerRenderer = transform.Find("EmptyRot/PlayerRenderer").gameObject;
 		animController = playerRenderer.GetComponent<Animator>();
 
 		//init reference to PlayerUnitManager script and vars

@@ -216,8 +216,7 @@ public class PlayerController : PlayerUnit
         AudioSource.PlayClipAtPoint(playerUnitManager.attackSound, Camera.main.transform.position);
         EnemyController enemyC = enemy.GetComponent<EnemyController>();
 		int enemyXP = enemyC.exp;
-		enemyC.TakeDmg(playerDmg);
-		if (!enemy.GetComponent<EnemyController>().isActiveAndEnabled) {
+		if (enemyC.TakeDmg(playerDmg)) { //TakeDamage returns true when the enemy is killed
 			exp += enemyXP;
 			ExpDisplayUpdate();
 			CheckLevelUp();

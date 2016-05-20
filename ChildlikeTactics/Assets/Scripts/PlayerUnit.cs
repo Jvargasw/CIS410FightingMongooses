@@ -32,8 +32,6 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public bool myTurn = false;
 
 	protected Text turnText;
-	protected Text expText;
-	protected Text dmgText;
 
 	protected PlayerUnitManager playerUnitManager;
 	protected TurnManager turnManager;
@@ -45,8 +43,6 @@ public abstract class PlayerUnit : MonoBehaviour {
 		print ("PlayerUnit start");
 
 		turnText = GameObject.Find("TurnText").GetComponent<Text>();
-		expText = GameObject.Find("HealthText").GetComponent<Text>();
-		dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
 		//get reference to PlayerRenderer parented to this unit
 		playerRenderer = transform.Find("PlayerRenderer").gameObject;

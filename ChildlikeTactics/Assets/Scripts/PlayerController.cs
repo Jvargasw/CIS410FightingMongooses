@@ -244,11 +244,11 @@ public class PlayerController : PlayerUnit
 	}
 
 	public override void ExpDisplayUpdate() {
-		expText.text = exp + "/" + nxtlvlxp;
+		//expText.text = exp + "/" + nxtlvlxp;
 	}
 
 	public override void DmgDisplayUpdate() {
-		dmgText.text = "DMG: " + playerDmg;
+		//dmgText.text = "DMG: " + playerDmg;
 	}
 
 	void OnGUI() {

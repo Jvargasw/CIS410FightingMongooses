@@ -84,7 +84,7 @@ public class Map
          *      Nothing.
          */
 
-        foreach (Room room in generator.rooms)
+        foreach (Room room in Generate.rooms)
         {
             if (room.containsPlayer)
             {
@@ -107,13 +107,13 @@ public class Map
          *      Nothing
          */
 
-        if (generator.rooms.Count == 0 || currentRoomIndex == generator.rooms.Count)
+        if (Generate.rooms.Count == 0 || currentRoomIndex == Generate.rooms.Count)
         {
             // Assume that rooms haven't been generated yet.
             return;
         }
 
-        foreach (Room room in generator.rooms)
+        foreach (Room room in Generate.rooms)
         {
             if (room.containsPlayer)
             {
@@ -123,7 +123,7 @@ public class Map
 
             if (room.x <= playerPositions[0].x && room.x + room.width >= playerPositions[0].x && room.y <= playerPositions[0].y && room.y + room.height >= playerPositions[0].y)
             {
-                MonoBehaviour.print("Assuming the player is in room: " + generator.rooms.IndexOf(room) + " has enemies?: " + room.hasEnemies());
+                MonoBehaviour.print("Assuming the player is in room: " + Generate.rooms.IndexOf(room) + " has enemies?: " + room.hasEnemies());
                 //MonoBehaviour.print("Assuming the player is in room: " + Generate.rooms.IndexOf(room) + " has enemies?: " + room.hasEnemies());
                 // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
                 room.containsPlayer = true;
@@ -340,7 +340,7 @@ public class Map
     public void destroyEnemy(int index)
     {
         Position pos = getEnemyPosition(index);
-        foreach (Room room in generator.rooms)
+        foreach (Room room in Generate.rooms)
         {
             if (room.x <= pos.x && room.x + room.width >= pos.x && room.y <= pos.y && room.y + room.height >= pos.y)
             {

@@ -15,6 +15,8 @@ public class PlayerUnitManager : MonoBehaviour {
 	public PlayerUnit activeUnit;
 	public int activeUnitIndex = 0;
 
+	public GameObject healthPanel, attackPanel, defensePanel, movementPanel, expPanel;
+
 	// Use this for initialization
 	void Awake () {
 
@@ -35,12 +37,21 @@ public class PlayerUnitManager : MonoBehaviour {
 				print("activeUnit initialized");
                 StartCoroutine (routines[activeUnitIndex]);
 				print ("PlayerTurn started");
+				UpdateStatsPanel ();
 				yield break;
 			} else {
 				print ("units empty");
 				yield return null;
 			}
 		}
+	}
+
+	public void UpdateStatsPanel() {
+		healthPanel.GetComponent<Text>().text = "Health: " + activeUnit.health.ToString() + "/" + activeUnit.maxHealth.ToString();
+		attackPanel.GetComponent<Text> ().text = "Attack: " + activeUnit.playerDmg.ToString ();
+		defensePanel.GetComponent<Text> ().text = "Defense: " + activeUnit.def.ToString ();
+		movementPanel.GetComponent<Text> ().text = "Movement: " + (activeUnit.maxMoveDistance - activeUnit.spacesMoved).ToString () + "/" + activeUnit.maxMoveDistance.ToString ();
+		expPanel.GetComponent<Text> ().text = "Exp: " + activeUnit.exp.ToString () + "/" + activeUnit.nxtlvlxp.ToString ();
 	}
 
 	// Update is called once per frame
@@ -60,6 +71,7 @@ public class PlayerUnitManager : MonoBehaviour {
         map.setActivePlayer(activeUnitIndex);
         activeUnit = units[activeUnitIndex];
 		unitIndicator.UpdateActiveUnit (activeUnit);
+		UpdateStatsPanel ();
         StartCoroutine(routines[activeUnitIndex]);
     }
 

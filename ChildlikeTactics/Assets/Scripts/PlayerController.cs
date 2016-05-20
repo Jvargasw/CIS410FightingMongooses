@@ -109,6 +109,7 @@ public class PlayerController : PlayerUnit
                             unitManager[index].Follow(oldPosition, index);
                         }
                     }
+					playerUnitManager.UpdateStatsPanel ();
                 }
                 else {
                     if (map.getTileAt((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y)) == TileType.ITEM) {
@@ -178,6 +179,7 @@ public class PlayerController : PlayerUnit
         if(health <= 0) {
             Die();
         }
+		playerUnitManager.UpdateStatsPanel ();
     }
 
     override public void Heal(int heal) {
@@ -185,17 +187,20 @@ public class PlayerController : PlayerUnit
         if (health >= maxHealth) {
             health = maxHealth;
         }
+		playerUnitManager.UpdateStatsPanel ();
         //healthText.text = "HP: " + health;
     }
 
     override public void IncreaseDmg(int dmg) {
         playerDmg += dmg;
         DmgDisplayUpdate();
+		playerUnitManager.UpdateStatsPanel ();
     }
 
     override public void DecreaseDmg(int dmg) {
         playerDmg -= dmg;
         DmgDisplayUpdate();
+		playerUnitManager.UpdateStatsPanel ();
     }
 
     override public void MeleeAttack(GameObject enemy) {
@@ -206,6 +211,7 @@ public class PlayerController : PlayerUnit
             exp += enemyXP;
             ExpDisplayUpdate();
             CheckLevelUp();
+			playerUnitManager.UpdateStatsPanel ();
         }
     }
 
@@ -250,19 +256,23 @@ public class PlayerController : PlayerUnit
                 maxHealth += maxHealth / 2;
                 health += maxHealth;
                 lvlUp -= 1;
+				playerUnitManager.UpdateStatsPanel ();
             }
             if (GUI.Button(new Rect(w/4, (h * 2) / 5, w / 4, h / 5), "DMG+50%")) {
                 playerDmg += playerDmg / 2;
                 DmgDisplayUpdate();
                 lvlUp -= 1;
+				playerUnitManager.UpdateStatsPanel ();
             }
             if (GUI.Button(new Rect(w/2, (h * 2) / 5, w / 4, h / 5), "MOV+1")) {
                 maxMoveDistance += 1;
                 lvlUp -= 1;
+				playerUnitManager.UpdateStatsPanel ();
             }
             if (GUI.Button(new Rect(3*w/4, (h * 2) / 5, w / 4, h / 5), "DEF+1")) {
                 def += 1;
                 lvlUp -= 1;
+				playerUnitManager.UpdateStatsPanel ();
             }
         }
     }

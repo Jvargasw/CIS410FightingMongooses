@@ -60,10 +60,13 @@ public class PlayerUnitManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if ((Input.GetKeyDown (KeyCode.Tab) && map.playerInRoomWithEnemies())) {
+        
+        //No, you don't get to hit tab
+
+        /*if ((Input.GetKeyDown (KeyCode.Tab) && map.playerInRoomWithEnemies())) {
 
             NextPlayer();
-		}
+		}*/
 
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			paused = !paused;
@@ -85,7 +88,7 @@ public class PlayerUnitManager : MonoBehaviour {
         activeUnit = units[activeUnitIndex];
 		unitIndicator.UpdateActiveUnit (activeUnit);
 		UpdateStatsPanel ();
-        print("Started: " + activeUnitIndex);
+        //print("Started: " + activeUnitIndex);
         StartCoroutine(routines[activeUnitIndex]);
     }
 

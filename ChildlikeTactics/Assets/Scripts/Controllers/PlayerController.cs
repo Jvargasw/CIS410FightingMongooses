@@ -35,14 +35,13 @@ public class PlayerController : PlayerUnit
 	override public IEnumerator PlayerTurn() {
 		//movePosition = transform.position;
 		//startPosition = transform.position;
-		print("TURN");
+		//print("TURN");
 
 		//while it's the player's turn
-		if (!turnManager.inCombat) {
-			myTurn = true;
-		}
 		while (/*myTurn &&*/ turnManager.playerTurn) {
-
+            if (!myTurn) {
+                playerUnitManager.NextPlayer();
+            }
 			//horizontal movement
 			if (Input.GetButtonDown ("Horizontal")) {
 				if (Input.GetAxisRaw ("Horizontal") > 0) {
@@ -83,6 +82,7 @@ public class PlayerController : PlayerUnit
 			}*/
 			yield return null;
 		}
+        print("OH GOD HELP");
 		yield break;
 	}
 

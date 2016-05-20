@@ -530,8 +530,8 @@ public class Generate : MonoBehaviour
                     case TileType.UNWALKABLE:
                         instance = (GameObject)Instantiate(unwalkablePrefab, new Vector3(i, j, 0f), transform.rotation);
 
-                        // Make the wall 2 units high. 
-                        instance.transform.localScale = new Vector3(1, 1, 2);
+                        // Make the wall 2 units high. "JK DON'T !!!" -jalan
+                        instance.transform.localScale = new Vector3(1, 1, 1);
                         break;
 
                     case TileType.PLAYER:

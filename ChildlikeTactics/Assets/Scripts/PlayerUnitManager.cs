@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerUnitManager : MonoBehaviour {
 
 	private FollowActiveUnit unitIndicator;
+	private bool paused = false;
 
 	public List<PlayerUnit> units;
 	public List<IEnumerator> routines = new List<IEnumerator>();
@@ -15,7 +16,7 @@ public class PlayerUnitManager : MonoBehaviour {
 	public PlayerUnit activeUnit;
 	public int activeUnitIndex = 0;
 
-	public GameObject healthPanel, attackPanel, defensePanel, movementPanel, expPanel;
+	public GameObject healthPanel, attackPanel, defensePanel, movementPanel, expPanel, pauseMenu;
 
 	// Use this for initialization
 	void Awake () {
@@ -59,6 +60,15 @@ public class PlayerUnitManager : MonoBehaviour {
 		if ((Input.GetKeyDown (KeyCode.Tab) && map.playerInRoomWithEnemies())) {
 
             setUnit(activeUnitIndex+1);
+		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			paused = !paused;
+			pauseMenu.SetActive (paused);
+			if (paused)
+				Time.timeScale = 0;
+			else
+				Time.timeScale = 1;
 		}
 	}
 

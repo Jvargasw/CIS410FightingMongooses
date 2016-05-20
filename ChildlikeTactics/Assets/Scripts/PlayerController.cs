@@ -182,7 +182,8 @@ public class PlayerController : PlayerUnit
 
 	override public void Heal(int heal) {
 		health += heal;
-		if (health >= maxHealth) {
+        AudioSource.PlayClipAtPoint(playerUnitManager.healSound, Camera.main.transform.position);
+        if (health >= maxHealth) {
 			health = maxHealth;
 		}
 		playerUnitManager.UpdateStatsPanel ();

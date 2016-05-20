@@ -204,7 +204,10 @@ public class PlayerController : PlayerUnit
     }
 
     override public void MeleeAttack(GameObject enemy) {
-        EnemyController enemyC = enemy.GetComponent<EnemyController>();
+		//trigger attack animation
+		animController.SetTrigger ("Attack");
+
+		EnemyController enemyC = enemy.GetComponent<EnemyController>();
         int enemyXP = enemyC.exp;
         enemyC.TakeDmg(playerDmg);
         if (!enemy.GetComponent<EnemyController>().isActiveAndEnabled) {

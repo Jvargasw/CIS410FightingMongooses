@@ -23,6 +23,8 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int spacesMoved = 0;
 
 	public GameObject healthBar;
+	protected GameObject playerRenderer;
+	protected Animator animController;
 
     public int lvlUp = 0;
 
@@ -42,16 +44,21 @@ public abstract class PlayerUnit : MonoBehaviour {
 		expText = GameObject.Find("HealthText").GetComponent<Text>();
         dmgText = GameObject.Find("DmgText").GetComponent<Text>();
 
+		//get reference to PlayerRenderer parented to this unit
+		playerRenderer = transform.Find("PlayerRenderer").gameObject;
+		animController = playerRenderer.GetComponent<Animator>();
+
+		//init reference to PlayerUnitManager script and vars
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
         unitManager = playerUnitManager.units;
 		routineManager = playerUnitManager.routines;
+
 		//register this unit with the PlayerUnitManager
 		unitManager.Add(this);
 		routineManager.Add (PlayerTurn());
 		print ("unit registered");
 
 		StartMoving();
-		//healthText.text = "HP: " + health;
 	}
 
 	protected void Update(){

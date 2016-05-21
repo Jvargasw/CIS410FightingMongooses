@@ -42,6 +42,7 @@ public class PlayerController : PlayerUnit
             if (!myTurn) {
                 playerUnitManager.NextPlayer();
             }
+
 			//horizontal movement
 			if (Input.GetButtonDown ("Horizontal")) {
 				if (Input.GetAxisRaw ("Horizontal") > 0) {
@@ -54,7 +55,7 @@ public class PlayerController : PlayerUnit
 					playerRenderer.transform.rotation = Quaternion.Euler (0f, 90f, -90f);
 				}
 				yield return null;
-				//vertical movement
+			//vertical movement
 			} else if (Input.GetButtonDown ("Vertical")) {
 				if (Input.GetAxisRaw ("Vertical") > 0) {
 					AttemptMove (Vector2.up);

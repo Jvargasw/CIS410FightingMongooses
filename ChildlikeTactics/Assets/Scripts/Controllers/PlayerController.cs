@@ -92,7 +92,8 @@ public class PlayerController : PlayerUnit
 			yield return null;
 		}
         print("OH GOD HELP");
-		yield break;
+        PlayerTurn();
+        yield break;
 	}
 
 	override public void AttemptMove(Vector2 moveDirection) {

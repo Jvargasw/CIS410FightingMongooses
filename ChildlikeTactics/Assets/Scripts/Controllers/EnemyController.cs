@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
     private GameObject tileManager;
-    //private TurnManager turnManager;
+    private TurnManager turnManager;
 	//private Map map;
     private bool success;
 	private bool isDead;
@@ -43,8 +43,8 @@ public class EnemyController : MonoBehaviour {
         }
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
         unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
-        //turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
-        //turnManager.combatants.Add(this.gameObject);
+        turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
+        turnManager.combatants.Add(this.gameObject);
 
         //map = tileManager.GetComponent<Generate> ().map;
 

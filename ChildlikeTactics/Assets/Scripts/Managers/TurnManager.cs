@@ -14,17 +14,21 @@ public class TurnManager : MonoBehaviour {
     protected PlayerUnitManager playerUnitManager;
     public int player = 0;
 
+    public SortedList initiativeOrder = new SortedList();
+
+    private int counter;
+
     private Map map;
 
     void Update() {
         if (!playerTurn) {
-            EnemyTurn();
+            //EnemyTurn();
         }
         if (map != null) {
             if (map.playerInRoomWithEnemies()) {
                 if (!inCombat) {
                     inCombat = true;
-                    //EnterCombat();
+                    EnterCombat();
                 }
                 else {
                     inCombat = true;
@@ -60,15 +64,73 @@ public class TurnManager : MonoBehaviour {
     }
 
     public void NextTurn() {
+        /*
         playerUnitManager.units[player].myTurn = false;
         player++;
         if(player >= 2) {
             playerTurn = false;
             player = 0;
-            //EnemyTurn();
+            EnemyTurn();
         }
         playerUnitManager.units[player].myTurn = true;
         //playerUnitManager.NextPlayer();
+        */
+        bool dead = false;
+        
+        int key = (int)initiativeOrder.GetKey(0);
+        print(key);
+        //print(counter);
+        GameObject combatant = (GameObject)initiativeOrder[key];
+        if (combatant.CompareTag("Enemy")) {
+            playerTurn = false;
+            if (!combatant.GetComponent<EnemyController>().isActiveAndEnabled) {
+                dead = true;
+            }
+            else {
+                combatant.GetComponent<EnemyController>().Attack();
+                counter = key + combatant.GetComponent<EnemyController>().initiative;
+            }
+        }
+        else {
+            playerTurn = true;
+            combatant.GetComponent<PlayerController>().myTurn = true;
+            counter = key + combatant.GetComponent<PlayerController>().initiative;
+            print("MADE IT");
+        }
+        initiativeOrder.Remove(key);
+        if (!dead) {
+            key = counter;
+            while (initiativeOrder.Contains(key)) {
+                key++;
+            }
+            initiativeOrder.Add(key, combatant);
+            if (combatant.CompareTag("Enemy")) {
+                NextTurn();
+            }
+        }
+        else {
+            NextTurn();
+        }
+
+        //print(initiativeOrder.GetKey(0));
     }
-		
+
+    public void EnterCombat() {
+        int key;
+        initiativeOrder.Clear();
+        foreach (GameObject combatant in combatants) {
+            if (combatant.CompareTag("Enemy")) {
+                key = combatant.GetComponent<EnemyController>().initiative;
+            }
+            else {
+                key = combatant.GetComponent<PlayerController>().initiative;
+                combatant.GetComponent<PlayerController>().myTurn = false;
+            }
+            while (initiativeOrder.Contains(key)) {
+                key++;
+            }
+            initiativeOrder.Add(key, combatant);
+        }
+        NextTurn();
+    }
 }

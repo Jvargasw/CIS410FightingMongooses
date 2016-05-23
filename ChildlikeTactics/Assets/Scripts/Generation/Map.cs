@@ -344,7 +344,7 @@ public class Map
         {
             if (room.x <= pos.x && room.x + room.width >= pos.x && room.y <= pos.y && room.y + room.height >= pos.y)
             {
-                // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
+                // Break because once we found the room, we don't need to keep searching
                 room.enemyCount--;
                 break;
             }

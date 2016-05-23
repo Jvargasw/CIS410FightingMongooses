@@ -148,7 +148,7 @@ public class Generate : MonoBehaviour
         GameObject instance = (GameObject)Instantiate(walkablePrefab, new Vector3((map.renderWidth - 1) / 2.0f, (map.renderHeight - 1) / 2.0f, 1.0f), Quaternion.Euler(-90, 0, 0));
         instance.transform.localScale = new Vector3(0.1f * map.renderWidth, 1, 0.1f * map.renderHeight);
 
-        GameObject enemy;
+        EnemyController enemy;
         GameObject item;
 
         for (int i = 0; i < map.renderWidth; i++)
@@ -173,13 +173,31 @@ public class Generate : MonoBehaviour
                         break;
 
                     case TileType.ENEMY:
-                        enemy = (GameObject)Instantiate(enemyPrefab, new Vector3(i, j, 0f), transform.rotation);
-                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
+                        enemy = ((GameObject)Instantiate(enemyPrefab, new Vector3(i, j, 0f), transform.rotation)).GetComponent<EnemyController>();
+                        enemy.index = map.getPlayerCollidedWith(i, j);
+
+                        foreach (Room room in Generate.rooms) {
+                            if (room.x <= i && room.x + room.width >= i && room.y <= j && room.y + room.height >= j) {
+                                // Break because once we found the room, we don't need to keep searching
+                                enemy.room = room;
+                                break;
+                            }
+                        }
+
                         break;
 
                     case TileType.BOSS:
-                        enemy = (GameObject)Instantiate(bossPrefab, new Vector3(i, j, 0f), transform.rotation);
-                        enemy.GetComponent<EnemyController>().index = map.getPlayerCollidedWith(i, j);
+                        enemy = ((GameObject)Instantiate(bossPrefab, new Vector3(i, j, 0f), transform.rotation)).GetComponent<EnemyController>();
+                        enemy.index = map.getPlayerCollidedWith(i, j);
+
+                        foreach (Room room in Generate.rooms) {
+                            if (room.x <= i && room.x + room.width >= i && room.y <= j && room.y + room.height >= j) {
+                                // Break because once we found the room, we don't need to keep searching
+                                enemy.room = room;
+                                break;
+                            }
+                        }
+
                         break;
 
                     case TileType.ITEM:

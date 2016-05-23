@@ -95,7 +95,6 @@ public class TurnManager : MonoBehaviour {
             playerTurn = true;
             combatant.GetComponent<PlayerController>().myTurn = true;
             counter = key + combatant.GetComponent<PlayerController>().initiative;
-            print("MADE IT");
         }
         initiativeOrder.Remove(key);
         if (!dead) {
@@ -120,16 +119,22 @@ public class TurnManager : MonoBehaviour {
         initiativeOrder.Clear();
         foreach (GameObject combatant in combatants) {
             if (combatant.CompareTag("Enemy")) {
-                key = combatant.GetComponent<EnemyController>().initiative;
+                if (combatant.GetComponent<EnemyController>().room.containsPlayer) {
+                    key = combatant.GetComponent<EnemyController>().initiative;
+                    while (initiativeOrder.Contains(key)) {
+                        key++;
+                    }
+                    initiativeOrder.Add(key, combatant);
+                }
             }
             else {
                 key = combatant.GetComponent<PlayerController>().initiative;
                 combatant.GetComponent<PlayerController>().myTurn = false;
+                while (initiativeOrder.Contains(key)) {
+                    key++;
+                }
+                initiativeOrder.Add(key, combatant);
             }
-            while (initiativeOrder.Contains(key)) {
-                key++;
-            }
-            initiativeOrder.Add(key, combatant);
         }
         NextTurn();
     }

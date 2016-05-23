@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour {
 	//private Map map;
     private bool success;
 	private bool isDead;
+    public Room room;
 
 	private TileType[,] grid;
 	private bool[,] tiles; //array of bools for whether or not each tile is walkable

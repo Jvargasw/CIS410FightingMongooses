@@ -20,6 +20,8 @@ public class EnemyController : MonoBehaviour {
 
     private int range = 1;
 
+	public GameObject healthBar;
+
     private GameObject tileManager;
     private TurnManager turnManager;
 	//private Map map;
@@ -58,6 +60,10 @@ public class EnemyController : MonoBehaviour {
 		meshRenderer = GetComponent<MeshRenderer> ();
 
     }
+
+	void Update(){
+		healthBar.transform.localScale = new Vector3 (((float) health/(float) maxHP)*.85f, 0.25f, 1f);
+	}
 
 	//stub of an A* function to be added later
 	private void FindPath (Vector3 start, Vector3 end) {

@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour {
 	public GameObject exitTile;
 
     public int index;
+    public int maxHP;
     public int health;
     public int dmg;
     public int movement = 5;
@@ -36,12 +37,17 @@ public class EnemyController : MonoBehaviour {
 	private MeshRenderer meshRenderer;
 
     void Start () {
-        if (health == 0) {
-            health = 10;
+        if (maxHP == 0) {
+            maxHP = 10;
         }
         if(dmg == 0) {
             dmg = 5;
         }
+        if(LevelHolder.level != 0) {
+            maxHP = maxHP * (LevelHolder.level * 2);
+            dmg = dmg * (LevelHolder.level * 2);
+        }
+        health = maxHP;
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
         unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();

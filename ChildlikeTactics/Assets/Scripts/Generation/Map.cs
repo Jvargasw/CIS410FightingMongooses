@@ -248,6 +248,18 @@ public class Map
         }
     }
 
+    public void swapPlayerPositions() {
+        int temp = activePlayer;
+        activePlayer = 0;
+        Position temp1 = playerPositions[activePlayer];
+        activePlayer++;
+        Position temp2 = playerPositions[activePlayer];
+        setPlayerPosition(temp1);
+        activePlayer = 0;
+        setPlayerPosition(temp2);
+        activePlayer = temp;
+    }
+
     public List<Position> getPlayerPositions()
     {
         return playerPositions;

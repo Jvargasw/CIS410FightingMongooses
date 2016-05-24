@@ -106,7 +106,7 @@ public class PlayerController : PlayerUnit
 		if(isMoving){
 			//have we already moved the max number of spaces?
 			if ((spacesMoved + 1 <= maxMoveDistance) || !turnManager.inCombat) {
-				if (map.movePlayerTo((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y))) { //OK, the X and Y being swapped is kinda a problem.
+				if (map.movePlayerTo((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y))) {
 					spacesMoved++;
 					movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
 					Vector3 oldPosition = transform.position;
@@ -125,7 +125,8 @@ public class PlayerController : PlayerUnit
 					playerUnitManager.UpdateStatsPanel ();
 				}
 				else {
-					if (map.getTileAt((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y)) == TileType.ITEM) {
+                    TileType thing = map.getTileAt((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y));
+                    if (thing == TileType.ITEM) {
 						int index = map.getPlayerCollidedWith((int)(moveDirection.x + transform.position.x), (int)(moveDirection.y + transform.position.y));
 						foreach (GameObject item in GameObject.FindGameObjectsWithTag("Item")) {
 							ItemController ic = item.GetComponent<ItemController>();
@@ -156,6 +157,15 @@ public class PlayerController : PlayerUnit
 							}
 						}
 					}
+                    else if(thing == TileType.PLAYER) {
+                        if (!turnManager.inCombat) {
+                            map.swapPlayerPositions();
+                            movePosition = new Vector3(moveDirection.x, moveDirection.y, 0) + transform.position;
+                            Vector3 oldPosition = transform.position;
+                            transform.position = movePosition;
+                            unitManager[1].transform.position = oldPosition;
+                        }
+                    }
 				}
 			}
 			return;
@@ -178,16 +188,6 @@ public class PlayerController : PlayerUnit
 		return;
 	}
 
-	/*
-    override public void StopMoving() {
-        isMoving = false;
-        turnText.text = "Attacking";
-    }
-    override public void StartMoving() {
-        isMoving = true;
-        turnText.text = "Moving";
-    }
-	*/
 	override public void TakeDmg(int enemyDmg) {
 		int dmgTaken = enemyDmg - def;
 		if(dmgTaken > 0) {
@@ -206,7 +206,6 @@ public class PlayerController : PlayerUnit
 			health = maxHealth;
 		}
 		playerUnitManager.UpdateStatsPanel ();
-		//healthText.text = "HP: " + health;
 	}
 
 	override public void IncreaseDmg(int dmg) {

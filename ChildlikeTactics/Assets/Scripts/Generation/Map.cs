@@ -148,9 +148,10 @@ public class Map
 
         for (int i = 0; i < enemyPositions.Count; i++)
         {
-            if (enemyPositions[i].x == x && enemyPositions[i].y == y)
-            {
-                return i;
+            if (enemyPositions[i] != null) {
+                if (enemyPositions[i].x == x && enemyPositions[i].y == y) {
+                    return i;
+                }
             }
         }
         for (int i = 0; i < itemPositions.Count; i++)
@@ -352,6 +353,7 @@ public class Map
     public void destroyEnemy(int index)
     {
         Position pos = getEnemyPosition(index);
+        enemyPositions[index] = null;
         foreach (Room room in Generate.rooms)
         {
             if (room.x <= pos.x && room.x + room.width >= pos.x && room.y <= pos.y && room.y + room.height >= pos.y)

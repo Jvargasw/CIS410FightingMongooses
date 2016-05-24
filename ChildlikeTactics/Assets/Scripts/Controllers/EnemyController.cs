@@ -71,10 +71,16 @@ public class EnemyController : MonoBehaviour {
 		}
 	}
 	
-	public void Attack() {
-        if (SeekAndDestroy(range,movement)) {
+	public IEnumerator Attack() {
+        yield return new WaitUntil(Done);
+        if (SeekAndDestroy(range, movement)) {
             MeleeAttack(target);
         }
+        yield break;
+    }
+
+    private bool Done() {
+        return turnManager.doneMoving;
     }
 
     public bool TakeDmg(int playerDmg) {
@@ -92,6 +98,7 @@ public class EnemyController : MonoBehaviour {
     public void Die() {
         //placeholder for giving player experience, gold, etc.
 		isDead = true;
+        tileManager.GetComponent<Generate>().map.destroyEnemy(index);
         if (isBoss)
         {
 			LevelHolder.level++;
@@ -107,15 +114,14 @@ public class EnemyController : MonoBehaviour {
 			meshRenderer.material.color = color;		
 			yield return null;
 		}
-		tileManager.GetComponent<Generate>().map.destroyEnemy(index);
 		gameObject.SetActive(false);
 		yield break;
 	}
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
         success = false;
-        Stack<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index));
         turnManager.doneMoving = false;
+        Stack<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index));
         StartCoroutine(Move(path));
         return success;
     }

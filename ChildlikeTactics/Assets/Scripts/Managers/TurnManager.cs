@@ -54,28 +54,7 @@ public class TurnManager : MonoBehaviour {
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
     }
 
-    public void EnemyTurn() {
-        foreach (GameObject enemy in enemies) {
-            if (enemy.GetComponent<EnemyController>().isActiveAndEnabled) {
-                enemy.GetComponent<EnemyController>().Attack();
-            }
-        }
-        playerTurn = true;
-        return;
-    }
-
     public void NextTurn() {
-        /*
-        playerUnitManager.units[player].myTurn = false;
-        player++;
-        if(player >= 2) {
-            playerTurn = false;
-            player = 0;
-            EnemyTurn();
-        }
-        playerUnitManager.units[player].myTurn = true;
-        //playerUnitManager.NextPlayer();
-        */
         bool dead = false;
         
         int key = (int)initiativeOrder.GetKey(0);
@@ -88,7 +67,7 @@ public class TurnManager : MonoBehaviour {
                 dead = true;
             }
             else {
-                combatant.GetComponent<EnemyController>().Attack();
+                StartCoroutine(combatant.GetComponent<EnemyController>().Attack());
                 counter = key + combatant.GetComponent<EnemyController>().initiative;
             }
         }

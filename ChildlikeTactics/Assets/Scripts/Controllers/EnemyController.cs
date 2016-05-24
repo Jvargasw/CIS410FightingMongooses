@@ -108,13 +108,9 @@ public class EnemyController : MonoBehaviour {
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
         success = false;
-        List<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index), enemyRange, enemyMovement, new List<Position>());
-        if (success) {
-            foreach ( Position loc in path) {
-                tileManager.GetComponent<Generate>().map.setEnemyPosition(index, loc);
-                this.transform.position = new Vector3(loc.x, loc.y, this.transform.position.z);
-            }
-        }
+        Stack<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index));
+        turnManager.doneMoving = false;
+        StartCoroutine(Move(path));
         return success;
     }
 
@@ -123,70 +119,26 @@ public class EnemyController : MonoBehaviour {
        		player.GetComponent<PlayerController>().TakeDmg(dmg);
     }
 
-    private List<Position> Search(Position location, int enemyRange, int enemyMovement, List<Position> path) {
-        if (enemyMovement <= 0) {
-            return new List<Position>();
+    IEnumerator Move(Stack<Position> path) {
+        int distance = path.Count;
+        if (distance <= movement + range) {
+            success = true;
         }
-        List<Position> players = tileManager.GetComponent<Generate>().map.getPlayerPositions();
-        Position newPos = new Position(location.x + 1, location.y); //UP (all these have the +1/-1 applied to the "wrong" side due to x and y being flipped)
-        foreach (Position playerLoc in players) {
-            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-                target = whichUnit(playerLoc);
-                success = true;
-                path.Add(location);
-                return path;
-            }
-            newPos = new Position(location.x - 1, location.y); //DOWN
-            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-                target = whichUnit(playerLoc);
-                success = true;
-                path.Add(location);
-                return path;
-            }
-            newPos = new Position(location.x, location.y - 1); //LEFT
-            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-                target = whichUnit(playerLoc);
-                success = true;
-                path.Add(location);
-                return path;
-            }
-            newPos = new Position(location.x, location.y + 1);//RIGHT
-            if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-                target = whichUnit(playerLoc);
-                success = true;
-                path.Add(location);
-                return path;
-            }
+        else {
+            distance = movement;
         }
-        newPos = new Position(location.x + 1, location.y); //UP
-        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
-            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
-            if (success) {
-                return temp;
+        while (distance >= 0) {
+            distance--;
+            try {
+                Position loc = path.Pop();
+                tileManager.GetComponent<Generate>().map.setEnemyPosition(index, loc);
+                this.transform.position = new Vector3(loc.x, loc.y, this.transform.position.z);
             }
-        }
-        newPos = new Position(location.x - 1, location.y); //DOWN
-        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
-            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
-            if (success) {
-                return temp;
+            catch {
             }
+            yield return new WaitForSeconds(1);
         }
-        newPos = new Position(location.x, location.y - 1); //LEFT
-        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
-            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
-            if (success) {
-                return temp;
-            }
-        }
-        newPos = new Position(location.x, location.y + 1);//RIGHT
-        if (tileManager.GetComponent<Generate>().map.canMoveTo(newPos.x, newPos.y)) {
-            List<Position> temp = Search(newPos, enemyRange, enemyMovement - 1, path);
-            if (success) {
-                return temp;
-            }
-        }
-        return new List<Position>();
+        turnManager.doneMoving = true;
     }
 
     private PlayerUnit whichUnit(Position pos) {
@@ -199,5 +151,62 @@ public class EnemyController : MonoBehaviour {
         }
         print("Error, could not find player for enemy attack");
         return null;
+    }
+
+
+    private Stack<Position> Search(Position location) {
+        Position[,] p = new Position[64,64];
+        List<Position> players = tileManager.GetComponent<Generate>().map.getPlayerPositions();
+        Position newPos = location;
+        Stack<Position> stack = new Stack<Position>();
+        Queue<Position> q = new Queue<Position>();
+
+        q.Enqueue(newPos);
+        bool stay = true;
+        while (stay) {
+            //print("x: " + newPos.x + ", y: " + newPos.y);
+            try {
+                newPos = q.Dequeue();
+            }
+            catch {
+                break;
+            }
+            foreach (Position playerLoc in players) {
+                if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
+                    print("Player x: " + newPos.x + ", y: " + newPos.y);
+                    target = whichUnit(playerLoc);
+                    while (stay) {
+                        if(newPos.x == location.x && location.y == newPos.y) {
+                            stay = false;
+                        }
+                        newPos = p[newPos.x, newPos.y];
+                        if (newPos != null) {
+                            stack.Push(newPos);
+                        }
+                        print("Enemy x: " + location.x + ", y: " + location.y);
+                    }
+                    break;
+                }
+            }
+            if (stay) {
+                if ((tileManager.GetComponent<Generate>().map.getTileAt(newPos.x + 1, newPos.y) == TileType.WALKABLE || tileManager.GetComponent<Generate>().map.getTileAt(newPos.x + 1, newPos.y) == TileType.PLAYER) && p[newPos.x + 1, newPos.y] == null) { //UP
+                    q.Enqueue(new Position(newPos.x + 1, newPos.y));
+                    p[newPos.x + 1, newPos.y] = newPos;
+                }
+                if ((tileManager.GetComponent<Generate>().map.getTileAt(newPos.x - 1, newPos.y) == TileType.WALKABLE || tileManager.GetComponent<Generate>().map.getTileAt(newPos.x - 1, newPos.y) == TileType.PLAYER) && p[newPos.x - 1, newPos.y] == null) { //DOWN
+                    q.Enqueue(new Position(newPos.x - 1, newPos.y));
+                    p[newPos.x - 1, newPos.y] = newPos;
+                }
+                if ((tileManager.GetComponent<Generate>().map.getTileAt(newPos.x, newPos.y + 1) == TileType.WALKABLE || tileManager.GetComponent<Generate>().map.getTileAt(newPos.x, newPos.y + 1) == TileType.PLAYER) && p[newPos.x, newPos.y + 1] == null) { //RIGHT
+                    q.Enqueue(new Position(newPos.x, newPos.y + 1));
+                    p[newPos.x, newPos.y + 1] = newPos;
+                }
+                if ((tileManager.GetComponent<Generate>().map.getTileAt(newPos.x, newPos.y - 1) == TileType.WALKABLE || tileManager.GetComponent<Generate>().map.getTileAt(newPos.x, newPos.y - 1) == TileType.PLAYER) && p[newPos.x, newPos.y - 1] == null) { //LEFT
+                    q.Enqueue(new Position(newPos.x, newPos.y - 1));
+                    p[newPos.x, newPos.y - 1] = newPos;
+                }
+            }
+        }
+        return stack;
     }
 }

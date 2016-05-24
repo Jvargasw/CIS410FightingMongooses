@@ -42,43 +42,48 @@ public class PlayerController : PlayerUnit
             if (!myTurn) {
                 playerUnitManager.NextPlayer();
             }
+            if (turnManager.doneMoving) {
+                //horizontal movement
+                if (Input.GetButtonDown("Horizontal")) {
+                    if (Input.GetAxisRaw("Horizontal") > 0) {
+                        AttemptMove(Vector2.right);
+                        //look right
+                        playerRenderer.transform.rotation = Quaternion.Euler(0f, 270f, -270f);
+                    }
+                    else {
+                        AttemptMove(Vector2.left);
+                        //look left
+                        playerRenderer.transform.rotation = Quaternion.Euler(0f, 90f, -90f);
+                    }
+                    yield return null;
+                    //vertical movement
+                }
+                else if (Input.GetButtonDown("Vertical")) {
+                    if (Input.GetAxisRaw("Vertical") > 0) {
+                        AttemptMove(Vector2.up);
+                        //look up
+                        playerRenderer.transform.rotation = Quaternion.Euler(-270f, 180f, 0f);
+                    }
+                    else {
+                        AttemptMove(Vector2.down);
+                        //look down
+                        playerRenderer.transform.rotation = Quaternion.Euler(-90f, 0f, -0f);
+                    }
+                    yield return null;
 
-			//horizontal movement
-			if (Input.GetButtonDown ("Horizontal")) {
-				if (Input.GetAxisRaw ("Horizontal") > 0) {
-					AttemptMove (Vector2.right);
-					//look right
-					playerRenderer.transform.rotation = Quaternion.Euler (0f, 270f, -270f);
-				} else {
-					AttemptMove (Vector2.left);
-					//look left
-					playerRenderer.transform.rotation = Quaternion.Euler (0f, 90f, -90f);
-				}
-				yield return null;
-			//vertical movement
-			} else if (Input.GetButtonDown ("Vertical")) {
-				if (Input.GetAxisRaw ("Vertical") > 0) {
-					AttemptMove (Vector2.up);
-					//look up
-					playerRenderer.transform.rotation = Quaternion.Euler (-270f, 180f, 0f);
-				} else {
-					AttemptMove (Vector2.down);
-					//look down
-					playerRenderer.transform.rotation = Quaternion.Euler (-90f, 0f, -0f);
-				}
-				yield return null;
-
-				//end turn
-			} else if (Input.GetKeyDown (KeyCode.Return)) {
-				if (isMoving) {
-					StopMoving();
-					turnText.text = "Attacking";
-				}
-				else {
-					PlayerEndTurn();
-				}
-				yield return null;
-			}
+                    //end turn
+                }
+                else if (Input.GetKeyDown(KeyCode.Return)) {
+                    if (isMoving) {
+                        StopMoving();
+                        turnText.text = "Attacking";
+                    }
+                    else {
+                        PlayerEndTurn();
+                    }
+                    yield return null;
+                }
+            }
 			//Removed undo movement capability due to it not being implemented to work with the grid system, as well as conflicts with item pickups. 
 			//(e.g. go pickup an item, undo movement, still have item without using up movement)
 			/*else if (Input.GetKeyDown (KeyCode.Backspace)) {

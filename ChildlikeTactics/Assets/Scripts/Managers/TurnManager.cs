@@ -9,6 +9,7 @@ public class TurnManager : MonoBehaviour {
 
 	public bool playerTurn = true;
     public bool inCombat = false;
+    public bool doneMoving = true;
 
     public List<GameObject> combatants = new List<GameObject>();
     protected PlayerUnitManager playerUnitManager;

@@ -77,6 +77,7 @@ public class Generate : MonoBehaviour
     public GameObject unwalkablePrefab;
     public GameObject walkablePrefab;
     public GameObject playerPrefab;
+    public GameObject playerPrefab2;
     public GameObject enemyPrefab;
     public GameObject bossPrefab;
     public GameObject itemHPPrefab;
@@ -170,6 +171,7 @@ public class Generate : MonoBehaviour
 
                     case TileType.PLAYER:
                         Instantiate(playerPrefab, new Vector3(i, j, 0f), transform.rotation);
+                        playerPrefab = playerPrefab2;
                         break;
 
                     case TileType.ENEMY:

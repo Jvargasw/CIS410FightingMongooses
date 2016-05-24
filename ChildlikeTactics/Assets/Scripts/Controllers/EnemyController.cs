@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour {
     private TurnManager turnManager;
 	//private Map map;
     private bool success;
-	private bool isDead;
+	public bool isDead;
     public Room room;
 
 	private TileType[,] grid;

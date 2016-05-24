@@ -84,7 +84,7 @@ public class TurnManager : MonoBehaviour {
         GameObject combatant = (GameObject)initiativeOrder[key];
         if (combatant.CompareTag("Enemy")) {
             playerTurn = false;
-            if (!combatant.GetComponent<EnemyController>().isActiveAndEnabled) {
+            if (combatant.GetComponent<EnemyController>().isDead) {
                 dead = true;
             }
             else {

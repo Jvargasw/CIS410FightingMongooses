@@ -32,7 +32,15 @@ public class PlayerController : PlayerUnit
 		base.Update ();
 	}
 
-	override public IEnumerator PlayerTurn() {
+    private bool Done() {
+        return turnManager.isMoving == -1;
+    }
+
+    private bool MyTurn() {
+        return turnManager.playerTurn;
+    }
+
+    override public IEnumerator PlayerTurn() {
 		//movePosition = transform.position;
 		//startPosition = transform.position;
 		//print("TURN");
@@ -42,7 +50,10 @@ public class PlayerController : PlayerUnit
             if (!myTurn) {
                 playerUnitManager.NextPlayer();
             }
-            if (turnManager.doneMoving) {
+            if (turnManager.isMoving != -1) {
+                yield return new WaitUntil(Done);
+            }
+            if (turnManager.isMoving == -1) {
                 //horizontal movement
                 if (Input.GetButtonDown("Horizontal")) {
                     if (Input.GetAxisRaw("Horizontal") > 0) {
@@ -83,6 +94,9 @@ public class PlayerController : PlayerUnit
                     }
                     yield return null;
                 }
+                if (!turnManager.playerTurn) {
+                    yield return new WaitUntil(MyTurn);
+                }
             }
 			//Removed undo movement capability due to it not being implemented to work with the grid system, as well as conflicts with item pickups. 
 			//(e.g. go pickup an item, undo movement, still have item without using up movement)
@@ -97,7 +111,8 @@ public class PlayerController : PlayerUnit
 			yield return null;
 		}
         print("OH GOD HELP");
-        PlayerTurn();
+        yield return new WaitUntil(Done);
+        StartCoroutine(PlayerTurn());
         yield break;
 	}
 

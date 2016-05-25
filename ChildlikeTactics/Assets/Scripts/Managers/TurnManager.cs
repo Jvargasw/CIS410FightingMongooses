@@ -9,7 +9,7 @@ public class TurnManager : MonoBehaviour {
 
 	public bool playerTurn = true;
     public bool inCombat = false;
-    public bool doneMoving = true;
+    public int isMoving = -1;
     public Object thisLock = new Object();
 
     public List<GameObject> combatants = new List<GameObject>();
@@ -55,7 +55,7 @@ public class TurnManager : MonoBehaviour {
         playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
     }
 
-    public void NextTurn() {
+    public IEnumerator NextTurn() {
         bool dead = false;
         
         int key = (int)initiativeOrder.GetKey(0);
@@ -63,13 +63,16 @@ public class TurnManager : MonoBehaviour {
         //print(counter);
         GameObject combatant = (GameObject)initiativeOrder[key];
         if (combatant.CompareTag("Enemy")) {
+            EnemyController ec = combatant.GetComponent<EnemyController>();
+            yield return new WaitUntil(Done);
             playerTurn = false;
-            if (combatant.GetComponent<EnemyController>().isDead) {
+            if (ec.isDead) {
                 dead = true;
             }
             else {
-                StartCoroutine(combatant.GetComponent<EnemyController>().Attack());
-                counter = key + combatant.GetComponent<EnemyController>().initiative;
+                isMoving = ec.index;
+                StartCoroutine(ec.Attack());
+                counter = key + ec.initiative;
             }
         }
         else {
@@ -85,13 +88,13 @@ public class TurnManager : MonoBehaviour {
             }
             initiativeOrder.Add(key, combatant);
             if (combatant.CompareTag("Enemy")) {
-                NextTurn();
+                StartCoroutine(NextTurn());
             }
         }
         else {
-            NextTurn();
+            StartCoroutine(NextTurn());
         }
-
+        yield break;
         //print(initiativeOrder.GetKey(0));
     }
 
@@ -117,6 +120,10 @@ public class TurnManager : MonoBehaviour {
                 initiativeOrder.Add(key, combatant);
             }
         }
-        NextTurn();
+        StartCoroutine(NextTurn());
+    }
+
+    private bool Done() {
+        return isMoving == -1;
     }
 }

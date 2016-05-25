@@ -78,18 +78,19 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	public IEnumerator Attack() {
+        print("start" + index);
         lock (turnManager.thisLock) {
-            //yield return new WaitUntil(Done);
-            turnManager.doneMoving = false;
-            if (SeekAndDestroy(range, movement)) {
-                MeleeAttack(target);
-            }
-            yield break;
+            yield return new WaitUntil(MyTurn);
         }
+        print("attacking" + index);
+        if (SeekAndDestroy(range, movement)) {
+            MeleeAttack(target);
+        }
+        yield break;
     }
 
-    private bool Done() {
-        return turnManager.doneMoving;
+    private bool MyTurn() {
+        return turnManager.isMoving == index;
     }
 
     public bool TakeDmg(int playerDmg) {
@@ -158,7 +159,8 @@ public class EnemyController : MonoBehaviour {
             }
             yield return new WaitForSeconds(0.1f);
         }
-        turnManager.doneMoving = true;
+        turnManager.isMoving = -1;
+        print("done" + index);
     }
 
     private PlayerUnit whichUnit(Position pos) {

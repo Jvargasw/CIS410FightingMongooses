@@ -107,7 +107,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 		StartMoving();
 		spacesMoved = 0;
 		transform.position = movePosition;
-		turnManager.NextTurn();
+        StartCoroutine(turnManager.NextTurn());
 		playerUnitManager.UpdateStatsPanel ();
 	}
 

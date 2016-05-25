@@ -27,7 +27,7 @@ public class FogOWar : MonoBehaviour
             if (!drawnFog.Contains(index) && !room.containsPlayer)
             {
                 GameObject instance = (GameObject)Instantiate(fogOWar, new Vector3(room.x + room.width / 2, room.y + room.height / 2, 0f), Quaternion.Euler(-90, 0, 0));
-                instance.transform.localScale = new Vector3((room.width + 2), 3.5f, (room.height + 2));
+                instance.transform.localScale = new Vector3(.9f * (room.width + 2), 3.5f, .9f * (room.height + 2));
                 instance.transform.SetParent(fogParent);
                 fog[index] = instance;
                 drawnFog.Add(index);

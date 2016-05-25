@@ -95,6 +95,7 @@ public class Generate : MonoBehaviour
     public Map map;
     public static List<Room> rooms;
     public int seed;
+    public bool useSeed = false;
 
     private Transform boardHolder;
     private int curRoom;
@@ -107,6 +108,9 @@ public class Generate : MonoBehaviour
 
         // Random seed bruh
         Random.seed = (int)DateTime.Now.Ticks;
+        if (useSeed) {
+            Random.seed = 1344375330;
+        }
         seed = Random.seed;
 
         curRoom = 0;

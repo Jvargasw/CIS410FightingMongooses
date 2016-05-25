@@ -78,11 +78,14 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	public IEnumerator Attack() {
-        yield return new WaitUntil(Done);
-        if (SeekAndDestroy(range, movement)) {
-            MeleeAttack(target);
+        lock (turnManager.thisLock) {
+            //yield return new WaitUntil(Done);
+            turnManager.doneMoving = false;
+            if (SeekAndDestroy(range, movement)) {
+                MeleeAttack(target);
+            }
+            yield break;
         }
-        yield break;
     }
 
     private bool Done() {
@@ -126,7 +129,6 @@ public class EnemyController : MonoBehaviour {
 
     private bool SeekAndDestroy(int enemyRange, int enemyMovement) {
         success = false;
-        turnManager.doneMoving = false;
         Stack<Position> path = Search(tileManager.GetComponent<Generate>().map.getEnemyPosition(index));
         StartCoroutine(Move(path));
         return success;

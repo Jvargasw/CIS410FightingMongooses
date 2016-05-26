@@ -17,6 +17,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int exp = 0;
 	public int def = 0;
 	public int initiative = 10;
+    public int playerNum;
 
 	public bool isMoving; //represents moving vs attacking
 
@@ -38,6 +39,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	protected TurnManager turnManager;
 	protected List<PlayerUnit> unitManager;
 	protected List<IEnumerator> routineManager;
+    protected PersistentStorage persistentStorage;
 
 	protected void Start()
 	{
@@ -54,9 +56,54 @@ public abstract class PlayerUnit : MonoBehaviour {
 		turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
 		unitManager = playerUnitManager.units;
 		routineManager = playerUnitManager.routines;
+        if(playerNum == 1) {
+            if(PersistentStorage.playerDamage1 == 0) {
+                PersistentStorage.playerDamage1 = playerDmg;
+            }
+            playerDmg = PersistentStorage.playerDamage1;
+            if(PersistentStorage.playerHealth1 == 0) {
+                PersistentStorage.playerHealth1 = maxHealth;
+            }
+            maxHealth = PersistentStorage.playerHealth1;
+            if(PersistentStorage.playerDefense1 == 0) {
+                PersistentStorage.playerDefense1 = def;
+            }
+            def = PersistentStorage.playerDefense1;
+            if(PersistentStorage.playerInitiative1 == 0) {
+                PersistentStorage.playerInitiative1 = initiative;
+            }
+            initiative = PersistentStorage.playerInitiative1;
+            if(PersistentStorage.playerMovement1 == 0) {
+                PersistentStorage.playerMovement1 = maxMoveDistance;
+            }
+            maxMoveDistance = PersistentStorage.playerMovement1;
+        }
+        else {
+            if (PersistentStorage.playerDamage2 == 0) {
+                PersistentStorage.playerDamage2 = playerDmg;
+            }
+            playerDmg = PersistentStorage.playerDamage2;
+            if (PersistentStorage.playerHealth2 == 0) {
+                PersistentStorage.playerHealth2 = maxHealth;
+            }
+            maxHealth = PersistentStorage.playerHealth2;
+            if (PersistentStorage.playerDefense2 == 0) {
+                PersistentStorage.playerDefense2 = def;
+            }
+            def = PersistentStorage.playerDefense2;
+            if (PersistentStorage.playerInitiative2 == 0) {
+                PersistentStorage.playerInitiative2 = initiative;
+            }
+            initiative = PersistentStorage.playerInitiative2;
+            if (PersistentStorage.playerMovement2 == 0) {
+                PersistentStorage.playerMovement2 = maxMoveDistance;
+            }
+            maxMoveDistance = PersistentStorage.playerMovement2;
+        }
 
-		//register this unit with the PlayerUnitManager
-		unitManager.Add(this);
+        //register this unit with the PlayerUnitManager
+        health = maxHealth;
+        unitManager.Add(this);
 		routineManager.Add (PlayerTurn());
 		print ("unit registered");
 

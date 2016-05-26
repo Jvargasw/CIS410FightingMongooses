@@ -225,17 +225,35 @@ public class PlayerController : PlayerUnit
 
 	override public void IncreaseDmg(int dmg) {
 		playerDmg += dmg;
+        if(playerNum == 1) {
+            PersistentStorage.playerDamage1 = playerDmg;
+        }
+        else {
+            PersistentStorage.playerDamage2 = playerDmg;
+        }
 		playerUnitManager.UpdateStatsPanel ();
 	}
 
 	override public void DecreaseDmg(int dmg) {
 		playerDmg -= dmg;
-		playerUnitManager.UpdateStatsPanel ();
+        if (playerNum == 1) {
+            PersistentStorage.playerDamage1 = playerDmg;
+        }
+        else {
+            PersistentStorage.playerDamage2 = playerDmg;
+        }
+        playerUnitManager.UpdateStatsPanel ();
 	}
 
 	override public void IncreaseDef(int defense) {
 		def += defense;
-		playerUnitManager.UpdateStatsPanel ();
+        if (playerNum == 1) {
+            PersistentStorage.playerDefense1 = def;
+        }
+        else {
+            PersistentStorage.playerDefense2 = def;
+        }
+        playerUnitManager.UpdateStatsPanel ();
 	}
 
 	override public void MeleeAttack(GameObject enemy) {
@@ -296,23 +314,47 @@ public class PlayerController : PlayerUnit
 			if (GUI.Button(new Rect(0, (h * 2) / 5, w / 4, h / 5), "HP+50%")) {
 				maxHealth += maxHealth / 2;
 				health = maxHealth;
-				lvlUp -= 1;
+                if (playerNum == 1) {
+                    PersistentStorage.playerHealth1 = maxHealth;
+                }
+                else {
+                    PersistentStorage.playerHealth2 = maxHealth;
+                }
+                lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
 			}
 			if (GUI.Button(new Rect(w/4, (h * 2) / 5, w / 4, h / 5), "DMG+50%")) {
 				playerDmg += playerDmg / 2;
 				DmgDisplayUpdate();
-				lvlUp -= 1;
+                if (playerNum == 1) {
+                    PersistentStorage.playerDamage1 = playerDmg;
+                }
+                else {
+                    PersistentStorage.playerDamage2 = playerDmg;
+                }
+                lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
 			}
 			if (GUI.Button(new Rect(w/2, (h * 2) / 5, w / 4, h / 5), "MOV+1")) {
 				maxMoveDistance += 1;
-				lvlUp -= 1;
+                if (playerNum == 1) {
+                    PersistentStorage.playerMovement1 = maxMoveDistance;
+                }
+                else {
+                    PersistentStorage.playerMovement2 = maxMoveDistance;
+                }
+                lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
 			}
 			if (GUI.Button(new Rect(3*w/4, (h * 2) / 5, w / 4, h / 5), "DEF+1")) {
 				def += 1;
-				lvlUp -= 1;
+                if (playerNum == 1) {
+                    PersistentStorage.playerDefense1 = def;
+                }
+                else {
+                    PersistentStorage.playerDefense2 = def;
+                }
+                lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
 			}
 		}

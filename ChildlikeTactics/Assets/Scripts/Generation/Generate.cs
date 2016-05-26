@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
-using System;
 
 public enum Direction
 {
@@ -107,11 +106,8 @@ public class Generate : MonoBehaviour
         /* Called when the script first "wakes up" */
 
         // Random seed bruh
-        Random.seed = (int)DateTime.Now.Ticks;
-        if (useSeed) {
-            Random.seed = 1344375330;
-        }
-        seed = Random.seed;
+        seed = PersistentStorage.seed;
+        Random.seed = PersistentStorage.seed;
 
         curRoom = 0;
         itemCount = 3;

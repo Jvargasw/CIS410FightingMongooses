@@ -24,6 +24,8 @@ public class EnemyController : MonoBehaviour {
 
     private GameObject tileManager;
     private TurnManager turnManager;
+	private Animator animController;
+
 	//private Map map;
     private bool success;
 	public bool isDead;
@@ -53,6 +55,7 @@ public class EnemyController : MonoBehaviour {
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
         unitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>().units;
         turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
+		animController = transform.Find("snake1").gameObject.GetComponent<Animator> ();
         turnManager.combatants.Add(this.gameObject);
 
         //map = tileManager.GetComponent<Generate> ().map;
@@ -138,6 +141,7 @@ public class EnemyController : MonoBehaviour {
     private void MeleeAttack(PlayerUnit player) {
 		if (!isDead)
        		player.GetComponent<PlayerController>().TakeDmg(dmg);
+			animController.SetTrigger ("Attack");
     }
 
     IEnumerator Move(Stack<Position> path) {

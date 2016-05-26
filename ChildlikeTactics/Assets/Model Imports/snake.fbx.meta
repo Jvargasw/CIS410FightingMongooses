@@ -1,0 +1,307 @@
+fileFormatVersion: 2
+guid: 48b5c8d92968e814da8ab557fddf4f5d
+timeCreated: 1464248522
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Body1
+    100004: Body2
+    100006: Body3
+    100008: Body4
+    100010: Hand.L
+    100012: Hand.L_end
+    100014: Hand.R
+    100016: Hand.R_end
+    100018: LowerArm.L
+    100020: LowerArm.R
+    100022: LowerJaw
+    100024: LowerJaw_end
+    100026: Neck1
+    100028: Neck2
+    100030: Shoulder.L
+    100032: Shoulder.R
+    100034: Snake
+    100036: //RootNode
+    100038: Tail1
+    100040: Tail2
+    100042: Tail3
+    100044: Tail4
+    100046: Tail5
+    100048: Tail5_end
+    100050: UpperArm.L
+    100052: UpperArm.R
+    100054: UpperJaw
+    100056: UpperJaw_end
+    400000: Armature
+    400002: Body1
+    400004: Body2
+    400006: Body3
+    400008: Body4
+    400010: Hand.L
+    400012: Hand.L_end
+    400014: Hand.R
+    400016: Hand.R_end
+    400018: LowerArm.L
+    400020: LowerArm.R
+    400022: LowerJaw
+    400024: LowerJaw_end
+    400026: Neck1
+    400028: Neck2
+    400030: Shoulder.L
+    400032: Shoulder.R
+    400034: Snake
+    400036: //RootNode
+    400038: Tail1
+    400040: Tail2
+    400042: Tail3
+    400044: Tail4
+    400046: Tail5
+    400048: Tail5_end
+    400050: UpperArm.L
+    400052: UpperArm.R
+    400054: UpperJaw
+    400056: UpperJaw_end
+    4300000: Snake
+    7400000: Armature|ArmatureAction
+    7400002: Idle
+    7400004: Punch
+    9500000: //RootNode
+    13700000: Snake
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Armature|ArmatureAction
+      firstFrame: 1
+      lastFrame: 60
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Body1
+        weight: 1
+      - path: Armature/Body1/Body2
+        weight: 1
+      - path: Armature/Body1/Body2/Body3
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/LowerJaw
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/LowerJaw/LowerJaw_end
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/UpperJaw
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/UpperJaw/UpperJaw_end
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L/LowerArm.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Hand.L_end
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R/LowerArm.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Hand.R_end
+        weight: 1
+      - path: Armature/Body1/Tail1
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3/Tail4
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3/Tail4/Tail5
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3/Tail4/Tail5/Tail5_end
+        weight: 1
+      - path: Snake
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Punch
+      takeName: Armature|ArmatureAction
+      firstFrame: 71
+      lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Body1
+        weight: 1
+      - path: Armature/Body1/Body2
+        weight: 1
+      - path: Armature/Body1/Body2/Body3
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/LowerJaw
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/LowerJaw/LowerJaw_end
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/UpperJaw
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Neck1/Neck2/UpperJaw/UpperJaw_end
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L/LowerArm.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Hand.L_end
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R/LowerArm.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R
+        weight: 1
+      - path: Armature/Body1/Body2/Body3/Body4/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Hand.R_end
+        weight: 1
+      - path: Armature/Body1/Tail1
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3/Tail4
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3/Tail4/Tail5
+        weight: 1
+      - path: Armature/Body1/Tail1/Tail2/Tail3/Tail4/Tail5/Tail5_end
+        weight: 1
+      - path: Snake
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.13
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

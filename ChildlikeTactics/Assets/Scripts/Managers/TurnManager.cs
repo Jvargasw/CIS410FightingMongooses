@@ -18,6 +18,8 @@ public class TurnManager : MonoBehaviour {
 
     public SortedList initiativeOrder = new SortedList();
 
+	public Text[] initiativeTexts;
+
     private int counter;
 
     private Map map;
@@ -126,4 +128,10 @@ public class TurnManager : MonoBehaviour {
     private bool Done() {
         return isMoving == -1;
     }
+
+	private void UpdateInitiativeUI() {
+		for (int i = 0; i < 6; i++) { //for each initiative text
+			//initiativeTexts[0].text = /*P1, P2, E, B, etc*/
+		}
+	}
 }

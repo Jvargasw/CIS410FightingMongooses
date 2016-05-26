@@ -123,6 +123,7 @@ public class Generate : MonoBehaviour
         // Generate all the rooms, then generate all the hallways for the rooms, then populate the rooms with enemies/items/players/etc, then generate the obstacles for the rooms, .
         generateRooms(1, 1, new List<Direction> { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH }, Random.Range(minRoomWidth, maxRoomWidth), Random.Range(minRoomHeight, maxRoomHeight));
         generateHallways();
+        shuffleRooms();
         populateRooms();
         generateObstacles();
 
@@ -532,6 +533,20 @@ public class Generate : MonoBehaviour
             {
                 generateRooms(startX, startY - (roomHeight + 1), directions, roomWidth, roomHeight);
             }
+        }
+    }
+
+    public void shuffleRooms()
+    {
+        int n = rooms.Count;
+        System.Random rng = new System.Random();
+        while(n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            Room room = rooms[k];
+            rooms[k] = rooms[n];
+            rooms[n] = room;
         }
     }
 

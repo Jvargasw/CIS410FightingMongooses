@@ -129,7 +129,7 @@ public class Map
             if (room.x <= playerPositions[0].x && room.x + room.width >= playerPositions[0].x && room.y <= playerPositions[0].y && room.y + room.height >= playerPositions[0].y)
             {
                 // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
-                sendMessageToAllObjects("OnPlayerChangeRoosm");
+                sendMessageToAllObjects("OnPlayerChangeRooms");
                 room.containsPlayer = true;
                 break;
             }

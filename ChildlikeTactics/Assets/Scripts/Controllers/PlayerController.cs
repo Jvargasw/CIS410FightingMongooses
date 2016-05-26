@@ -288,7 +288,15 @@ public class PlayerController : PlayerUnit
 		if(exp >= nxtlvlxp) {
 			exp -= nxtlvlxp;
 			nxtlvlxp = nxtlvlxp * 2;
-			ExpDisplayUpdate();
+            if (playerNum == 1) {
+                PersistentStorage.playerExp1 = exp;
+                PersistentStorage.playerNextExp1 = nxtlvlxp;
+            }
+            else {
+                PersistentStorage.playerExp2 = exp;
+                PersistentStorage.playerNextExp2 = nxtlvlxp;
+            }
+            ExpDisplayUpdate();
 			health = maxHealth;
 			LevelUp();
 			CheckLevelUp();

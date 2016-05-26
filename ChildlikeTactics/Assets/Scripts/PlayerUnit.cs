@@ -77,6 +77,14 @@ public abstract class PlayerUnit : MonoBehaviour {
                 PersistentStorage.playerMovement1 = maxMoveDistance;
             }
             maxMoveDistance = PersistentStorage.playerMovement1;
+            if (PersistentStorage.playerExp1 == 0) {
+                PersistentStorage.playerExp1 = exp;
+            }
+            exp = PersistentStorage.playerExp1;
+            if (PersistentStorage.playerNextExp1 == 0) {
+                PersistentStorage.playerNextExp1 = nxtlvlxp;
+            }
+            nxtlvlxp = PersistentStorage.playerNextExp1;
         }
         else {
             if (PersistentStorage.playerDamage2 == 0) {
@@ -99,6 +107,14 @@ public abstract class PlayerUnit : MonoBehaviour {
                 PersistentStorage.playerMovement2 = maxMoveDistance;
             }
             maxMoveDistance = PersistentStorage.playerMovement2;
+            if (PersistentStorage.playerExp2 == 0) {
+                PersistentStorage.playerExp2 = exp;
+            }
+            exp = PersistentStorage.playerExp2;
+            if (PersistentStorage.playerNextExp2 == 0) {
+                PersistentStorage.playerNextExp2 = nxtlvlxp;
+            }
+            nxtlvlxp = PersistentStorage.playerNextExp2;
         }
 
         //register this unit with the PlayerUnitManager

@@ -59,9 +59,8 @@ public class TurnManager : MonoBehaviour {
 
     public IEnumerator NextTurn() {
         bool dead = false;
-        
         int key = (int)initiativeOrder.GetKey(0);
-        print(key);
+        UpdateInitiativeUI();
         //print(counter);
         GameObject combatant = (GameObject)initiativeOrder[key];
         if (combatant.CompareTag("Enemy")) {
@@ -130,8 +129,24 @@ public class TurnManager : MonoBehaviour {
     }
 
 	private void UpdateInitiativeUI() {
+        int key;
 		for (int i = 0; i < 6; i++) { //for each initiative text
-			//initiativeTexts[0].text = /*P1, P2, E, B, etc*/
+            if (initiativeOrder.Count > i) {
+                key = (int)initiativeOrder.GetKey(i);
+                GameObject combatant = (GameObject)initiativeOrder[key];
+                if (combatant.CompareTag("Enemy")) {
+                    initiativeTexts[i].text = "E";
+                    if (combatant.GetComponent<EnemyController>().isBoss) {
+                        initiativeTexts[i].text = "B";
+                    }
+                }
+                else {
+                    initiativeTexts[i].text = "P";
+                }
+            }
+            else {
+                initiativeTexts[i].text = "";
+            }
 		}
 	}
 }

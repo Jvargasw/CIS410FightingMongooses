@@ -164,7 +164,6 @@ public class EnemyController : MonoBehaviour {
             yield return new WaitForSeconds(0.1f);
         }
         turnManager.isMoving = -1;
-        print("done" + index);
     }
 
     private PlayerUnit whichUnit(Position pos) {
@@ -199,7 +198,6 @@ public class EnemyController : MonoBehaviour {
             }
             foreach (Position playerLoc in players) {
                 if ((playerLoc.x == newPos.x) && (playerLoc.y == newPos.y)) {
-                    print("Player x: " + newPos.x + ", y: " + newPos.y);
                     target = whichUnit(playerLoc);
                     while (stay) {
                         if(newPos.x == location.x && location.y == newPos.y) {
@@ -209,7 +207,6 @@ public class EnemyController : MonoBehaviour {
                         if (newPos != null) {
                             stack.Push(newPos);
                         }
-                        print("Enemy x: " + location.x + ", y: " + location.y);
                     }
                     break;
                 }

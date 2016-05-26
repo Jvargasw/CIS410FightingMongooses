@@ -9,11 +9,15 @@ public class PersistentStorage : MonoBehaviour
     public static int playerDefense1 = 0;
     public static int playerInitiative1 = 0;
     public static int playerMovement1 = 0;
+    public static int playerExp1 = 0;
+    public static int playerNextExp1 = 0;
     public static int playerDamage2 = 0;
     public static int playerHealth2 = 0;
     public static int playerDefense2 = 0;
     public static int playerInitiative2 = 0;
     public static int playerMovement2 = 0;
+    public static int playerExp2 = 0;
+    public static int playerNextExp2 = 0;
     public static int seed;
 
     void Awake()

@@ -88,7 +88,12 @@ public class Map
         {
             if (room.containsPlayer)
             {
-                return room.hasEnemies();
+                bool hasEnemies = room.hasEnemies();
+                if (hasEnemies)
+                {
+                    sendMessageToAllObjects("OnEnterRoomWithEnemies");
+                }
+                return hasEnemies;
             }
         }
 
@@ -123,9 +128,8 @@ public class Map
 
             if (room.x <= playerPositions[0].x && room.x + room.width >= playerPositions[0].x && room.y <= playerPositions[0].y && room.y + room.height >= playerPositions[0].y)
             {
-                //MonoBehaviour.print("Assuming the player is in room: " + Generate.rooms.IndexOf(room) + " has enemies?: " + room.hasEnemies());
-                //MonoBehaviour.print("Assuming the player is in room: " + Generate.rooms.IndexOf(room) + " has enemies?: " + room.hasEnemies());
                 // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
+                sendMessageToAllObjects("OnPlayerChangeRoosm");
                 room.containsPlayer = true;
                 break;
             }
@@ -377,8 +381,18 @@ public class Map
         destroyThing(pos.x, pos.y);
     }
 
+
     public void pickupItem(int x, int y)
     {
         setTileAt(x, y, TileType.WALKABLE);
     }
+
+    void sendMessageToAllObjects(string message)
+    {
+        foreach (GameObject gameObject in GameObject.FindObjectsOfType<GameObject>())
+        {
+            gameObject.BroadcastMessage(message, SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
 }

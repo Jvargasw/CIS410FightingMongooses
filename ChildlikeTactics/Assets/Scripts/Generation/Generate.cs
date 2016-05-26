@@ -121,10 +121,13 @@ public class Generate : MonoBehaviour
         generateHallways();
         populateRooms();
         generateObstacles();
+
+        sendMessageToAllObjects("OnGeneratedMap");
         
 
         // Render the map, starting at (0.0, 0.0)
         renderMap(map, 0, 0);
+        sendMessageToAllObjects("OnRenderedMap");
     }
 
     void renderMap(Map map, int startX, int startY)
@@ -548,6 +551,14 @@ public class Generate : MonoBehaviour
         int endY = Random.Range(y + 2, topSide - 2);
 
         return new Position(endX, endY);
+    }
+
+    void sendMessageToAllObjects(string message)
+    {
+        foreach(GameObject gameObject in GameObject.FindObjectsOfType<GameObject>())
+        {
+            gameObject.BroadcastMessage(message, SendMessageOptions.DontRequireReceiver);
+        }
     }
 
 

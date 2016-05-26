@@ -15,22 +15,15 @@ public class FogOWar : MonoBehaviour
         fog = new GameObject[Generate.rooms.Count];
         drawnFog = new List<int>();
         drawnFog.Add(0);
+        OnPlayerChangeRooms(0);
 	}
 	
-	void Update ()
+    void OnPlayerChangeRooms(int roomIndex)
     {
-            updateFogOWar();
-	}
-
-    void updateFogOWar()
-    {
-        foreach(Room room in Generate.rooms)
+        Destroy(fog[roomIndex]);
+        foreach (Room room in Generate.rooms)
         {
             int index = Generate.rooms.IndexOf(room);
-            if (drawnFog.Count == Generate.rooms.Count && room.containsPlayer)
-            {
-                Destroy(fog[index]);
-            }
             if (!drawnFog.Contains(index) && !room.containsPlayer)
             {
                 GameObject instance = (GameObject)Instantiate(fogOWar, new Vector3(room.x + room.width / 2, room.y + room.height / 2, -0.55f), Quaternion.Euler(-90, 0, 0));

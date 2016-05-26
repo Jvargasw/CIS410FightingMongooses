@@ -91,7 +91,7 @@ public class Map
                 bool hasEnemies = room.hasEnemies();
                 if (hasEnemies)
                 {
-                    sendMessageToAllObjects("OnEnterRoomWithEnemies");
+                    sendMessageToAllObjects("OnEnterRoomWithEnemies", room.enemyCount);
                 }
                 return hasEnemies;
             }
@@ -129,7 +129,7 @@ public class Map
             if (room.x <= playerPositions[0].x && room.x + room.width >= playerPositions[0].x && room.y <= playerPositions[0].y && room.y + room.height >= playerPositions[0].y)
             {
                 // Set .containsPlayer to true. Break because once we found the room, we don't need to keep searching
-                sendMessageToAllObjects("OnPlayerChangeRooms");
+                sendMessageToAllObjects("OnPlayerChangeRooms", Generate.rooms.IndexOf(room));
                 room.containsPlayer = true;
                 break;
             }
@@ -387,11 +387,11 @@ public class Map
         setTileAt(x, y, TileType.WALKABLE);
     }
 
-    void sendMessageToAllObjects(string message)
+    void sendMessageToAllObjects(string message, int arg)
     {
         foreach (GameObject gameObject in GameObject.FindObjectsOfType<GameObject>())
         {
-            gameObject.BroadcastMessage(message, SendMessageOptions.DontRequireReceiver);
+            gameObject.BroadcastMessage(message, arg, SendMessageOptions.DontRequireReceiver);
         }
     }
 

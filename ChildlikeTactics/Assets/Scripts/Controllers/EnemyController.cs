@@ -82,9 +82,7 @@ public class EnemyController : MonoBehaviour {
 	
 	public IEnumerator Attack() {
         print("start" + index);
-        lock (turnManager.thisLock) {
-            yield return new WaitUntil(MyTurn);
-        }
+        yield return new WaitUntil(MyTurn);
         print("attacking" + index);
         if (SeekAndDestroy(range, movement)) {
             MeleeAttack(target);

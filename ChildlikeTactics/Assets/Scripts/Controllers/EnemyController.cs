@@ -115,7 +115,7 @@ public class EnemyController : MonoBehaviour {
         if (isBoss)
         {
 			LevelHolder.level++;
-			Instantiate (exitTile, transform.position - new Vector3(0, 0, .3f), Quaternion.identity);
+			Instantiate (exitTile, transform.position + new Vector3(0, 0, .95f), Quaternion.identity);
         }
 		StartCoroutine (fadeOutAndDeactivate ());
     }

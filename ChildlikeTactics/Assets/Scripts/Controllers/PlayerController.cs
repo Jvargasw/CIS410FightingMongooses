@@ -274,6 +274,21 @@ public class PlayerController : PlayerUnit
 	override public void Die() {
         //healthText.text = "YOU DIED!";
         Time.timeScale = 0;
+        PersistentStorage.level = 0;
+        PersistentStorage.playerDamage1 = 0;
+        PersistentStorage.playerHealth1 = 0;
+        PersistentStorage.playerDefense1 = 0;
+        PersistentStorage.playerInitiative1 = 0;
+        PersistentStorage.playerMovement1 = 0;
+        PersistentStorage.playerExp1 = 0;
+        PersistentStorage.playerNextExp1 = 0;
+        PersistentStorage.playerDamage2 = 0;
+        PersistentStorage.playerHealth2 = 0;
+        PersistentStorage.playerDefense2 = 0;
+        PersistentStorage.playerInitiative2 = 0;
+        PersistentStorage.playerMovement2 = 0;
+        PersistentStorage.playerExp2 = 0;
+        PersistentStorage.playerNextExp2 = 0;
         playerUnitManager.DiedMenu.SetActive(true);
         
 	}

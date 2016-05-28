@@ -17,7 +17,8 @@ public class PlayerController : PlayerUnit
 	private int spacesMoved = 0;
 	*/
 	private Map map;
-
+    //refrence to game manager (going to be used to solidify pause menu)
+    //GameObject manager;
 	new void Start()
 	{
 		//execute PlayerUnit's start code
@@ -166,7 +167,8 @@ public class PlayerController : PlayerUnit
 									print("Unknown Item Type on Pickup");
 								}
 								map.pickupItem(index);
-								item.gameObject.SetActive(false);
+                                AudioSource.PlayClipAtPoint(playerUnitManager.healSound, Camera.main.transform.position);
+                                item.gameObject.SetActive(false);
 								AttemptMove(moveDirection);
 								return;
 							}
@@ -216,7 +218,7 @@ public class PlayerController : PlayerUnit
 
 	override public void Heal(int heal) {
 		health += heal;
-        AudioSource.PlayClipAtPoint(playerUnitManager.healSound, Camera.main.transform.position);
+        
         if (health >= maxHealth) {
 			health = maxHealth;
 		}

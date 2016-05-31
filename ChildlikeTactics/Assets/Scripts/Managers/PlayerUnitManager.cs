@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerUnitManager : MonoBehaviour {
 
 	private FollowActiveUnit unitIndicator;
-	private bool paused = false;
+	public bool paused = false;
 
 	public List<PlayerUnit> units;
 	public List<IEnumerator> routines = new List<IEnumerator>();

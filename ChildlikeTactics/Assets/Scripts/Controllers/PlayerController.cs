@@ -41,6 +41,10 @@ public class PlayerController : PlayerUnit
         return turnManager.playerTurn;
     }
 
+    private bool NotPaused() {
+        return !playerUnitManager.paused;
+    }
+
     override public IEnumerator PlayerTurn() {
 		//movePosition = transform.position;
 		//startPosition = transform.position;
@@ -48,6 +52,9 @@ public class PlayerController : PlayerUnit
 
 		//while it's the player's turn
 		while (/*myTurn &&*/ turnManager.playerTurn) {
+            if (!NotPaused()) {
+                yield return new WaitUntil(NotPaused);
+            }
             if (!myTurn) {
                 playerUnitManager.NextPlayer();
             }

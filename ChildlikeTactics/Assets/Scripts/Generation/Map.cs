@@ -136,6 +136,29 @@ public class Map
         }
     }
 
+    private bool checkRoom(int x, int y) {
+        /* Checks if the room has the player in it currently.
+         * 
+         * Args:
+         *      The position of a tile in the room
+         *      
+         * Returns:
+         *      Nothing
+         */
+
+        if (Generate.rooms.Count == 0 || currentRoomIndex == Generate.rooms.Count) {
+            // Assume that rooms haven't been generated yet.
+            return true;
+        }
+
+        foreach (Room room in Generate.rooms) {
+            if (room.x <= x && room.x + room.width >= x && room.y <= y && room.y + room.height >= y) {
+                return room.containsPlayer;
+            }
+        }
+        return true;
+    }
+
     public int getPlayerCollidedWith(int x, int y)
     {
         /* Returns the index in the enemy list of the enemy the player would collide with if the 
@@ -217,7 +240,12 @@ public class Map
          * Returns:
          *      true if the tile at grid position (x, y) is WALKABLE, false if it isn't.
          */
-
+        TurnManager turnManager = GameObject.Find("GameManager").GetComponent<TurnManager>();
+        if (turnManager.inCombat) {
+            if (!checkRoom(x, y)) {
+                return false;
+            }
+        }
         if (grid[x, y] == TileType.WALKABLE)
         {
             return true;

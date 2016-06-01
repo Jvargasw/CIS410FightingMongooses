@@ -17,7 +17,8 @@ public class PlayerController : PlayerUnit
 	private int spacesMoved = 0;
 	*/
 	private Map map;
-
+    //refrence to game manager (going to be used to solidify pause menu)
+    //GameObject manager;
 	new void Start()
 	{
 		//execute PlayerUnit's start code
@@ -40,6 +41,10 @@ public class PlayerController : PlayerUnit
         return turnManager.playerTurn;
     }
 
+    private bool NotPaused() {
+        return !playerUnitManager.paused;
+    }
+
     override public IEnumerator PlayerTurn() {
 		//movePosition = transform.position;
 		//startPosition = transform.position;
@@ -47,6 +52,9 @@ public class PlayerController : PlayerUnit
 
 		//while it's the player's turn
 		while (/*myTurn &&*/ turnManager.playerTurn) {
+            if (!NotPaused()) {
+                yield return new WaitUntil(NotPaused);
+            }
             if (!myTurn) {
                 playerUnitManager.NextPlayer();
             }
@@ -166,7 +174,8 @@ public class PlayerController : PlayerUnit
 									print("Unknown Item Type on Pickup");
 								}
 								map.pickupItem(index);
-								item.gameObject.SetActive(false);
+                                AudioSource.PlayClipAtPoint(playerUnitManager.healSound, Camera.main.transform.position);
+                                item.gameObject.SetActive(false);
 								AttemptMove(moveDirection);
 								return;
 							}
@@ -216,7 +225,7 @@ public class PlayerController : PlayerUnit
 
 	override public void Heal(int heal) {
 		health += heal;
-        AudioSource.PlayClipAtPoint(playerUnitManager.healSound, Camera.main.transform.position);
+        
         if (health >= maxHealth) {
 			health = maxHealth;
 		}
@@ -274,6 +283,21 @@ public class PlayerController : PlayerUnit
 	override public void Die() {
         //healthText.text = "YOU DIED!";
         Time.timeScale = 0;
+        PersistentStorage.level = 0;
+        PersistentStorage.playerDamage1 = 0;
+        PersistentStorage.playerHealth1 = 0;
+        PersistentStorage.playerDefense1 = 0;
+        PersistentStorage.playerInitiative1 = 0;
+        PersistentStorage.playerMovement1 = 0;
+        PersistentStorage.playerExp1 = 0;
+        PersistentStorage.playerNextExp1 = 0;
+        PersistentStorage.playerDamage2 = 0;
+        PersistentStorage.playerHealth2 = 0;
+        PersistentStorage.playerDefense2 = 0;
+        PersistentStorage.playerInitiative2 = 0;
+        PersistentStorage.playerMovement2 = 0;
+        PersistentStorage.playerExp2 = 0;
+        PersistentStorage.playerNextExp2 = 0;
         playerUnitManager.DiedMenu.SetActive(true);
         
 	}

@@ -3,10 +3,13 @@ using System.Collections;
 
 public class PauseMenuManager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    protected PlayerUnitManager playerUnitManager;
+
+    // Use this for initialization
+    void Start () {
+        playerUnitManager = GameObject.Find("GameManager").GetComponent<PlayerUnitManager>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -19,6 +22,7 @@ public class PauseMenuManager : MonoBehaviour {
 	}
 	public void ResumeGame() {
 		Time.timeScale = 1;
+        playerUnitManager.paused = false;
 		gameObject.SetActive (false);
 	}
 

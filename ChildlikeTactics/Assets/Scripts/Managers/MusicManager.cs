@@ -30,4 +30,10 @@ public class MusicManager : MonoBehaviour {
 			emitter.SetParameter("Battle", 0);
 		}
 	}
+
+	public void EndMusic()
+	{
+
+		emitter.Stop ();
+	}
 }

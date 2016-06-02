@@ -33,6 +33,9 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int lvlUp = 0;
 	public bool myTurn = false;
 
+	//refrence to camera for music managment
+	GameObject cameraRef;
+
 	protected Text turnText;
 
 	protected PlayerUnitManager playerUnitManager;
@@ -43,6 +46,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	protected void Start()
 	{
+		cameraRef = GameObject.Find ("Main Camera");
 		print ("PlayerUnit start");
 
 		turnText = GameObject.Find("TurnText").GetComponent<Text>();
@@ -161,7 +165,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public abstract void ExpDisplayUpdate();
 
 	public abstract void DmgDisplayUpdate();
-
+	//refrence to the music manager script
 
 
 	public void PlayerEndTurn() {
@@ -187,13 +191,22 @@ public abstract class PlayerUnit : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider coll) {
+		MusicManager musicScript = cameraRef.GetComponent<MusicManager> ();
 		if (coll.CompareTag ("Exit")) {
 			if (PersistentStorage.level >= 4) {  //First level is level 0 so fifth level is level 4
 				//do yo thang
 			} else {
+				//stop the music so levels don't overlap
+				musicScript.EndMusic ();
+				LevelDelay ();
 				SceneManager.LoadScene("Main_Play");
 			}
 		}
+	}
+	//method to place a delay into the level ending (doesnt seem to work??)
+	IEnumerator LevelDelay()
+	{
+		yield return new WaitForSeconds (100);
 	}
 
 

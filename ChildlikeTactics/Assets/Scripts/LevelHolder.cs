@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class LevelHolder : MonoBehaviour {
 
-	public static int level = 0;
-
 	public static LevelHolder instance = null;
 
 	public GameObject levelText;
@@ -21,13 +19,13 @@ public class LevelHolder : MonoBehaviour {
 	}
 
 	public void Start() {
-        if (level >= 4)
+        if (PersistentStorage.level >= 4)
         {
             SceneManager.LoadScene("Win_Scene");
         }
         else
         {
-            levelText.GetComponent<Text>().text = "Level: " + (level + 1).ToString();
+            levelText.GetComponent<Text>().text = "Level: " + (PersistentStorage.level + 1).ToString();
         }
 	}
 	

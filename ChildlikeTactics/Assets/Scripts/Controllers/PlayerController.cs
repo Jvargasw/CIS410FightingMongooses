@@ -310,7 +310,6 @@ public class PlayerController : PlayerUnit
 
 	override public void CheckLevelUp() {
 		if(exp >= nxtlvlxp) {
-			exp -= nxtlvlxp;
 			nxtlvlxp = nxtlvlxp * 2;
             if (playerNum == 1) {
                 PersistentStorage.playerExp1 = exp;

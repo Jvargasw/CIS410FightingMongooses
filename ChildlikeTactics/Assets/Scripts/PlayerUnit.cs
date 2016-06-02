@@ -188,7 +188,7 @@ public abstract class PlayerUnit : MonoBehaviour {
 
 	void OnTriggerEnter(Collider coll) {
 		if (coll.CompareTag ("Exit")) {
-			if (LevelHolder.level >= 4) {  //First level is level 0 so fifth level is level 4
+			if (PersistentStorage.level >= 4) {  //First level is level 0 so fifth level is level 4
 				//do yo thang
 			} else {
 				SceneManager.LoadScene("Main_Play");

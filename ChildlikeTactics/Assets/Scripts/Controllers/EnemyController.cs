@@ -47,9 +47,9 @@ public class EnemyController : MonoBehaviour {
         if(dmg == 0) {
             dmg = 5;
         }
-        if(LevelHolder.level != 0) {
-            maxHP = maxHP * (LevelHolder.level * 2);
-            dmg = dmg * (LevelHolder.level * 2);
+        if(PersistentStorage.level != 0) {
+            maxHP = maxHP * (PersistentStorage.level * 2);
+            dmg = dmg * (PersistentStorage.level * 2);
         }
         health = maxHP;
         tileManager = GameObject.FindGameObjectWithTag("TileManager");
@@ -112,7 +112,7 @@ public class EnemyController : MonoBehaviour {
         tileManager.GetComponent<Generate>().map.destroyEnemy(index);
         if (isBoss)
         {
-			LevelHolder.level++;
+			PersistentStorage.level++;
 			Instantiate (exitTile, transform.position + new Vector3(0, 0, .95f), Quaternion.identity);
         }
 		StartCoroutine (fadeOutAndDeactivate ());

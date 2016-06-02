@@ -18,11 +18,13 @@ public class DeathManager : MonoBehaviour
     }
     public void ExitGame()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("Start_screen");
     }
     public void ContinueGame()
     {
 
+        Time.timeScale = 1;
         SceneManager.LoadScene("Main_Play");
     }
 

@@ -49,6 +49,11 @@ public class startMenuManager : MonoBehaviour {
         seedMenu.enabled = true;
         textBox.text = PersistentStorage.seed.ToString();
     }
+
+	public void TutorialButton() {
+		SceneManager.LoadScene ("Controls_Scene");
+	}
+
     public void ExitGame()
     {
         Application.Quit();

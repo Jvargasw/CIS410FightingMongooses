@@ -141,7 +141,7 @@ public class TurnManager : MonoBehaviour {
                     }
                 }
                 else {
-                    initiativeTexts[i].text = "P";
+                    initiativeTexts[i].text = "P" + combatant.GetComponent<PlayerController>().playerNum;
                 }
             }
             else {

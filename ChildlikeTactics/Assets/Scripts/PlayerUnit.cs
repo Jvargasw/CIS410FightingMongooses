@@ -19,6 +19,9 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public int initiative = 10;
     public int playerNum;
 
+    public Font font;
+    public int fontSize;
+
 	public bool isMoving; //represents moving vs attacking
 
 	public Vector3 movePosition;
@@ -157,10 +160,6 @@ public abstract class PlayerUnit : MonoBehaviour {
 	public abstract void CheckLevelUp();
 
 	public abstract void LevelUp();
-
-	public abstract void ExpDisplayUpdate();
-
-	public abstract void DmgDisplayUpdate();
 
 
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour {
 
@@ -48,9 +49,13 @@ public class EnemyController : MonoBehaviour {
         if(dmg == 0) {
             dmg = 5;
         }
-        if(PersistentStorage.level != 0) {
-            maxHP = maxHP * (PersistentStorage.level * 2);
-            dmg = dmg * (PersistentStorage.level * 2);
+        if (exp == 0) {
+            exp = 50;
+        }
+        if (PersistentStorage.level != 0) {
+            maxHP = (int)((float)maxHP * (float)(PersistentStorage.level * 2) * Random.Range(.5f, 1.5f));
+            dmg = (int)((float)dmg * (float)(PersistentStorage.level * 2) * Random.Range(.5f, 1.5f));
+            exp = exp * (PersistentStorage.level * 2);
         }
         health = maxHP;
         tileManager = GameObject.FindGameObjectWithTag("TileManager");

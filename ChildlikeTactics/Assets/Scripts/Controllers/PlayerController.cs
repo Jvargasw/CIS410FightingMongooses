@@ -26,7 +26,6 @@ public class PlayerController : PlayerUnit
 		base.Start();
 
 		//.text = "HP: " + health;
-		DmgDisplayUpdate();
 		map = GameObject.FindGameObjectWithTag("TileManager").GetComponent<Generate>().map;
 	}
 
@@ -275,10 +274,11 @@ public class PlayerController : PlayerUnit
         EnemyController enemyC = enemy.GetComponent<EnemyController>();
 		int enemyXP = enemyC.exp;
 		if (enemyC.TakeDmg(playerDmg)) { //TakeDamage returns true when the enemy is killed
-			exp += enemyXP;
-			ExpDisplayUpdate();
-			CheckLevelUp();
-			playerUnitManager.UpdateStatsPanel ();
+            foreach (PlayerUnit player in playerUnitManager.units) {
+                player.exp += enemyXP;
+                player.CheckLevelUp();
+                playerUnitManager.UpdateStatsPanel();
+            }
 		}
 	}
 
@@ -321,7 +321,6 @@ public class PlayerController : PlayerUnit
                 PersistentStorage.playerExp2 = exp;
                 PersistentStorage.playerNextExp2 = nxtlvlxp;
             }
-            ExpDisplayUpdate();
 			health = maxHealth;
 			LevelUp();
 			CheckLevelUp();
@@ -332,18 +331,17 @@ public class PlayerController : PlayerUnit
 		lvlUp +=1;
 	}
 
-	public override void ExpDisplayUpdate() {
-		//expText.text = exp + "/" + nxtlvlxp;
-	}
-
-	public override void DmgDisplayUpdate() {
-		//dmgText.text = "DMG: " + playerDmg;
-	}
-
 	void OnGUI() {
 		int w = Screen.width;
 		int h = Screen.height;
-		if (lvlUp > 0) {
+        GUI.skin.label.font = GUI.skin.button.font = GUI.skin.box.font = font;
+        GUI.skin.label.fontSize = GUI.skin.box.fontSize = GUI.skin.button.fontSize = fontSize;
+        var centeredStyle = GUI.skin.GetStyle("Label");
+        centeredStyle.alignment = TextAnchor.UpperCenter;
+        if ((lvlUp > 0 && playerNum == 1) || (lvlUp > 0 && playerUnitManager.units[0].lvlUp == 0)) {
+            playerUnitManager.paused = true;
+            GUI.Box(new Rect(0, h / 5, w, h / 5), "");
+            GUI.Label(new Rect(0, h/5, w, h / 5), "Level Up!: Player " + playerNum, centeredStyle);
 			if (GUI.Button(new Rect(0, (h * 2) / 5, w / 4, h / 5), "HP+50%")) {
 				maxHealth += maxHealth / 2;
 				health = maxHealth;
@@ -355,10 +353,10 @@ public class PlayerController : PlayerUnit
                 }
                 lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
-			}
+                playerUnitManager.paused = false;
+            }
 			if (GUI.Button(new Rect(w/4, (h * 2) / 5, w / 4, h / 5), "DMG+50%")) {
 				playerDmg += playerDmg / 2;
-				DmgDisplayUpdate();
                 if (playerNum == 1) {
                     PersistentStorage.playerDamage1 = playerDmg;
                 }
@@ -367,7 +365,8 @@ public class PlayerController : PlayerUnit
                 }
                 lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
-			}
+                playerUnitManager.paused = false;
+            }
 			if (GUI.Button(new Rect(w/2, (h * 2) / 5, w / 4, h / 5), "MOV+1")) {
 				maxMoveDistance += 1;
                 if (playerNum == 1) {
@@ -378,7 +377,8 @@ public class PlayerController : PlayerUnit
                 }
                 lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
-			}
+                playerUnitManager.paused = false;
+            }
 			if (GUI.Button(new Rect(3*w/4, (h * 2) / 5, w / 4, h / 5), "DEF+1")) {
 				def += 1;
                 if (playerNum == 1) {
@@ -389,7 +389,8 @@ public class PlayerController : PlayerUnit
                 }
                 lvlUp -= 1;
 				playerUnitManager.UpdateStatsPanel ();
-			}
+                playerUnitManager.paused = false;
+            }
 		}
 	}
 

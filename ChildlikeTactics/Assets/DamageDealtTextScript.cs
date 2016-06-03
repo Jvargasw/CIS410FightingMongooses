@@ -11,7 +11,7 @@ public class DamageDealtTextScript : MonoBehaviour {
 	void Start () {
 		canvas = GameObject.Find ("Canvas");
 		transform.SetParent (canvas.transform, false);
-		//StartCoroutine (DisableAfterSeconds ());
+		StartCoroutine (DisableAfterSeconds ());
 	}
 	
 	// Update is called once per frame

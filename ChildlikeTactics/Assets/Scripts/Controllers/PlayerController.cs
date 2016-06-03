@@ -17,6 +17,7 @@ public class PlayerController : PlayerUnit
 	private int spacesMoved = 0;
 	*/
 	private Map map;
+	public GameObject damageDealtText;
     //refrence to game manager (going to be used to solidify pause menu)
     //GameObject manager;
 	new void Start()
@@ -216,6 +217,7 @@ public class PlayerController : PlayerUnit
 		int dmgTaken = enemyDmg - def;
 		if(dmgTaken > 0) {
 			health -= dmgTaken;
+			Instantiate (damageDealtText).GetComponent<DamageDealtTextScript> ().SetText (dmgTaken);
 		}
 		if(health <= 0) {
 			Die();

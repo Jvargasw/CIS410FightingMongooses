@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour {
     private int range = 1;
 
 	public GameObject healthBar;
+	public GameObject damageDealtText;
 
     private GameObject tileManager;
     private TurnManager turnManager;
@@ -67,18 +68,6 @@ public class EnemyController : MonoBehaviour {
 	void Update(){
 		healthBar.transform.localScale = new Vector3 (((float) health/(float) maxHP)*.85f, 0.25f, 1f);
 	}
-
-	//stub of an A* function to be added later
-	private void FindPath (Vector3 start, Vector3 end) {
-		List<Vector3> openSet = new List<Vector3>();
-		//HashSet<Vector3> closedSet = new HashSet<Vector3> ();
-		openSet.Add (start);
-		openSet.Add (end);
-
-		while (openSet.Count > 0) {
-
-		}
-	}
 	
 	public IEnumerator Attack() {
         print("start" + index);
@@ -98,6 +87,7 @@ public class EnemyController : MonoBehaviour {
         int dmgTaken = playerDmg - def;
         if (dmgTaken > 0) {
             health -= dmgTaken;
+			Instantiate (damageDealtText).GetComponent<DamageDealtTextScript> ().SetText (dmgTaken);
         }
         if (health <= 0) {
             Die();

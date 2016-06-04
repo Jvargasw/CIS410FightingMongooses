@@ -193,9 +193,11 @@ public abstract class PlayerUnit : MonoBehaviour {
 	void OnTriggerEnter(Collider coll) {
 		MusicManager musicScript = cameraRef.GetComponent<MusicManager> ();
 		if (coll.CompareTag ("Exit")) {
-			if (PersistentStorage.level >= 4) {  //First level is level 0 so fifth level is level 4
-				//do yo thang
-			} else {
+			if (PersistentStorage.level >= 4) {
+                //First level is level 0 so fifth level is level 4
+                SceneManager.LoadScene("Win_Scene");
+                //do yo thang
+            } else {
 				//stop the music so levels don't overlap
 				musicScript.EndMusic ();
 				LevelDelay ();

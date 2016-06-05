@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.07.00">
+    <object class="AudioFile" id="{d6b0bae6-d67a-4574-b653-b0734132bb07}">
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>48.117551020408165</value>
+        </property>
+        <property name="audioFilePath">
+            <value>$(AUDIO_BIN_DIR)/ChildlikeTactics_Battle_noIntro {0357fa1e-180d-446b-9c9a-6cdddff592de}.mp3</value>
+        </property>
+        <relationship name="container">
+            <destination>{57190f05-9e87-496c-95e0-93e6cffb15fb}</destination>
+        </relationship>
+    </object>
+</objects>

@@ -16,4 +16,9 @@ public class WinManager : MonoBehaviour
     {
         SceneManager.LoadScene("Start_screen");
     }
+
+    public void goToCredits()
+    {
+        SceneManager.LoadScene("Credits_Scene");
+    }
 }

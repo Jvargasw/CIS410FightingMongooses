@@ -54,6 +54,11 @@ public class startMenuManager : MonoBehaviour {
 		SceneManager.LoadScene ("Controls_Scene");
 	}
 
+    public void CreditsButton()
+    {
+        SceneManager.LoadScene("Credits_Scene");
+    }
+
     public void ExitGame()
     {
         Application.Quit();

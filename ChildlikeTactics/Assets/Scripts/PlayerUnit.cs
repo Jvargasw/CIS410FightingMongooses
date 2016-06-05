@@ -193,8 +193,8 @@ public abstract class PlayerUnit : MonoBehaviour {
 	void OnTriggerEnter(Collider coll) {
 		MusicManager musicScript = cameraRef.GetComponent<MusicManager> ();
 		if (coll.CompareTag ("Exit")) {
-			if (PersistentStorage.level >= 4) {
-                //First level is level 0 so fifth level is level 4
+			if (PersistentStorage.level >= 5) {
+                //First level is level 0 so fifth level is level 4 (changed to 5 because level updates on boss kill not use of teleporter)
                 SceneManager.LoadScene("Win_Scene");
                 //do yo thang
             } else {

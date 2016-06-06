@@ -43,6 +43,7 @@ public class EnemyController : MonoBehaviour {
 	private MeshRenderer meshRenderer;
 
     void Start () {
+
         if (maxHP == 0) {
             maxHP = 10;
         }

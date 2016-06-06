@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.07.00">
+    <object class="Event" id="{0f5d93bb-61ee-458e-be2a-ec19beba19b1}"/>
+    <object class="MasterTrack" id="{a5e0654c-304c-4426-8dc3-31cb9ec3e0fd}">
+        <property name="uiAutomationTracksVisible">
+            <value>true</value>
+        </property>
+    </object>
+    <object class="MixerInput" id="{71a11e9b-f2d8-45b8-a0d3-8fd4e74d219b}"/>
+    <object class="EventAutomatableProperties" id="{eced94cf-5f17-4ed8-950d-8f353897c208}"/>
+    <object class="MarkerTrack" id="{f7f0b143-b48f-4374-a229-97c496324abc}"/>
+    <object class="MarkerTrack" id="{931cbdb5-62c5-44ad-a569-1a8a670dcbe3}"/>
+    <object class="MarkerTrack" id="{b95f2e15-de7f-4223-9efe-733eb0331d76}"/>
+    <object class="GroupTrack" id="{eba80a64-fcdc-4ac2-9f20-b2b5e4884b6c}"/>
+    <object class="Timeline" id="{21e99829-1364-4e2a-8078-6580ce7c4056}">
+        <property name="cursorPosition">
+            <value>65.879120879120876</value>
+        </property>
+        <property name="uiLastRulerScaleRatio">
+            <value>0.054945054945054944</value>
+        </property>
+        <property name="uiLastHorizontalScrollBarValue">
+            <value>1030</value>
+        </property>
+    </object>
+    <object class="GameParameter" id="{957ee2db-b253-4a4a-8919-08a8705cd7d0}">
+        <property name="cursorPosition">
+            <value>0</value>
+        </property>
+        <property name="uiLastRulerScaleRatio">
+            <value>0.0012239902080783353</value>
+        </property>
+        <property name="uiLastHorizontalScrollBarValue">
+            <value>38</value>
+        </property>
+    </object>
+    <object class="EventMixerMaster" id="{5658a77a-82bd-44aa-bf70-a6b84d95a291}">
+        <relationship name="input">
+            <destination>{6138598f-39f7-4684-848d-69ab124a7d97}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusEffectChain" id="{8ab3b87a-e6aa-4d63-ae98-5634bc3ac9fb}"/>
+    <object class="MixerBusPanner" id="{e20f5cf7-274e-43ff-8f2d-b30c9706222f}"/>
+    <object class="EventMixerGroup" id="{6138598f-39f7-4684-848d-69ab124a7d97}"/>
+    <object class="TransitionMarker" id="{7010c340-a073-4c52-964e-ec4692745e8f}"/>
+    <object class="TransitionMarker" id="{cf8381f1-4719-43b1-a494-55e192ee34c5}"/>
+    <object class="TransitionMarker" id="{eb8a09b0-80df-448e-b132-8703a02253ad}"/>
+    <object class="NamedMarker" id="{b96c8011-9062-4872-ade5-e78cf2a2d0b2}"/>
+    <object class="NamedMarker" id="{4fdcf011-e6d1-4917-b64b-91c3afcccfa0}"/>
+    <object class="LoopRegion" id="{5edc08c3-9761-4f8d-b71b-259b0a6d3c60}"/>
+    <object class="TempoMarker" id="{4afc0636-518c-44a9-8488-7b77b8bec252}"/>
+    <object class="TempoMarker" id="{2424ba3c-81a8-419c-b569-4fb3f983c062}"/>
+    <object class="LoopRegion" id="{7c6056ba-1298-4763-a404-d3cdda55482a}"/>
+    <object class="TransitionRegion" id="{872ab925-2465-4357-a7c7-6f9d1e9a34b4}"/>
+    <object class="MixerBusEffectChain" id="{1bc424f3-654b-4aeb-ada9-6cbe44f05277}"/>
+    <object class="MixerBusPanner" id="{8bae017d-ee41-4e46-af6c-5f257c75b111}"/>
+    <object class="MixerBusFader" id="{e85c195d-d468-4cae-9847-c0657877080c}"/>
+    <object class="MixerBusEffectChain" id="{8a559c62-b9e9-4f60-8448-adfa068f2f46}"/>
+    <object class="MixerBusPanner" id="{6f2da4f1-2079-4380-a586-7da0b38f2e4a}"/>
+    <object class="ParameterCondition" id="{9ab7ef89-8bd1-40d6-84a8-b54dc7737dbd}"/>
+    <object class="ParameterCondition" id="{ab40d54c-7c21-403d-899a-c2459a60a653}"/>
+    <object class="ParameterCondition" id="{d730ec46-fd93-48b4-b0f6-bc5019a02f4e}"/>
+    <object class="ParameterCondition" id="{0098bf3a-6506-4059-afa5-3d7b95fb311f}"/>
+    <object class="MixerBusFader" id="{94f833a5-39f6-4be1-a495-b0609cbc2cb9}"/>
+    <object class="SpatialiserEffect" id="{6ca831c9-0e45-44c4-bb84-cc2b2fb03598}"/>
+    <object class="MixerSend" id="{5b0910ba-c833-4d9a-b2a9-55190bbddb2a}"/>
+    <object class="MixerBusFader" id="{3f2dfa2e-9072-49f6-bf31-0b2dd2c90ee5}"/>
+</objects>

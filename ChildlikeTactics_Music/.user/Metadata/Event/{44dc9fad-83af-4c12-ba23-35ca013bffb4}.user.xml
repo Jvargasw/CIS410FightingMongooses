@@ -2,17 +2,13 @@
 <objects serializationModel="Studio.01.07.00">
     <object class="Event" id="{44dc9fad-83af-4c12-ba23-35ca013bffb4}">
         <relationship name="selectables">
-            <destination>{a2eecbd0-d640-4113-b5a9-48645a50e532}</destination>
+            <destination>{68886181-e65d-4361-8c89-7385b09ab242}</destination>
         </relationship>
         <relationship name="uiLastParameterSelection">
             <destination>{b30b13e2-accf-456f-9be0-4aeba344dea6}</destination>
         </relationship>
     </object>
-    <object class="MasterTrack" id="{68886181-e65d-4361-8c89-7385b09ab242}">
-        <property name="uiAutomationTracksVisible">
-            <value>true</value>
-        </property>
-    </object>
+    <object class="MasterTrack" id="{68886181-e65d-4361-8c89-7385b09ab242}"/>
     <object class="MixerInput" id="{b42944b9-b5d5-41b2-a28d-73add40710e9}"/>
     <object class="EventAutomatableProperties" id="{f0e077ca-9be4-458f-888b-7d7564dc3e01}"/>
     <object class="MarkerTrack" id="{6d0d5f79-41ac-4e66-9194-03778afbccc2}"/>
@@ -28,7 +24,7 @@
             <value>0.07702182284980745</value>
         </property>
         <property name="uiLastHorizontalScrollBarValue">
-            <value>2492</value>
+            <value>1</value>
         </property>
     </object>
     <object class="GameParameter" id="{eae5a649-20c1-4012-8f37-7191c87d7902}">
@@ -112,7 +108,6 @@
     <object class="ParameterCondition" id="{e34836f2-1883-4cbc-8f06-9ff1ea2f41b4}"/>
     <object class="ParameterCondition" id="{733c3f36-9938-47c3-8973-b4cb5a50dc82}"/>
     <object class="MixerBusFader" id="{8b86e4d6-de40-4a38-a00d-2f96b651d708}"/>
-    <object class="SpatialiserEffect" id="{2e24f6ce-badd-487a-8253-a3eef60f656b}"/>
     <object class="MixerSend" id="{f348f07a-ecee-4443-8945-52b8e72c638b}"/>
     <object class="MixerBusFader" id="{724c9f2d-5e4a-4445-a861-5900981d053a}"/>
 </objects>

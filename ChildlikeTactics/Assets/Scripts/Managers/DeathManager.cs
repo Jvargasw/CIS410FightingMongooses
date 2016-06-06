@@ -11,7 +11,9 @@ public class DeathManager : MonoBehaviour
     
     void OnEnable()
     {
+		MusicManager musicScript = cameraRef.GetComponent<MusicManager> ();
         //change the text to somthing witty
+		musicScript.EndMusic();
         Transform DiedText = transform.FindChild("DiedText");
         Text t = DiedText.GetComponent<Text>();
         t.text = messageArray[Random.Range(0, messageArray.Length)];
